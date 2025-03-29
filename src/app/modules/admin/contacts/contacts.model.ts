@@ -1,5 +1,6 @@
 export interface Contact {
     id?: string;
+    avatar?: string | null;
     firstName: string;
     lastName: string;
     email?: string;
