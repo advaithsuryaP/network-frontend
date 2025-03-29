@@ -1,13 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Contact } from './contacts.model';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, switchMap, tap, take } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ContactsService {
     private _http = inject(HttpClient);
+
+    private _contactSubject: BehaviorSubject<Contact | null> =
+        new BehaviorSubject(null);
+
     private _contactsSubject: BehaviorSubject<Contact[] | null> =
         new BehaviorSubject([
             {
@@ -62,6 +66,7 @@ export class ContactsService {
     //         );
     // }
 
+    contact$: Observable<Contact> = this._contactSubject.asObservable();
     contacts$: Observable<Contact[]> = this._contactsSubject.asObservable();
 
     getContacts(): Observable<Contact[]> {
@@ -69,12 +74,28 @@ export class ContactsService {
             .get<Contact[]>('/api/v1/contacts')
             .pipe(tap((contacts) => this._contactsSubject.next(contacts)));
     }
+
     getContact(id: string) {
         return this._http.get(`/api/contacts/${id}`);
     }
-    createContact(contact: any) {
-        return this._http.post('/api/contacts', contact);
+
+    createContact(): Observable<Contact> {
+        return this.contacts$.pipe(
+            take(1),
+            switchMap((contacts) =>
+                this._http.post<Contact>('api/v1/contacts', {}).pipe(
+                    map((newContact) => {
+                        // Update the contacts with the new contact
+                        this._contactsSubject.next([newContact, ...contacts]);
+
+                        // Return the new contact
+                        return newContact;
+                    })
+                )
+            )
+        );
     }
+
     updateContact(id: string, contact: any) {
         return this._http.put(`/api/contacts/${id}`, contact);
     }

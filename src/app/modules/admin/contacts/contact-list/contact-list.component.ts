@@ -6,6 +6,7 @@ import {
     OnDestroy,
     OnInit,
     ViewChild,
+    ViewEncapsulation,
 } from '@angular/core';
 import {
     ActivatedRoute,
@@ -14,7 +15,7 @@ import {
     RouterOutlet,
 } from '@angular/router';
 import { ContactsService } from '../contacts.service';
-import { Subject, switchMap, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { Contact } from '../contacts.model';
 
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
@@ -30,11 +31,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 
 @Component({
-    selector: 'app-list',
+    selector: 'app-contact-list',
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         NgIf,
         NgFor,
@@ -50,15 +51,18 @@ import { MatButtonModule } from '@angular/material/button';
         MatFormFieldModule,
         ReactiveFormsModule,
     ],
-    templateUrl: './list.component.html',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: './contact-list.component.html',
 })
-export class ListComponent implements OnInit, OnDestroy {
+export class ContactListComponent implements OnInit, OnDestroy {
     @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
 
     private _router = inject(Router);
     private _activatedRoute = inject(ActivatedRoute);
-    private _changeDetectorRef = inject(ChangeDetectorRef);
     private _contactsService = inject(ContactsService);
+    private _changeDetectorRef = inject(ChangeDetectorRef);
+    private _fuseMediaWatcherService = inject(FuseMediaWatcherService);
 
     private _unsubscribeAll: Subject<void> = new Subject<void>();
 
@@ -81,6 +85,17 @@ export class ListComponent implements OnInit, OnDestroy {
                 this._changeDetectorRef.markForCheck();
             });
 
+        // Get the contact
+        this._contactsService.contact$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((contact: Contact) => {
+                // Update the selected contact
+                this.selectedContact = contact;
+
+                // Mark for check
+                this._changeDetectorRef.markForCheck();
+            });
+
         // // Subscribe to search input field value changes
         // this.searchInputControl.valueChanges
         //     .pipe(
@@ -91,6 +106,32 @@ export class ListComponent implements OnInit, OnDestroy {
         //         )
         //     )
         //     .subscribe();
+
+        // Subscribe to MatDrawer opened change
+        this.matDrawer.openedChange.subscribe((opened) => {
+            if (!opened) {
+                // Remove the selected contact when drawer closed
+                this.selectedContact = null;
+
+                // Mark for check
+                this._changeDetectorRef.markForCheck();
+            }
+        });
+
+        // Subscribe to media changes
+        this._fuseMediaWatcherService.onMediaChange$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(({ matchingAliases }) => {
+                // Set the drawerMode if the given breakpoint is active
+                if (matchingAliases.includes('lg')) {
+                    this.drawerMode = 'side';
+                } else {
+                    this.drawerMode = 'over';
+                }
+
+                // Mark for check
+                this._changeDetectorRef.markForCheck();
+            });
     }
 
     /**
@@ -109,14 +150,14 @@ export class ListComponent implements OnInit, OnDestroy {
      */
     createContact(): void {
         // Create the contact
-        // this._contactsService.createContact().subscribe((newContact) => {
-        //     // Go to the new contact
-        //     this._router.navigate(['./', newContact.id], {
-        //         relativeTo: this._activatedRoute,
-        //     });
-        //     // Mark for check
-        //     this._changeDetectorRef.markForCheck();
-        // });
+        this._contactsService.createContact().subscribe((newContact) => {
+            // Go to the new contact
+            this._router.navigate(['./', newContact.id], {
+                relativeTo: this._activatedRoute,
+            });
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
+        });
     }
 
     /**
@@ -129,5 +170,8 @@ export class ListComponent implements OnInit, OnDestroy {
         return item.id || index;
     }
 
-    ngOnDestroy(): void {}
+    ngOnDestroy(): void {
+        this._unsubscribeAll.next(null);
+        this._unsubscribeAll.complete();
+    }
 }

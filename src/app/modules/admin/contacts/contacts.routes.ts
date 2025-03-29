@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { ContactsComponent } from './contacts.component';
-import { ListComponent } from './list/list.component';
-import { DetailsComponent } from './details/details.component';
+import { ContactListComponent } from './contact-list/contact-list.component';
+import { ContactDetailComponent } from './contact-detail/contact-detail.component';
 
 export default [
     {
@@ -10,11 +10,11 @@ export default [
         children: [
             {
                 path: '',
-                component: ListComponent,
+                component: ContactListComponent,
                 children: [
                     {
                         path: ':id',
-                        component: DetailsComponent,
+                        component: ContactDetailComponent,
                     },
                 ],
             },
