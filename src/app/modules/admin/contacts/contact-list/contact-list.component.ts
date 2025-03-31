@@ -1,30 +1,30 @@
 import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    inject,
-    OnDestroy,
     OnInit,
+    inject,
+    Component,
+    OnDestroy,
     ViewChild,
     ViewEncapsulation,
+    ChangeDetectorRef,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import {
-    ActivatedRoute,
     Router,
     RouterLink,
     RouterOutlet,
+    ActivatedRoute,
 } from '@angular/router';
 import { ContactsService } from '../contacts.service';
-import { Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { Contact } from '../contacts.model';
 
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import {
+    NgIf,
+    NgFor,
+    NgClass,
     AsyncPipe,
     I18nPluralPipe,
-    NgClass,
-    NgFor,
-    NgIf,
 } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -67,7 +67,7 @@ export class ContactListComponent implements OnInit, OnDestroy {
     private _unsubscribeAll: Subject<void> = new Subject<void>();
 
     searchInputControl: FormControl<string> = new FormControl<string>('');
-    contacts$ = this._contactsService.contacts$;
+    contacts$: Observable<Contact[]> = this._contactsService.contacts$;
     selectedContact: Contact;
 
     contactsCount: number = 0;
