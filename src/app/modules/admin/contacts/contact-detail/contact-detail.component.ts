@@ -6,19 +6,15 @@ import {
     inject,
     OnDestroy,
     OnInit,
-    Renderer2,
-    TemplateRef,
     ViewChild,
-    ViewContainerRef,
     ViewEncapsulation,
 } from '@angular/core';
-import { JsonPipe, NgFor, NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { Subject, takeUntil } from 'rxjs';
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ContactsService } from '../contacts.service';
 import { ContactListComponent } from '../contact-list/contact-list.component';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Contact, Country } from '../contacts.model';
+import { Category, Contact, Country } from '../contacts.model';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import {
     FormArray,
@@ -28,12 +24,14 @@ import {
     Validators,
 } from '@angular/forms';
 import { MatDrawerToggleResult } from '@angular/material/sidenav';
-import { TemplatePortal } from '@angular/cdk/portal';
+import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatRippleModule } from '@angular/material/core';
+import { MatRadioModule } from '@angular/material/radio';
 
 interface EmailFormGroup {
     label: FormControl<string>;
@@ -56,7 +54,7 @@ interface ContactForm {
     notes: FormControl<string | null>;
     title: FormControl<string | null>;
     major: FormControl<string | null>;
-    graduationYear: FormControl<string | null>;
+    companyId: FormControl<string | null>;
     company: FormGroup<{
         name: FormControl<string | null>;
         alternateName: FormControl<string | null>;
@@ -92,9 +90,12 @@ interface ContactForm {
         RouterLink,
         MatIconModule,
         MatInputModule,
+        MatSelectModule,
         MatButtonModule,
+        MatRippleModule,
         MatTooltipModule,
         MatFormFieldModule,
+        MatRadioModule,
         ReactiveFormsModule,
     ],
     encapsulation: ViewEncapsulation.None,
@@ -103,15 +104,10 @@ interface ContactForm {
 })
 export class ContactDetailComponent implements OnInit, OnDestroy {
     @ViewChild('avatarFileInput') private _avatarFileInput: ElementRef;
-    @ViewChild('tagsPanel') private _tagsPanel: TemplateRef<any>;
-    @ViewChild('tagsPanelOrigin') private _tagsPanelOrigin: ElementRef;
 
     private _router = inject(Router);
-    private _overlay = inject(Overlay);
-    private _renderer2 = inject(Renderer2);
     private _activatedRoute = inject(ActivatedRoute);
     private _contactsService = inject(ContactsService);
-    private _viewContainerRef = inject(ViewContainerRef);
     private _changeDetectorRef = inject(ChangeDetectorRef);
     private _contactsListComponent = inject(ContactListComponent);
     private _fuseConfirmationService = inject(FuseConfirmationService);
@@ -124,6 +120,7 @@ export class ContactDetailComponent implements OnInit, OnDestroy {
     // contactForm: UntypedFormGroup;
     contacts: Contact[];
     countries: Country[] = [];
+    categories: Category[] = [];
 
     contactForm = new FormGroup<ContactForm>({
         id: new FormControl<string>(''),
@@ -135,15 +132,24 @@ export class ContactDetailComponent implements OnInit, OnDestroy {
         notes: new FormControl<string | null>(''),
         title: new FormControl<string | null>('', Validators.required),
         major: new FormControl<string | null>(''),
-        graduationYear: new FormControl<string | null>(''),
+        companyId: new FormControl<string | null>(''),
         company: new FormGroup({
             name: new FormControl<string | null>('', Validators.required),
             alternateName: new FormControl<string | null>(''),
             description: new FormControl<string | null>(''),
             website: new FormControl<string | null>(''),
-            category: new FormControl<string | null>(''),
-            primaryIndustry: new FormControl<string | null>(''),
-            secondaryIndustry: new FormControl<string | null>(''),
+            category: new FormControl<string>('', {
+                validators: [Validators.required],
+                nonNullable: true,
+            }),
+            primaryIndustry: new FormControl<string>('', {
+                validators: [Validators.required],
+                nonNullable: true,
+            }),
+            secondaryIndustry: new FormControl<string>('', {
+                validators: [Validators.required],
+                nonNullable: true,
+            }),
             attractedOutOfState: new FormControl<boolean | null>(false),
             confidentialityRequested: new FormControl<boolean | null>(false),
             intellectualProperty: new FormControl<string | null>(''),
@@ -162,7 +168,6 @@ export class ContactDetailComponent implements OnInit, OnDestroy {
         }),
     });
 
-    private _tagsPanelOverlayRef: OverlayRef;
     private _unsubscribeAll: Subject<void> = new Subject<void>();
 
     // -----------------------------------------------------------------------------------------------------
@@ -175,21 +180,6 @@ export class ContactDetailComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         // Open the drawer
         this._contactsListComponent.matDrawer.open();
-
-        // Create the contact form
-        // this.contactForm = this._formBuilder.group({
-        //     id: [''],
-        //     avatar: [null],
-        //     name: ['', [Validators.required]],
-        //     emails: this._formBuilder.array([]),
-        //     phoneNumbers: this._formBuilder.array([]),
-        //     title: [''],
-        //     company: [''],
-        //     birthday: [null],
-        //     address: [null],
-        //     notes: [null],
-        //     tags: [[]],
-        // });
 
         // Get the contacts
         this._contactsService.contacts$
@@ -217,10 +207,40 @@ export class ContactDetailComponent implements OnInit, OnDestroy {
                 this.contactForm.controls.phoneNumbers.clear();
 
                 // Patch values to the form
-                // this.contactForm.patchValue(contact);
+                this.contactForm.patchValue({
+                    id: contact.id,
+                    firstName: contact.firstName,
+                    lastName: contact.lastName,
+                    title: contact.title,
+                    notes: contact.notes,
+                    major: contact.major,
+                    companyId: contact.companyId,
+                });
 
-                // Setup the emails form array
-                // const emailFormGroups = [];
+                this.contactForm.controls.company.patchValue({
+                    name: contact.company.name,
+                    description: contact.company.description,
+                    website: contact.company.website,
+                    category: contact.company.category,
+                    primaryIndustry: contact.company.primaryIndustry,
+                    secondaryIndustry: contact.company.secondaryIndustry,
+                    attractedOutOfState: contact.company.attractedOutOfState,
+                    confidentialityRequested:
+                        contact.company.confidentialityRequested,
+                    intellectualProperty: contact.company.intellectualProperty,
+                    departmentIfFaculty: contact.company.departmentIfFaculty,
+                    pointOfContactName: contact.company.pointOfContactName,
+                    pointOfContactEmail: contact.company.pointOfContactEmail,
+                    pointOfContactPhone: contact.company.pointOfContactPhone,
+                    usmFounders: contact.company.usmFounders,
+                    miscResources: contact.company.miscResources,
+                    preCompanyResources: contact.company.preCompanyResources,
+                    preCompanyFunding: contact.company.preCompanyFunding,
+                    icorps: contact.company.icorps,
+                    tcf: contact.company.tcf,
+                    tcfAmount: contact.company.tcfAmount,
+                    comments: contact.company.comments,
+                });
 
                 if (contact.emails.length > 0) {
                     // Iterate through them
@@ -254,45 +274,55 @@ export class ContactDetailComponent implements OnInit, OnDestroy {
                     );
                 }
 
-                // Add the email form groups to the emails form array
-                // emailFormGroups.forEach((emailFormGroup) => {
-                //     (this.contactForm.get('emails') as UntypedFormArray).push(
-                //         emailFormGroup
-                //     );
-                // });
-
-                // Setup the phone numbers form array
-                const phoneNumbersFormGroups = [];
-
-                // if (contact.phoneNumbers.length > 0) {
-                //     // Iterate through them
-                //     contact.phoneNumbers.forEach((phoneNumber) => {
-                //         // Create an email form group
-                //         phoneNumbersFormGroups.push(
-                //             this._formBuilder.group({
-                //                 country: [phoneNumber.country],
-                //                 phoneNumber: [phoneNumber.phoneNumber],
-                //                 label: [phoneNumber.label],
-                //             })
-                //         );
-                //     });
-                // } else {
-                //     // Create a phone number form group
-                //     phoneNumbersFormGroups.push(
-                //         this._formBuilder.group({
-                //             country: ['us'],
-                //             phoneNumber: [''],
-                //             label: [''],
-                //         })
-                //     );
-                // }
-
-                // Add the phone numbers form groups to the phone numbers form array
-                // phoneNumbersFormGroups.forEach((phoneNumbersFormGroup) => {
-                //     (
-                //         this.contactForm.get('phoneNumbers') as UntypedFormArray
-                //     ).push(phoneNumbersFormGroup);
-                // });
+                if (contact.phoneNumbers.length > 0) {
+                    // Iterate through them
+                    contact.phoneNumbers.forEach((phoneNumber) => {
+                        // Create an email form group
+                        this.contactForm.controls.phoneNumbers.push(
+                            new FormGroup<PhoneNumberFormGroup>({
+                                countryCode: new FormControl<string>(
+                                    phoneNumber.countryCode,
+                                    {
+                                        validators: [Validators.required],
+                                        nonNullable: true,
+                                    }
+                                ),
+                                phoneNumber: new FormControl<string>(
+                                    phoneNumber.phoneNumber,
+                                    {
+                                        validators: [Validators.required],
+                                        nonNullable: true,
+                                    }
+                                ),
+                                label: new FormControl<string>(
+                                    phoneNumber.label,
+                                    {
+                                        validators: [Validators.required],
+                                        nonNullable: true,
+                                    }
+                                ),
+                            })
+                        );
+                    });
+                } else {
+                    // Create a phone number form group
+                    this.contactForm.controls.phoneNumbers.push(
+                        new FormGroup<PhoneNumberFormGroup>({
+                            countryCode: new FormControl<string>('us', {
+                                validators: [Validators.required],
+                                nonNullable: true,
+                            }),
+                            phoneNumber: new FormControl<string>('', {
+                                validators: [Validators.required],
+                                nonNullable: true,
+                            }),
+                            label: new FormControl<string>('', {
+                                validators: [Validators.required],
+                                nonNullable: true,
+                            }),
+                        })
+                    );
+                }
 
                 // Toggle the edit mode off
                 this.toggleEditMode(false);
@@ -304,23 +334,21 @@ export class ContactDetailComponent implements OnInit, OnDestroy {
         // Get the country telephone codes
         this._contactsService.countries$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((codes: Country[]) => {
-                this.countries = codes;
+            .subscribe((countries: Country[]) => {
+                this.countries = countries;
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
 
-        // Get the tags
-        // this._contactsService.tags$
-        //     .pipe(takeUntil(this._unsubscribeAll))
-        //     .subscribe((tags: Tag[]) => {
-        //         this.tags = tags;
-        //         this.filteredTags = tags;
+        this._contactsService.categories$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((categories: Category[]) => {
+                this.categories = categories;
 
-        //         // Mark for check
-        //         this._changeDetectorRef.markForCheck();
-        //     });
+                // Mark for check
+                this._changeDetectorRef.markForCheck();
+            });
     }
 
     /**
@@ -330,11 +358,6 @@ export class ContactDetailComponent implements OnInit, OnDestroy {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
-
-        // Dispose the overlays if they are still on the DOM
-        if (this._tagsPanelOverlayRef) {
-            this._tagsPanelOverlayRef.dispose();
-        }
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -368,6 +391,8 @@ export class ContactDetailComponent implements OnInit, OnDestroy {
      * Update the contact
      */
     updateContact(): void {
+        console.log(this.contactForm.errors);
+
         // // Get the contact object
         // const contact = this.contactForm.getRawValue();
         // // Go through the contact object and clear empty values
@@ -492,270 +517,24 @@ export class ContactDetailComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Open tags panel
-     */
-    openTagsPanel(): void {
-        // Create the overlay
-        this._tagsPanelOverlayRef = this._overlay.create({
-            backdropClass: '',
-            hasBackdrop: true,
-            scrollStrategy: this._overlay.scrollStrategies.block(),
-            positionStrategy: this._overlay
-                .position()
-                .flexibleConnectedTo(this._tagsPanelOrigin.nativeElement)
-                .withFlexibleDimensions(true)
-                .withViewportMargin(64)
-                .withLockedPosition(true)
-                .withPositions([
-                    {
-                        originX: 'start',
-                        originY: 'bottom',
-                        overlayX: 'start',
-                        overlayY: 'top',
-                    },
-                ]),
-        });
-
-        // Subscribe to the attachments observable
-        this._tagsPanelOverlayRef.attachments().subscribe(() => {
-            // Add a class to the origin
-            this._renderer2.addClass(
-                this._tagsPanelOrigin.nativeElement,
-                'panel-opened'
-            );
-
-            // Focus to the search input once the overlay has been attached
-            this._tagsPanelOverlayRef.overlayElement
-                .querySelector('input')
-                .focus();
-        });
-
-        // Create a portal from the template
-        const templatePortal = new TemplatePortal(
-            this._tagsPanel,
-            this._viewContainerRef
-        );
-
-        // Attach the portal to the overlay
-        this._tagsPanelOverlayRef.attach(templatePortal);
-
-        // Subscribe to the backdrop click
-        this._tagsPanelOverlayRef.backdropClick().subscribe(() => {
-            // Remove the class from the origin
-            this._renderer2.removeClass(
-                this._tagsPanelOrigin.nativeElement,
-                'panel-opened'
-            );
-
-            // If overlay exists and attached...
-            if (
-                this._tagsPanelOverlayRef &&
-                this._tagsPanelOverlayRef.hasAttached()
-            ) {
-                // Detach it
-                this._tagsPanelOverlayRef.detach();
-
-                // Reset the tag filter
-                // this.filteredTags = this.tags;
-
-                // Toggle the edit mode off
-                this.tagsEditMode = false;
-            }
-
-            // If template portal exists and attached...
-            if (templatePortal && templatePortal.isAttached) {
-                // Detach it
-                templatePortal.detach();
-            }
-        });
-    }
-
-    /**
-     * Toggle the tags edit mode
-     */
-    toggleTagsEditMode(): void {
-        this.tagsEditMode = !this.tagsEditMode;
-    }
-
-    /**
-     * Filter tags
-     *
-     * @param event
-     */
-    filterTags(event): void {
-        // Get the value
-        const value = event.target.value.toLowerCase();
-
-        // Filter the tags
-        // this.filteredTags = this.tags.filter((tag) =>
-        //     tag.title.toLowerCase().includes(value)
-        // );
-    }
-
-    /**
-     * Filter tags input key down event
-     *
-     * @param event
-     */
-    filterTagsInputKeyDown(event): void {
-        // Return if the pressed key is not 'Enter'
-        if (event.key !== 'Enter') {
-            return;
-        }
-
-        // If there is no tag available...
-        // if (this.filteredTags.length === 0) {
-        //     // Create the tag
-        //     this.createTag(event.target.value);
-
-        //     // Clear the input
-        //     event.target.value = '';
-
-        //     // Return
-        //     return;
-        // }
-
-        // If there is a tag...
-        // const tag = this.filteredTags[0];
-        // const isTagApplied = this.contact.tags.find((id) => id === tag.id);
-
-        // // If the found tag is already applied to the contact...
-        // if (isTagApplied) {
-        //     // Remove the tag from the contact
-        //     this.removeTagFromContact(tag);
-        // } else {
-        //     // Otherwise add the tag to the contact
-        //     this.addTagToContact(tag);
-        // }
-    }
-
-    /**
-     * Create a new tag
-     *
-     * @param title
-     */
-    createTag(title: string): void {
-        const tag = {
-            title,
-        };
-
-        // Create tag on the server
-        // this._contactsService.createTag(tag).subscribe((response) => {
-        //     // Add the tag to the contact
-        //     this.addTagToContact(response);
-        // });
-    }
-
-    /**
-     * Update the tag title
-     *
-     * @param tag
-     * @param event
-     */
-    // updateTagTitle(tag: Tag, event): void {
-    //     // Update the title on the tag
-    //     tag.title = event.target.value;
-
-    //     // Update the tag on the server
-    //     this._contactsService
-    //         .updateTag(tag.id, tag)
-    //         .pipe(debounceTime(300))
-    //         .subscribe();
-
-    //     // Mark for check
-    //     this._changeDetectorRef.markForCheck();
-    // }
-
-    /**
-     * Delete the tag
-     *
-     * @param tag
-     */
-    // deleteTag(tag: Tag): void {
-    //     // Delete the tag from the server
-    //     this._contactsService.deleteTag(tag.id).subscribe();
-
-    //     // Mark for check
-    //     this._changeDetectorRef.markForCheck();
-    // }
-
-    /**
-     * Add tag to the contact
-     *
-     * @param tag
-     */
-    // addTagToContact(tag: Tag): void {
-    //     // Add the tag
-    //     this.contact.tags.unshift(tag.id);
-
-    //     // Update the contact form
-    //     this.contactForm.get('tags').patchValue(this.contact.tags);
-
-    //     // Mark for check
-    //     this._changeDetectorRef.markForCheck();
-    // }
-
-    /**
-     * Remove tag from the contact
-     *
-     * @param tag
-     */
-    // removeTagFromContact(tag: Tag): void {
-    //     // Remove the tag
-    //     this.contact.tags.splice(
-    //         this.contact.tags.findIndex((item) => item === tag.id),
-    //         1
-    //     );
-
-    //     // Update the contact form
-    //     this.contactForm.get('tags').patchValue(this.contact.tags);
-
-    //     // Mark for check
-    //     this._changeDetectorRef.markForCheck();
-    // }
-
-    /**
-     * Toggle contact tag
-     *
-     * @param tag
-     */
-    // toggleContactTag(tag: Tag): void {
-    //     if (this.contact.tags.includes(tag.id)) {
-    //         this.removeTagFromContact(tag);
-    //     } else {
-    //         this.addTagToContact(tag);
-    //     }
-    // }
-
-    /**
-     * Should the create tag button be visible
-     *
-     * @param inputValue
-     */
-    // shouldShowCreateTagButton(inputValue: string): boolean {
-    //     return !!!(
-    //         inputValue === '' ||
-    //         this.tags.findIndex(
-    //             (tag) => tag.title.toLowerCase() === inputValue.toLowerCase()
-    //         ) > -1
-    //     );
-    // }
-
-    /**
      * Add the email field
      */
     addEmailField(): void {
         // Create an empty email form group
-        // const emailFormGroup = this._formBuilder.group({
-        //     email: [''],
-        //     label: [''],
-        // });
-        // // Add the email form group to the emails form array
-        // (this.contactForm.get('emails') as UntypedFormArray).push(
-        //     emailFormGroup
-        // );
-        // // Mark for check
-        // this._changeDetectorRef.markForCheck();
+        this.contactForm.controls.emails.push(
+            new FormGroup<EmailFormGroup>({
+                label: new FormControl<string>('', {
+                    validators: [Validators.required],
+                    nonNullable: true,
+                }),
+                email: new FormControl<string>('', {
+                    validators: [Validators.required],
+                    nonNullable: true,
+                }),
+            })
+        );
+        // Mark for check
+        this._changeDetectorRef.markForCheck();
     }
 
     /**
@@ -764,14 +543,9 @@ export class ContactDetailComponent implements OnInit, OnDestroy {
      * @param index
      */
     removeEmailField(index: number): void {
-        // Get form array for emails
-        // const emailsFormArray = this.contactForm.get(
-        //     'emails'
-        // ) as UntypedFormArray;
-        // // Remove the email field
-        // emailsFormArray.removeAt(index);
-        // // Mark for check
-        // this._changeDetectorRef.markForCheck();
+        this.contactForm.controls.emails.removeAt(index);
+        // Mark for check
+        this._changeDetectorRef.markForCheck();
     }
 
     /**
@@ -779,17 +553,24 @@ export class ContactDetailComponent implements OnInit, OnDestroy {
      */
     addPhoneNumberField(): void {
         // Create an empty phone number form group
-        // const phoneNumberFormGroup = this._formBuilder.group({
-        //     country: ['us'],
-        //     phoneNumber: [''],
-        //     label: [''],
-        // });
-        // // Add the phone number form group to the phoneNumbers form array
-        // (this.contactForm.get('phoneNumbers') as UntypedFormArray).push(
-        //     phoneNumberFormGroup
-        // );
-        // // Mark for check
-        // this._changeDetectorRef.markForCheck();
+        this.contactForm.controls.phoneNumbers.push(
+            new FormGroup<PhoneNumberFormGroup>({
+                countryCode: new FormControl<string>('us', {
+                    validators: [Validators.required],
+                    nonNullable: true,
+                }),
+                phoneNumber: new FormControl<string>('', {
+                    validators: [Validators.required],
+                    nonNullable: true,
+                }),
+                label: new FormControl<string>('', {
+                    validators: [Validators.required],
+                    nonNullable: true,
+                }),
+            })
+        );
+        // Mark for check
+        this._changeDetectorRef.markForCheck();
     }
 
     /**
@@ -798,14 +579,9 @@ export class ContactDetailComponent implements OnInit, OnDestroy {
      * @param index
      */
     removePhoneNumberField(index: number): void {
-        // Get form array for phone numbers
-        // const phoneNumbersFormArray = this.contactForm.get(
-        //     'phoneNumbers'
-        // ) as UntypedFormArray;
-        // // Remove the phone number field
-        // phoneNumbersFormArray.removeAt(index);
-        // // Mark for check
-        // this._changeDetectorRef.markForCheck();
+        this.contactForm.controls.phoneNumbers.removeAt(index);
+        // Mark for check
+        this._changeDetectorRef.markForCheck();
     }
 
     /**

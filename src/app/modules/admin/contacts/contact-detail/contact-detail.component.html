@@ -79,24 +79,12 @@
                         class="flex items-center justify-center py-1 px-3 mr-3 mb-3 rounded-full leading-normal text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700"
                     >
                         <span class="text-sm font-medium whitespace-nowrap">{{
-                            contact.roleInCompany
+                            contact.title
                         }}</span>
                     </div>
                 </div>
 
                 <div class="flex flex-col mt-4 pt-6 border-t space-y-8">
-                    <!-- Title -->
-                    <ng-container *ngIf="contact.title">
-                        <div class="flex sm:items-center">
-                            <mat-icon
-                                [svgIcon]="'heroicons_outline:briefcase'"
-                            ></mat-icon>
-                            <div class="ml-6 leading-6">
-                                {{ contact.title }}
-                            </div>
-                        </div>
-                    </ng-container>
-
                     <!-- Company -->
                     <ng-container *ngIf="contact.company">
                         <div class="flex sm:items-center">
@@ -215,7 +203,7 @@
                         </div>
                     </ng-container>
 
-                    <!-- Address -->
+                    <!-- Major -->
                     <ng-container *ngIf="contact.major">
                         <div class="flex sm:items-center">
                             <mat-icon
@@ -228,7 +216,7 @@
                     </ng-container>
 
                     <!-- Birthday -->
-                    <ng-container *ngIf="contact.birthday">
+                    <!-- <ng-container *ngIf="contact.birthday">
                         <div class="flex sm:items-center">
                             <mat-icon
                                 [svgIcon]="'heroicons_outline:cake'"
@@ -237,7 +225,7 @@
                                 {{ contact.birthday | date : "longDate" }}
                             </div>
                         </div>
-                    </ng-container>
+                    </ng-container> -->
 
                     <!-- Notes -->
                     <ng-container *ngIf="contact.notes">
@@ -360,241 +348,44 @@
                         </div>
                     </div>
 
-                    <!-- Name -->
-                    <div class="mt-8">
-                        <mat-form-field
-                            class="w-full"
-                            [subscriptSizing]="'dynamic'"
-                        >
-                            <mat-label>Name</mat-label>
-                            <mat-icon
-                                matPrefix
-                                class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:user-circle'"
-                            ></mat-icon>
-                            <input
-                                matInput
-                                [formControlName]="'firstName'"
-                                [placeholder]="'Name'"
-                                [spellcheck]="false"
-                            />
-                        </mat-form-field>
-                    </div>
-
-                    <!-- Tags -->
-                    <div class="flex flex-wrap items-center -m-1.5 mt-6">
-                        <!-- Tags -->
-                        <ng-container *ngIf="contact.tags.length">
-                            <ng-container
-                                *ngFor="
-                                    let tag of contact.tags
-                                        | fuseFindByKey : 'id' : tags;
-                                    trackBy: trackByFn
-                                "
+                    <div class="mt-8 flex space-x-4">
+                        <div class="flex-1">
+                            <mat-form-field
+                                class="w-full"
+                                [subscriptSizing]="'dynamic'"
                             >
-                                <div
-                                    class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700"
-                                >
-                                    <span
-                                        class="text-md font-medium whitespace-nowrap"
-                                        >{{ tag.title }}</span
-                                    >
-                                </div>
-                            </ng-container>
-                        </ng-container>
-                        <!-- Tags panel and its button -->
-                        <div
-                            class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 cursor-pointer text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700"
-                            (click)="openTagsPanel()"
-                            #tagsPanelOrigin
-                        >
-                            <ng-container *ngIf="contact.tags.length">
+                                <mat-label>First Name</mat-label>
                                 <mat-icon
-                                    class="icon-size-5"
-                                    [svgIcon]="'heroicons_solid:pencil-square'"
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:user-circle'"
                                 ></mat-icon>
-                                <span
-                                    class="ml-1.5 text-md font-medium whitespace-nowrap"
-                                    >Edit</span
-                                >
-                            </ng-container>
-
-                            <ng-container *ngIf="!contact.tags.length">
+                                <input
+                                    matInput
+                                    [formControlName]="'firstName'"
+                                    placeholder="First Name"
+                                    [spellcheck]="false"
+                                />
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-1">
+                            <mat-form-field
+                                class="w-full"
+                                [subscriptSizing]="'dynamic'"
+                            >
+                                <mat-label>Last Name</mat-label>
                                 <mat-icon
-                                    class="icon-size-5"
-                                    [svgIcon]="'heroicons_solid:plus-circle'"
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:user-circle'"
                                 ></mat-icon>
-                                <span
-                                    class="ml-1.5 text-md font-medium whitespace-nowrap"
-                                    >Add</span
-                                >
-                            </ng-container>
-
-                            <!-- Tags panel -->
-                            <ng-template #tagsPanel>
-                                <div
-                                    class="w-60 rounded border shadow-md bg-card"
-                                >
-                                    <!-- Tags panel header -->
-                                    <div class="flex items-center m-3 mr-2">
-                                        <div class="flex items-center">
-                                            <mat-icon
-                                                class="icon-size-5"
-                                                [svgIcon]="
-                                                    'heroicons_solid:magnifying-glass'
-                                                "
-                                            ></mat-icon>
-                                            <div class="ml-2">
-                                                <input
-                                                    class="w-full min-w-0 py-1 border-0"
-                                                    type="text"
-                                                    placeholder="Enter tag name"
-                                                    (input)="filterTags($event)"
-                                                    (keydown)="
-                                                        filterTagsInputKeyDown(
-                                                            $event
-                                                        )
-                                                    "
-                                                    [maxLength]="30"
-                                                    #newTagInput
-                                                />
-                                            </div>
-                                        </div>
-                                        <button
-                                            class="ml-1"
-                                            mat-icon-button
-                                            (click)="toggleTagsEditMode()"
-                                        >
-                                            <mat-icon
-                                                *ngIf="!tagsEditMode"
-                                                class="icon-size-5"
-                                                [svgIcon]="
-                                                    'heroicons_solid:pencil-square'
-                                                "
-                                            ></mat-icon>
-                                            <mat-icon
-                                                *ngIf="tagsEditMode"
-                                                class="icon-size-5"
-                                                [svgIcon]="
-                                                    'heroicons_solid:check'
-                                                "
-                                            ></mat-icon>
-                                        </button>
-                                    </div>
-                                    <div
-                                        class="flex flex-col max-h-64 py-2 border-t overflow-y-auto"
-                                    >
-                                        <!-- Tags -->
-                                        <ng-container *ngIf="!tagsEditMode">
-                                            <ng-container
-                                                *ngFor="
-                                                    let tag of filteredTags;
-                                                    trackBy: trackByFn
-                                                "
-                                            >
-                                                <div
-                                                    class="flex items-center h-10 min-h-10 pl-1 pr-4 cursor-pointer hover:bg-hover"
-                                                    (click)="
-                                                        toggleContactTag(tag)
-                                                    "
-                                                    matRipple
-                                                >
-                                                    <mat-checkbox
-                                                        class="flex items-center h-10 min-h-10 pointer-events-none"
-                                                        [checked]="
-                                                            contact.tags.includes(
-                                                                tag.id
-                                                            )
-                                                        "
-                                                        [color]="'primary'"
-                                                        [disableRipple]="true"
-                                                    >
-                                                    </mat-checkbox>
-                                                    <div>{{ tag.title }}</div>
-                                                </div>
-                                            </ng-container>
-                                        </ng-container>
-                                        <!-- Tags editing -->
-                                        <ng-container *ngIf="tagsEditMode">
-                                            <div class="py-2 space-y-2">
-                                                <ng-container
-                                                    *ngFor="
-                                                        let tag of filteredTags;
-                                                        trackBy: trackByFn
-                                                    "
-                                                >
-                                                    <div
-                                                        class="flex items-center"
-                                                    >
-                                                        <mat-form-field
-                                                            class="fuse-mat-dense w-full mx-4"
-                                                            [subscriptSizing]="
-                                                                'dynamic'
-                                                            "
-                                                        >
-                                                            <input
-                                                                matInput
-                                                                [value]="
-                                                                    tag.title
-                                                                "
-                                                                (input)="
-                                                                    updateTagTitle(
-                                                                        tag,
-                                                                        $event
-                                                                    )
-                                                                "
-                                                            />
-                                                            <button
-                                                                mat-icon-button
-                                                                (click)="
-                                                                    deleteTag(
-                                                                        tag
-                                                                    )
-                                                                "
-                                                                matSuffix
-                                                            >
-                                                                <mat-icon
-                                                                    class="icon-size-5 ml-2"
-                                                                    [svgIcon]="
-                                                                        'heroicons_solid:trash'
-                                                                    "
-                                                                ></mat-icon>
-                                                            </button>
-                                                        </mat-form-field>
-                                                    </div>
-                                                </ng-container>
-                                            </div>
-                                        </ng-container>
-                                        <!-- Create tag -->
-                                        <div
-                                            class="flex items-center h-10 min-h-10 -ml-0.5 pl-4 pr-3 leading-none cursor-pointer hover:bg-hover"
-                                            *ngIf="
-                                                shouldShowCreateTagButton(
-                                                    newTagInput.value
-                                                )
-                                            "
-                                            (click)="
-                                                createTag(newTagInput.value);
-                                                newTagInput.value = ''
-                                            "
-                                            matRipple
-                                        >
-                                            <mat-icon
-                                                class="mr-2 icon-size-5"
-                                                [svgIcon]="
-                                                    'heroicons_solid:plus-circle'
-                                                "
-                                            ></mat-icon>
-                                            <div class="break-all">
-                                                Create "<b>{{
-                                                    newTagInput.value
-                                                }}</b
-                                                >"
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </ng-template>
+                                <input
+                                    matInput
+                                    [formControlName]="'lastName'"
+                                    placeholder="Last Name"
+                                    [spellcheck]="false"
+                                />
+                            </mat-form-field>
                         </div>
                     </div>
 
@@ -612,14 +403,14 @@
                             ></mat-icon>
                             <input
                                 matInput
-                                [formControlName]="'title'"
-                                [placeholder]="'Job title'"
+                                formControlName="title"
+                                [placeholder]="'Title in the company'"
                             />
                         </mat-form-field>
                     </div>
 
                     <!-- Company -->
-                    <div class="mt-8">
+                    <div class="mt-8" formGroupName="company">
                         <mat-form-field
                             class="w-full"
                             [subscriptSizing]="'dynamic'"
@@ -632,14 +423,14 @@
                             ></mat-icon>
                             <input
                                 matInput
-                                [formControlName]="'company'"
+                                formControlName="name"
                                 [placeholder]="'Company'"
                             />
                         </mat-form-field>
                     </div>
 
                     <!-- Emails -->
-                    <div class="mt-8">
+                    <div class="mt-8" formArrayName="emails">
                         <div class="space-y-4">
                             <ng-container
                                 *ngFor="
@@ -652,7 +443,7 @@
                                     trackBy: trackByFn
                                 "
                             >
-                                <div class="flex">
+                                <div class="flex" [formGroupName]="i">
                                     <mat-form-field
                                         class="flex-auto"
                                         [subscriptSizing]="'dynamic'"
@@ -669,7 +460,7 @@
                                         ></mat-icon>
                                         <input
                                             matInput
-                                            [formControl]="email.get('email')"
+                                            formControlName="email"
                                             [placeholder]="'Email address'"
                                             [spellcheck]="false"
                                         />
@@ -688,7 +479,7 @@
                                         ></mat-icon>
                                         <input
                                             matInput
-                                            [formControl]="email.get('label')"
+                                            formControlName="label"
                                             [placeholder]="'Label'"
                                         />
                                     </mat-form-field>
@@ -732,7 +523,7 @@
                     </div>
 
                     <!-- Phone numbers -->
-                    <div class="mt-8">
+                    <div class="mt-8" formArrayName="phoneNumbers">
                         <div class="space-y-4">
                             <ng-container
                                 *ngFor="
@@ -745,7 +536,7 @@
                                     trackBy: trackByFn
                                 "
                             >
-                                <div class="relative flex">
+                                <div class="relative flex" [formGroupName]="i">
                                     <mat-form-field
                                         class="flex-auto"
                                         [subscriptSizing]="'dynamic'"
@@ -755,16 +546,12 @@
                                         >
                                         <input
                                             matInput
-                                            [formControl]="
-                                                phoneNumber.get('phoneNumber')
-                                            "
+                                            formControlName="phoneNumber"
                                             [placeholder]="'Phone'"
                                         />
                                         <mat-select
                                             class="mr-1.5"
-                                            [formControl]="
-                                                phoneNumber.get('country')
-                                            "
+                                            formControlName="countryCode"
                                             matPrefix
                                         >
                                             <mat-select-trigger>
@@ -780,21 +567,22 @@
                                                         [style.backgroundPosition]="
                                                             getCountryByIso(
                                                                 phoneNumber.get(
-                                                                    'country'
+                                                                    'countryCode'
                                                                 ).value
                                                             ).flagImagePos
                                                         "
                                                     ></span>
                                                     <span
                                                         class="sm:mx-0.5 font-medium text-default"
-                                                        >{{
+                                                    >
+                                                        {{
                                                             getCountryByIso(
                                                                 phoneNumber.get(
-                                                                    "country"
+                                                                    "countryCode"
                                                                 ).value
                                                             ).code
-                                                        }}</span
-                                                    >
+                                                        }}
+                                                    </span>
                                                 </span>
                                             </mat-select-trigger>
                                             <ng-container
@@ -849,9 +637,7 @@
                                         ></mat-icon>
                                         <input
                                             matInput
-                                            [formControl]="
-                                                phoneNumber.get('label')
-                                            "
+                                            formControlName="label"
                                             [placeholder]="'Label'"
                                         />
                                     </mat-form-field>
@@ -902,7 +688,7 @@
                             class="w-full"
                             [subscriptSizing]="'dynamic'"
                         >
-                            <mat-label>Address</mat-label>
+                            <mat-label>Major</mat-label>
                             <mat-icon
                                 matPrefix
                                 class="hidden sm:flex icon-size-5"
@@ -910,38 +696,52 @@
                             ></mat-icon>
                             <input
                                 matInput
-                                [formControlName]="'address'"
-                                [placeholder]="'Address'"
+                                [formControlName]="'major'"
+                                [placeholder]="'Major'"
                             />
                         </mat-form-field>
                     </div>
 
-                    <!-- Birthday -->
-                    <div class="mt-8">
+                    <!-- Category -->
+                    <div class="mt-8" formGroupName="company">
                         <mat-form-field
                             class="w-full"
                             [subscriptSizing]="'dynamic'"
                         >
-                            <mat-label>Birthday</mat-label>
+                            <mat-label>Category</mat-label>
                             <mat-icon
                                 matPrefix
                                 class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:cake'"
+                                [svgIcon]="'heroicons_solid:tag'"
+                            ></mat-icon>
+                            <mat-select formControlName="category">
+                                <mat-option
+                                    *ngFor="let category of categories"
+                                    [value]="category.id"
+                                >
+                                    {{ category.label }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Primary Industry -->
+                    <div class="mt-8" formGroupName="company">
+                        <mat-form-field
+                            class="w-full"
+                            [subscriptSizing]="'dynamic'"
+                        >
+                            <mat-label>Primary Industry</mat-label>
+                            <mat-icon
+                                matPrefix
+                                class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:building-office-2'"
                             ></mat-icon>
                             <input
                                 matInput
-                                [matDatepicker]="birthdayDatepicker"
-                                [formControlName]="'birthday'"
-                                [placeholder]="'Birthday'"
+                                formControlName="primaryIndustry"
+                                [placeholder]="'Primary Industry'"
                             />
-                            <mat-datepicker-toggle
-                                matSuffix
-                                [for]="birthdayDatepicker"
-                            >
-                            </mat-datepicker-toggle>
-                            <mat-datepicker
-                                #birthdayDatepicker
-                            ></mat-datepicker>
                         </mat-form-field>
                     </div>
 
@@ -995,8 +795,8 @@
                             class="ml-2"
                             mat-flat-button
                             [color]="'primary'"
-                            [disabled]="contactForm.invalid"
                             [matTooltip]="'Save'"
+                            [disabled]="contactForm.invalid"
                             (click)="updateContact()"
                         >
                             Save

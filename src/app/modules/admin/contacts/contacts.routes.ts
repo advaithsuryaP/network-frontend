@@ -95,6 +95,8 @@ export default [
                             contact: contactResolver,
                             countries: () =>
                                 inject(ContactsService).fetchCountries(),
+                            categories: () =>
+                                inject(ContactsService).fetchCategories(),
                         },
                         component: ContactDetailComponent,
                         canDeactivate: [canDeactivateContactsDetails],
