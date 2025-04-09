@@ -12,9 +12,7 @@
     <ng-container fuseVerticalNavigationHeader>
         <!-- Logo -->
         <div class="flex items-center h-20 p-6 pb-0">
-            <img
-                class="w-30"
-                src="assets/images/logo/logo-text-on-dark.svg">
+            <img class="w-30" src="assets/images/logo/logo-text-on-dark.svg" />
         </div>
     </ng-container>
     <!-- Navigation footer hook -->
@@ -23,11 +21,13 @@
         <div class="flex items-center w-full px-6 py-8 border-t">
             <user></user>
             <div class="flex flex-col w-full ml-4 overflow-hidden">
-                <div class="w-full whitespace-nowrap text-ellipsis overflow-hidden leading-normal text-current opacity-80">
-                    {{user.name}}
+                <div
+                    class="w-full whitespace-nowrap text-ellipsis overflow-hidden leading-normal text-current opacity-80">
+                    {{ user.name }}
                 </div>
-                <div class="w-full mt-0.5 whitespace-nowrap text-sm text-ellipsis overflow-hidden leading-normal text-current opacity-50">
-                    brian.hughes@company.com
+                <div
+                    class="w-full mt-0.5 whitespace-nowrap text-sm text-ellipsis overflow-hidden leading-normal text-current opacity-50">
+                    kevinf&#64;umbc.edu
                 </div>
             </div>
         </div>
@@ -36,14 +36,11 @@
 
 <!-- Wrapper -->
 <div class="flex flex-col flex-auto w-full min-w-0">
-
     <!-- Header -->
-    <div class="relative flex flex-0 items-center w-full h-16 px-4 md:px-6 z-49 shadow dark:shadow-none dark:border-b bg-card dark:bg-transparent print:hidden">
+    <div
+        class="relative flex flex-0 items-center w-full h-16 px-4 md:px-6 z-49 shadow dark:shadow-none dark:border-b bg-card dark:bg-transparent print:hidden">
         <!-- Navigation toggle button -->
-        <button
-            class="mr-2"
-            mat-icon-button
-            (click)="toggleNavigation('mainNavigation')">
+        <button class="mr-2" mat-icon-button (click)="toggleNavigation('mainNavigation')">
             <mat-icon [svgIcon]="'heroicons_outline:bars-3'"></mat-icon>
         </button>
         <!-- Components -->
@@ -54,10 +51,7 @@
             <shortcuts></shortcuts>
             <messages></messages>
             <notifications></notifications>
-            <button
-                class="lg:hidden"
-                mat-icon-button
-                (click)="quickChat.toggle()">
+            <button class="lg:hidden" mat-icon-button (click)="quickChat.toggle()">
                 <mat-icon [svgIcon]="'heroicons_outline:chat-bubble-left-right'"></mat-icon>
             </button>
         </div>
@@ -71,10 +65,10 @@
     </div>
 
     <!-- Footer -->
-    <div class="relative flex flex-0 items-center justify-start w-full h-14 px-4 md:px-6 z-49 border-t bg-card dark:bg-transparent print:hidden">
-        <span class="font-medium text-secondary">Fuse &copy; {{currentYear}}</span>
+    <div
+        class="relative flex flex-0 items-center justify-start w-full h-14 px-4 md:px-6 z-49 border-t bg-card dark:bg-transparent print:hidden">
+        <span class="font-medium text-secondary">Fuse &copy; {{ currentYear }}</span>
     </div>
-
 </div>
 
 <!-- Quick chat -->

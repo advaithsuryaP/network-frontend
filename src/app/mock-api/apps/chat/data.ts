@@ -3149,7 +3149,7 @@ export const contacts = [
 export const profile: any = {
     id: 'cfaad35d-07a3-4447-a6c3-d8c3d54fd5df',
     name: 'Kevin Fulmer',
-    email: 'kevin.fulmer@umbc.edu',
-    avatar: 'assets/images/avatars/brian-hughes.jpg',
+    email: 'kevinf@umbc.edu',
+    avatar: 'assets/images/avatars/kevin-fulmer.jpg',
     about: "Hi there! I'm using FuseChat."
 };

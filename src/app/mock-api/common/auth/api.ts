@@ -45,7 +45,7 @@ export class AuthMockApi {
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService.onPost('api/auth/sign-in', 1500).reply(({ request }) => {
             // Sign in successful
-            if (request.body.email === 'kevin.fulmer@umbc.edu' && request.body.password === 'admin') {
+            if (request.body.email === 'kevinf@umbc.edu' && request.body.password === 'admin') {
                 return [
                     200,
                     {
@@ -101,7 +101,7 @@ export class AuthMockApi {
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService.onPost('api/auth/unlock-session', 1500).reply(({ request }) => {
             // Sign in successful
-            if (request.body.email === 'kevin.fulmer@umbc.edu' && request.body.password === 'admin') {
+            if (request.body.email === 'kevinf@umbc.edu' && request.body.password === 'admin') {
                 return [
                     200,
                     {
