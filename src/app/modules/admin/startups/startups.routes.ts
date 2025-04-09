@@ -1,21 +1,19 @@
 import { inject } from '@angular/core';
-import { CompaniesComponent } from './companies.component';
-import { CompanyListComponent } from './company-list/company-list.component';
-import { CompaniesService } from './companies.service';
 import { Routes } from '@angular/router';
-import { ContactsService } from '../contacts/contacts.service';
+import { StartupsComponent } from './startups.component';
+import { StartupListComponent } from './startup-list/startup-list.component';
+import { CompaniesService } from '../companies/companies.service';
 
 export default [
     {
         path: '',
-        component: CompaniesComponent,
+        component: StartupsComponent,
         children: [
             {
                 path: '',
-                component: CompanyListComponent,
+                component: StartupListComponent,
                 resolve: {
-                    companies: () => inject(CompaniesService).fetchCompanies(),
-                    categories: () => inject(ContactsService).fetchCategories()
+                    startups: () => inject(CompaniesService).fetchStartups()
                 }
                 // children: [
                 //     {

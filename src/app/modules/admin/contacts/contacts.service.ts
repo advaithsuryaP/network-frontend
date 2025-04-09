@@ -27,7 +27,7 @@ export class ContactsService {
             .pipe(tap(contacts => this._contactsSubject.next(contacts)));
     }
 
-    getContactById(id: string) {
+    fetchContactById(id: string): Observable<Contact> {
         return this._contactsSubject.pipe(
             take(1),
             map(contacts => {

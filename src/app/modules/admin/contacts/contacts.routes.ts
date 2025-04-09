@@ -16,7 +16,7 @@ const contactResolver = (route: ActivatedRouteSnapshot, state: RouterStateSnapsh
     const contactsService = inject(ContactsService);
     const router = inject(Router);
 
-    return contactsService.getContactById(route.paramMap.get('id')).pipe(
+    return contactsService.fetchContactById(route.paramMap.get('id')).pipe(
         // Error here means the requested contact is not available
         catchError(error => {
             // Log the error

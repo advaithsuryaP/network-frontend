@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { Router, RouterLink, RouterOutlet, ActivatedRoute } from '@angular/router';
 import { ContactsService } from '../contacts.service';
-import { Observable, Subject, switchMap, takeUntil } from 'rxjs';
+import { Observable, Subject, switchMap, takeUntil, map } from 'rxjs';
 import { Contact } from '../contact.model';
 
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
@@ -63,7 +63,15 @@ export class ContactListComponent implements OnInit, OnDestroy {
     drawerMode: 'side' | 'over';
 
     ngOnInit(): void {
-        this.contacts$ = this._contactsService.contacts$;
+        this.contacts$ = this._contactsService.contacts$.pipe(
+            map(contacts => {
+                // Sort contacts alphabetically by first name
+                return [...contacts].sort((a, b) => {
+                    return a.firstName.localeCompare(b.firstName);
+                });
+            })
+        );
+
         this._contactsService.contacts$.pipe(takeUntil(this._unsubscribeAll)).subscribe((contacts: Contact[]) => {
             // Update the counts
             this.contactsCount = contacts.length;
