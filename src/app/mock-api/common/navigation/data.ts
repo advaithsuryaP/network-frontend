@@ -7,22 +7,22 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: 'Contacts',
         type: 'basic',
         icon: 'heroicons_outline:user-group',
-        link: '/contacts',
+        link: '/contacts'
     },
-    // {
-    //     id: 'organizations',
-    //     title: 'Organizations',
-    //     type: 'basic',
-    //     icon: 'heroicons_outline:building-office-2',
-    //     link: 'organizations',
-    // },
-    // {
-    //     id: 'startups',
-    //     title: 'Startups',
-    //     type: 'basic',
-    //     icon: 'heroicons_outline:arrow-trending-up',
-    //     link: 'startups',
-    // },
+    {
+        id: 'companies',
+        title: 'Companies',
+        type: 'basic',
+        icon: 'heroicons_outline:building-office-2',
+        link: 'companies'
+    },
+    {
+        id: 'startups',
+        title: 'Startups',
+        type: 'basic',
+        icon: 'heroicons_outline:arrow-trending-up',
+        link: 'startups'
+    }
 ];
 export const compactNavigation: FuseNavigationItem[] = [
     {
@@ -30,22 +30,22 @@ export const compactNavigation: FuseNavigationItem[] = [
         title: 'Contacts',
         type: 'basic',
         icon: 'heroicons_outline:user-group',
-        link: '/contacts',
+        link: '/contacts'
     },
-    // {
-    //     id: 'organizations',
-    //     title: 'Organizations',
-    //     type: 'basic',
-    //     icon: 'heroicons_outline:building-office-2',
-    //     link: 'organizations',
-    // },
-    // {
-    //     id: 'startups',
-    //     title: 'Startups',
-    //     type: 'basic',
-    //     icon: 'heroicons_outline:arrow-trending-up',
-    //     link: 'startups',
-    // },
+    {
+        id: 'companies',
+        title: 'Companies',
+        type: 'basic',
+        icon: 'heroicons_outline:building-office-2',
+        link: 'companies'
+    },
+    {
+        id: 'startups',
+        title: 'Startups',
+        type: 'basic',
+        icon: 'heroicons_outline:arrow-trending-up',
+        link: 'startups'
+    }
 ];
 export const futuristicNavigation: FuseNavigationItem[] = [
     {
@@ -53,22 +53,22 @@ export const futuristicNavigation: FuseNavigationItem[] = [
         title: 'Contacts',
         type: 'basic',
         icon: 'heroicons_outline:user-group',
-        link: '/contacts',
+        link: '/contacts'
     },
-    // {
-    //     id: 'organizations',
-    //     title: 'Organizations',
-    //     type: 'basic',
-    //     icon: 'heroicons_outline:building-office-2',
-    //     link: 'organizations',
-    // },
-    // {
-    //     id: 'startups',
-    //     title: 'Startups',
-    //     type: 'basic',
-    //     icon: 'heroicons_outline:arrow-trending-up',
-    //     link: 'startups',
-    // },
+    {
+        id: 'companies',
+        title: 'Companies',
+        type: 'basic',
+        icon: 'heroicons_outline:building-office-2',
+        link: 'companies'
+    },
+    {
+        id: 'startups',
+        title: 'Startups',
+        type: 'basic',
+        icon: 'heroicons_outline:arrow-trending-up',
+        link: 'startups'
+    }
 ];
 export const horizontalNavigation: FuseNavigationItem[] = [
     {
@@ -76,20 +76,20 @@ export const horizontalNavigation: FuseNavigationItem[] = [
         title: 'Contacts',
         type: 'basic',
         icon: 'heroicons_outline:user-group',
-        link: '/contacts',
+        link: '/contacts'
     },
-    // {
-    //     id: 'organizations',
-    //     title: 'Organizations',
-    //     type: 'basic',
-    //     icon: 'heroicons_outline:building-office-2',
-    //     link: 'organizations',
-    // },
-    // {
-    //     id: 'startups',
-    //     title: 'Startups',
-    //     type: 'basic',
-    //     icon: 'heroicons_outline:arrow-trending-up',
-    //     link: 'startups',
-    // },
+    {
+        id: 'companies',
+        title: 'Companies',
+        type: 'basic',
+        icon: 'heroicons_outline:building-office-2',
+        link: 'companies'
+    },
+    {
+        id: 'startups',
+        title: 'Startups',
+        type: 'basic',
+        icon: 'heroicons_outline:arrow-trending-up',
+        link: 'startups'
+    }
 ];

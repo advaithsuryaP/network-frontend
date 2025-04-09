@@ -187,7 +187,6 @@ export class ContactDetailComponent implements OnInit, OnDestroy {
 
             // Get the contact
             this.contact = contact;
-            console.log(contact);
 
             // Clear the emails and phoneNumbers form arrays
             this.contactForm.controls.emails.clear();
