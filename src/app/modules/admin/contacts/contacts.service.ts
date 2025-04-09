@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Category, Contact, Country } from './contacts.model';
+import { Category, Contact, Country } from './contact.model';
 import { BehaviorSubject, map, Observable, switchMap, tap, take, throwError, of, filter } from 'rxjs';
 
 const API_URL = 'http://localhost:3000/api/v1';
@@ -16,29 +16,12 @@ export class ContactsService {
     private _countriesSubject: BehaviorSubject<Country[]> = new BehaviorSubject([]);
     private _categoriesSubject: BehaviorSubject<Category[]> = new BehaviorSubject([]);
 
-    /**
-     * Search contacts with given query
-     *
-     * @param query
-     */
-    searchContacts(query: string): Observable<Contact[]> {
-        return this._http
-            .get<Contact[]>(`${API_URL}/contacts/search`, {
-                params: { query }
-            })
-            .pipe(
-                tap(contacts => {
-                    this._contactsSubject.next(contacts);
-                })
-            );
-    }
-
     contact$: Observable<Contact> = this._contactSubject.asObservable();
     contacts$: Observable<Contact[]> = this._contactsSubject.asObservable();
     countries$: Observable<Country[]> = this._countriesSubject.asObservable();
     categories$: Observable<Category[]> = this._categoriesSubject.asObservable();
 
-    getContacts(): Observable<Contact[]> {
+    fetchContacts(): Observable<Contact[]> {
         return this._http
             .get<Contact[]>(`${API_URL}/contacts`)
             .pipe(tap(contacts => this._contactsSubject.next(contacts)));
@@ -152,6 +135,23 @@ export class ContactsService {
                 )
             )
         );
+    }
+
+    /**
+     * Search contacts with given query
+     *
+     * @param query
+     */
+    searchContacts(query: string): Observable<Contact[]> {
+        return this._http
+            .get<Contact[]>(`${API_URL}/contacts/search`, {
+                params: { query }
+            })
+            .pipe(
+                tap(contacts => {
+                    this._contactsSubject.next(contacts);
+                })
+            );
     }
 
     /**

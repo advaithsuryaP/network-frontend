@@ -25,41 +25,30 @@ export const appRoutes: Route[] = [
         canActivateChild: [NoAuthGuard],
         component: LayoutComponent,
         data: {
-            layout: 'empty',
+            layout: 'empty'
         },
         children: [
             {
                 path: 'confirmation-required',
-                loadChildren: () =>
-                    import(
-                        'app/modules/auth/confirmation-required/confirmation-required.routes'
-                    ),
+                loadChildren: () => import('app/modules/auth/confirmation-required/confirmation-required.routes')
             },
             {
                 path: 'forgot-password',
-                loadChildren: () =>
-                    import(
-                        'app/modules/auth/forgot-password/forgot-password.routes'
-                    ),
+                loadChildren: () => import('app/modules/auth/forgot-password/forgot-password.routes')
             },
             {
                 path: 'reset-password',
-                loadChildren: () =>
-                    import(
-                        'app/modules/auth/reset-password/reset-password.routes'
-                    ),
+                loadChildren: () => import('app/modules/auth/reset-password/reset-password.routes')
             },
             {
                 path: 'sign-in',
-                loadChildren: () =>
-                    import('app/modules/auth/sign-in/sign-in.routes'),
+                loadChildren: () => import('app/modules/auth/sign-in/sign-in.routes')
             },
             {
                 path: 'sign-up',
-                loadChildren: () =>
-                    import('app/modules/auth/sign-up/sign-up.routes'),
-            },
-        ],
+                loadChildren: () => import('app/modules/auth/sign-up/sign-up.routes')
+            }
+        ]
     },
 
     // Auth routes for authenticated users
@@ -69,22 +58,18 @@ export const appRoutes: Route[] = [
         canActivateChild: [AuthGuard],
         component: LayoutComponent,
         data: {
-            layout: 'empty',
+            layout: 'empty'
         },
         children: [
             {
                 path: 'sign-out',
-                loadChildren: () =>
-                    import('app/modules/auth/sign-out/sign-out.routes'),
+                loadChildren: () => import('app/modules/auth/sign-out/sign-out.routes')
             },
             {
                 path: 'unlock-session',
-                loadChildren: () =>
-                    import(
-                        'app/modules/auth/unlock-session/unlock-session.routes'
-                    ),
-            },
-        ],
+                loadChildren: () => import('app/modules/auth/unlock-session/unlock-session.routes')
+            }
+        ]
     },
 
     // Landing routes
@@ -92,15 +77,14 @@ export const appRoutes: Route[] = [
         path: '',
         component: LayoutComponent,
         data: {
-            layout: 'empty',
+            layout: 'empty'
         },
         children: [
             {
                 path: 'home',
-                loadChildren: () =>
-                    import('app/modules/landing/home/home.routes'),
-            },
-        ],
+                loadChildren: () => import('app/modules/landing/home/home.routes')
+            }
+        ]
     },
 
     // Admin routes
@@ -110,14 +94,17 @@ export const appRoutes: Route[] = [
         canActivateChild: [AuthGuard],
         component: LayoutComponent,
         resolve: {
-            initialData: initialDataResolver,
+            initialData: initialDataResolver
         },
         children: [
             {
                 path: 'contacts',
-                loadChildren: () =>
-                    import('app/modules/admin/contacts/contacts.routes'),
+                loadChildren: () => import('app/modules/admin/contacts/contacts.routes')
             },
-        ],
-    },
+            {
+                path: 'companies',
+                loadChildren: () => import('app/modules/admin/companies/companies.routes')
+            }
+        ]
+    }
 ];

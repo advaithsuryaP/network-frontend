@@ -11,7 +11,7 @@ import {
 import { Router, RouterLink, RouterOutlet, ActivatedRoute } from '@angular/router';
 import { ContactsService } from '../contacts.service';
 import { Observable, Subject, switchMap, takeUntil } from 'rxjs';
-import { Contact } from '../contacts.model';
+import { Contact } from '../contact.model';
 
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { NgIf, NgFor, NgClass, AsyncPipe, I18nPluralPipe } from '@angular/common';

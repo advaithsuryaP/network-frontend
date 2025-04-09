@@ -1,24 +1,3 @@
-export interface Contact {
-    id?: string;
-    avatar?: string | null;
-    background?: string | null;
-    firstName: string;
-    lastName: string;
-    emails: Array<{
-        label: string;
-        email: string;
-    }>;
-    phoneNumbers: Array<{
-        label: string;
-        countryCode: string;
-        phoneNumber: string;
-    }>;
-    notes?: string;
-    title: string;
-    major?: string;
-    company?: Company; // optional for JOIN responses
-}
-
 export interface Company {
     id?: string;
     name: string;
@@ -42,17 +21,4 @@ export interface Company {
     tcf?: boolean;
     tcfAmount?: number;
     comments?: string;
-}
-
-export interface Country {
-    id: string;
-    iso: string;
-    name: string;
-    code: string;
-    flagImagePos: string;
-}
-
-export interface Category {
-    id: string;
-    label: string;
 }

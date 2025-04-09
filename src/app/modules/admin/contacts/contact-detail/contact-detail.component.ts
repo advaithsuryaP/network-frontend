@@ -14,7 +14,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { ContactsService } from '../contacts.service';
 import { ContactListComponent } from '../contact-list/contact-list.component';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Category, Contact, Country } from '../contacts.model';
+import { Category, Contact, Country } from '../contact.model';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDrawerToggleResult } from '@angular/material/sidenav';

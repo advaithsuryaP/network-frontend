@@ -14,14 +14,14 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: 'Companies',
         type: 'basic',
         icon: 'heroicons_outline:building-office-2',
-        link: 'companies'
+        link: '/companies'
     },
     {
         id: 'startups',
         title: 'Startups',
         type: 'basic',
         icon: 'heroicons_outline:arrow-trending-up',
-        link: 'startups'
+        link: '/startups'
     }
 ];
 export const compactNavigation: FuseNavigationItem[] = [
@@ -37,14 +37,14 @@ export const compactNavigation: FuseNavigationItem[] = [
         title: 'Companies',
         type: 'basic',
         icon: 'heroicons_outline:building-office-2',
-        link: 'companies'
+        link: '/companies'
     },
     {
         id: 'startups',
         title: 'Startups',
         type: 'basic',
         icon: 'heroicons_outline:arrow-trending-up',
-        link: 'startups'
+        link: '/startups'
     }
 ];
 export const futuristicNavigation: FuseNavigationItem[] = [
@@ -60,14 +60,14 @@ export const futuristicNavigation: FuseNavigationItem[] = [
         title: 'Companies',
         type: 'basic',
         icon: 'heroicons_outline:building-office-2',
-        link: 'companies'
+        link: '/companies'
     },
     {
         id: 'startups',
         title: 'Startups',
         type: 'basic',
         icon: 'heroicons_outline:arrow-trending-up',
-        link: 'startups'
+        link: '/startups'
     }
 ];
 export const horizontalNavigation: FuseNavigationItem[] = [
@@ -83,13 +83,13 @@ export const horizontalNavigation: FuseNavigationItem[] = [
         title: 'Companies',
         type: 'basic',
         icon: 'heroicons_outline:building-office-2',
-        link: 'companies'
+        link: '/companies'
     },
     {
         id: 'startups',
         title: 'Startups',
         type: 'basic',
         icon: 'heroicons_outline:arrow-trending-up',
-        link: 'startups'
+        link: '/startups'
     }
 ];
