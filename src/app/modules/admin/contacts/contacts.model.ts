@@ -4,19 +4,18 @@ export interface Contact {
     background?: string | null;
     firstName: string;
     lastName: string;
-    emails?: {
+    emails: Array<{
         label: string;
         email: string;
-    }[];
-    phoneNumbers?: {
+    }>;
+    phoneNumbers: Array<{
         label: string;
         countryCode: string;
         phoneNumber: string;
-    }[];
+    }>;
     notes?: string;
     title: string;
     major?: string;
-    companyId: string;
     company?: Company; // optional for JOIN responses
 }
 

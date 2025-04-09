@@ -6,26 +6,15 @@ import {
     ViewChild,
     ViewEncapsulation,
     ChangeDetectorRef,
-    ChangeDetectionStrategy,
+    ChangeDetectionStrategy
 } from '@angular/core';
-import {
-    Router,
-    RouterLink,
-    RouterOutlet,
-    ActivatedRoute,
-} from '@angular/router';
+import { Router, RouterLink, RouterOutlet, ActivatedRoute } from '@angular/router';
 import { ContactsService } from '../contacts.service';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, switchMap, takeUntil } from 'rxjs';
 import { Contact } from '../contacts.model';
 
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
-import {
-    NgIf,
-    NgFor,
-    NgClass,
-    AsyncPipe,
-    I18nPluralPipe,
-} from '@angular/common';
+import { NgIf, NgFor, NgClass, AsyncPipe, I18nPluralPipe } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
@@ -49,11 +38,11 @@ import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
         MatButtonModule,
         MatSidenavModule,
         MatFormFieldModule,
-        ReactiveFormsModule,
+        ReactiveFormsModule
     ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    templateUrl: './contact-list.component.html',
+    templateUrl: './contact-list.component.html'
 })
 export class ContactListComponent implements OnInit, OnDestroy {
     @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
@@ -75,40 +64,36 @@ export class ContactListComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.contacts$ = this._contactsService.contacts$;
-        this._contactsService.contacts$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((contacts: Contact[]) => {
-                // Update the counts
-                this.contactsCount = contacts.length;
+        this._contactsService.contacts$.pipe(takeUntil(this._unsubscribeAll)).subscribe((contacts: Contact[]) => {
+            // Update the counts
+            this.contactsCount = contacts.length;
 
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
+        });
 
         // Get the contact
-        this._contactsService.contact$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((contact: Contact) => {
-                // Update the selected contact
-                this.selectedContact = contact;
+        this._contactsService.contact$.pipe(takeUntil(this._unsubscribeAll)).subscribe((contact: Contact) => {
+            // Update the selected contact
+            this.selectedContact = contact;
 
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
+        });
 
         // // Subscribe to search input field value changes
-        // this.searchInputControl.valueChanges
-        //     .pipe(
-        //         takeUntil(this._unsubscribeAll),
-        //         switchMap((query) =>
-        //             // Search
-        //             this._contactsService.searchContacts(query)
-        //         )
-        //     )
-        //     .subscribe();
+        this.searchInputControl.valueChanges
+            .pipe(
+                takeUntil(this._unsubscribeAll),
+                switchMap(query =>
+                    // Search
+                    this._contactsService.searchContacts(query)
+                )
+            )
+            .subscribe();
 
         // Subscribe to MatDrawer opened change
-        this.matDrawer.openedChange.subscribe((opened) => {
+        this.matDrawer.openedChange.subscribe(opened => {
             if (!opened) {
                 // Remove the selected contact when drawer closed
                 this.selectedContact = null;
@@ -150,10 +135,10 @@ export class ContactListComponent implements OnInit, OnDestroy {
      */
     createContact(): void {
         // Create the contact
-        this._contactsService.createContact().subscribe((newContact) => {
+        this._contactsService.createContact().subscribe(newContact => {
             // Go to the new contact
             this._router.navigate(['./', newContact.id], {
-                relativeTo: this._activatedRoute,
+                relativeTo: this._activatedRoute
             });
             // Mark for check
             this._changeDetectorRef.markForCheck();

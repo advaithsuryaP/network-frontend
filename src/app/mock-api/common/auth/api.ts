@@ -6,17 +6,15 @@ import Utf8 from 'crypto-js/enc-utf8';
 import HmacSHA256 from 'crypto-js/hmac-sha256';
 import { cloneDeep } from 'lodash-es';
 
-@Injectable({providedIn: 'root'})
-export class AuthMockApi
-{
+@Injectable({ providedIn: 'root' })
+export class AuthMockApi {
     private readonly _secret: any;
     private _user: any = userData;
 
     /**
      * Constructor
      */
-    constructor(private _fuseMockApiService: FuseMockApiService)
-    {
+    constructor(private _fuseMockApiService: FuseMockApiService) {
         // Set the mock-api
         this._secret = 'YOUR_VERY_CONFIDENTIAL_SECRET_FOR_SIGNING_JWT_TOKENS!!!';
 
@@ -31,131 +29,92 @@ export class AuthMockApi
     /**
      * Register Mock API handlers
      */
-    registerHandlers(): void
-    {
+    registerHandlers(): void {
         // -----------------------------------------------------------------------------------------------------
         // @ Forgot password - POST
         // -----------------------------------------------------------------------------------------------------
-        this._fuseMockApiService
-            .onPost('api/auth/forgot-password', 1000)
-            .reply(() =>
-                [
-                    200,
-                    true,
-                ],
-            );
+        this._fuseMockApiService.onPost('api/auth/forgot-password', 1000).reply(() => [200, true]);
 
         // -----------------------------------------------------------------------------------------------------
         // @ Reset password - POST
         // -----------------------------------------------------------------------------------------------------
-        this._fuseMockApiService
-            .onPost('api/auth/reset-password', 1000)
-            .reply(() =>
-                [
-                    200,
-                    true,
-                ],
-            );
+        this._fuseMockApiService.onPost('api/auth/reset-password', 1000).reply(() => [200, true]);
 
         // -----------------------------------------------------------------------------------------------------
         // @ Sign in - POST
         // -----------------------------------------------------------------------------------------------------
-        this._fuseMockApiService
-            .onPost('api/auth/sign-in', 1500)
-            .reply(({request}) =>
-            {
-                // Sign in successful
-                if ( request.body.email === 'hughes.brian@company.com' && request.body.password === 'admin' )
-                {
-                    return [
-                        200,
-                        {
-                            user       : cloneDeep(this._user),
-                            accessToken: this._generateJWTToken(),
-                            tokenType  : 'bearer',
-                        },
-                    ];
-                }
-
-                // Invalid credentials
+        this._fuseMockApiService.onPost('api/auth/sign-in', 1500).reply(({ request }) => {
+            // Sign in successful
+            if (request.body.email === 'kevin.fulmer@umbc.edu' && request.body.password === 'admin') {
                 return [
-                    404,
-                    false,
+                    200,
+                    {
+                        user: cloneDeep(this._user),
+                        accessToken: this._generateJWTToken(),
+                        tokenType: 'bearer'
+                    }
                 ];
-            });
+            }
+
+            // Invalid credentials
+            return [404, false];
+        });
 
         // -----------------------------------------------------------------------------------------------------
         // @ Sign in using the access token - POST
         // -----------------------------------------------------------------------------------------------------
-        this._fuseMockApiService
-            .onPost('api/auth/sign-in-with-token')
-            .reply(({request}) =>
-            {
-                // Get the access token
-                const accessToken = request.body.accessToken;
+        this._fuseMockApiService.onPost('api/auth/sign-in-with-token').reply(({ request }) => {
+            // Get the access token
+            const accessToken = request.body.accessToken;
 
-                // Verify the token
-                if ( this._verifyJWTToken(accessToken) )
-                {
-                    return [
-                        200,
-                        {
-                            user       : cloneDeep(this._user),
-                            accessToken: this._generateJWTToken(),
-                            tokenType  : 'bearer',
-                        },
-                    ];
-                }
-
-                // Invalid token
+            // Verify the token
+            if (this._verifyJWTToken(accessToken)) {
                 return [
-                    401,
+                    200,
                     {
-                        error: 'Invalid token',
-                    },
+                        user: cloneDeep(this._user),
+                        accessToken: this._generateJWTToken(),
+                        tokenType: 'bearer'
+                    }
                 ];
-            });
+            }
+
+            // Invalid token
+            return [
+                401,
+                {
+                    error: 'Invalid token'
+                }
+            ];
+        });
 
         // -----------------------------------------------------------------------------------------------------
         // @ Sign up - POST
         // -----------------------------------------------------------------------------------------------------
-        this._fuseMockApiService
-            .onPost('api/auth/sign-up', 1500)
-            .reply(() =>
-
-                // Simply return true
-                [
-                    200,
-                    true,
-                ],
-            );
+        this._fuseMockApiService.onPost('api/auth/sign-up', 1500).reply(() =>
+            // Simply return true
+            [200, true]
+        );
 
         // -----------------------------------------------------------------------------------------------------
         // @ Unlock session - POST
         // -----------------------------------------------------------------------------------------------------
-        this._fuseMockApiService
-            .onPost('api/auth/unlock-session', 1500)
-            .reply(({request}) =>
-            {
-                // Sign in successful
-                if ( request.body.email === 'hughes.brian@company.com' && request.body.password === 'admin' )
-                {
-                    return [
-                        200,
-                        {
-                            user       : cloneDeep(this._user),
-                            accessToken: this._generateJWTToken(),
-                            tokenType  : 'bearer',
-                        },
-                    ];
-                }
-
-                // Invalid credentials
+        this._fuseMockApiService.onPost('api/auth/unlock-session', 1500).reply(({ request }) => {
+            // Sign in successful
+            if (request.body.email === 'kevin.fulmer@umbc.edu' && request.body.password === 'admin') {
                 return [
-                    404,
-                    false,
+                    200,
+                    {
+                        user: cloneDeep(this._user),
+                        accessToken: this._generateJWTToken(),
+                        tokenType: 'bearer'
+                    }
                 ];
-            });
+            }
+
+            // Invalid credentials
+            return [404, false];
+        });
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -168,8 +127,7 @@ export class AuthMockApi
      * @param source
      * @private
      */
-    private _base64url(source: any): string
-    {
+    private _base64url(source: any): string {
         // Encode in classical base64
         let encodedSource = Base64.stringify(source);
 
@@ -192,24 +150,23 @@ export class AuthMockApi
      *
      * @private
      */
-    private _generateJWTToken(): string
-    {
+    private _generateJWTToken(): string {
         // Define token header
         const header = {
             alg: 'HS256',
-            typ: 'JWT',
+            typ: 'JWT'
         };
 
         // Calculate the issued at and expiration dates
         const date = new Date();
         const iat = Math.floor(date.getTime() / 1000);
-        const exp = Math.floor((date.setDate(date.getDate() + 7)) / 1000);
+        const exp = Math.floor(date.setDate(date.getDate() + 7) / 1000);
 
         // Define token payload
         const payload = {
             iat: iat,
             iss: 'Fuse',
-            exp: exp,
+            exp: exp
         };
 
         // Stringify and encode the header
@@ -235,8 +192,7 @@ export class AuthMockApi
      * @param token
      * @private
      */
-    private _verifyJWTToken(token: string): boolean
-    {
+    private _verifyJWTToken(token: string): boolean {
         // Split the token into parts
         const parts = token.split('.');
         const header = parts[0];
@@ -247,6 +203,6 @@ export class AuthMockApi
         const signatureCheck = this._base64url(HmacSHA256(header + '.' + payload, this._secret));
 
         // Verify that the resulting signature is valid
-        return (signature === signatureCheck);
+        return signature === signatureCheck;
     }
 }

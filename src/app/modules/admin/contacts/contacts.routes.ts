@@ -1,9 +1,4 @@
-import {
-    ActivatedRouteSnapshot,
-    Router,
-    RouterStateSnapshot,
-    Routes,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, Routes } from '@angular/router';
 import { ContactsComponent } from './contacts.component';
 import { ContactListComponent } from './contact-list/contact-list.component';
 import { ContactDetailComponent } from './contact-detail/contact-detail.component';
@@ -17,16 +12,13 @@ import { catchError, throwError } from 'rxjs';
  * @param route
  * @param state
  */
-const contactResolver = (
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-) => {
+const contactResolver = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
     const contactsService = inject(ContactsService);
     const router = inject(Router);
 
     return contactsService.getContactById(route.paramMap.get('id')).pipe(
         // Error here means the requested contact is not available
-        catchError((error) => {
+        catchError(error => {
             // Log the error
             console.error(error);
 
@@ -88,21 +80,22 @@ export default [
             {
                 path: '',
                 component: ContactListComponent,
+                resolve: {
+                    contacts: () => inject(ContactsService).getContacts()
+                },
                 children: [
                     {
                         path: ':id',
                         resolve: {
                             contact: contactResolver,
-                            countries: () =>
-                                inject(ContactsService).fetchCountries(),
-                            categories: () =>
-                                inject(ContactsService).fetchCategories(),
+                            countries: () => inject(ContactsService).fetchCountries(),
+                            categories: () => inject(ContactsService).fetchCategories()
                         },
                         component: ContactDetailComponent,
-                        canDeactivate: [canDeactivateContactsDetails],
-                    },
-                ],
-            },
-        ],
-    },
+                        canDeactivate: [canDeactivateContactsDetails]
+                    }
+                ]
+            }
+        ]
+    }
 ] as Routes;
