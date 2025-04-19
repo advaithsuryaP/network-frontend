@@ -202,30 +202,36 @@ export class ContactDetailComponent implements OnInit, OnDestroy {
                 major: contact.major
             });
 
-            this.contactForm.controls.company.patchValue({
-                id: contact.company.id,
-                name: contact.company.name,
-                description: contact.company.description,
-                website: contact.company.website,
-                category: contact.company.category,
-                primaryIndustry: contact.company.primaryIndustry,
-                secondaryIndustry: contact.company.secondaryIndustry,
-                attractedOutOfState: contact.company.attractedOutOfState,
-                confidentialityRequested: contact.company.confidentialityRequested,
-                intellectualProperty: contact.company.intellectualProperty,
-                departmentIfFaculty: contact.company.departmentIfFaculty,
-                pointOfContactName: contact.company.pointOfContactName,
-                pointOfContactEmail: contact.company.pointOfContactEmail,
-                pointOfContactPhone: contact.company.pointOfContactPhone,
-                usmFounders: contact.company.usmFounders,
-                miscResources: contact.company.miscResources,
-                preCompanyResources: contact.company.preCompanyResources,
-                preCompanyFunding: contact.company.preCompanyFunding,
-                icorps: contact.company.icorps,
-                tcf: contact.company.tcf,
-                tcfAmount: contact.company.tcfAmount,
-                comments: contact.company.comments
-            });
+            // Only patch company values if contact has a company
+            if (contact.company) {
+                this.contactForm.controls.company.patchValue({
+                    id: contact.company.id,
+                    name: contact.company.name,
+                    description: contact.company.description,
+                    website: contact.company.website,
+                    category: contact.company.category,
+                    primaryIndustry: contact.company.primaryIndustry,
+                    secondaryIndustry: contact.company.secondaryIndustry,
+                    attractedOutOfState: contact.company.attractedOutOfState,
+                    confidentialityRequested: contact.company.confidentialityRequested,
+                    intellectualProperty: contact.company.intellectualProperty,
+                    departmentIfFaculty: contact.company.departmentIfFaculty,
+                    pointOfContactName: contact.company.pointOfContactName,
+                    pointOfContactEmail: contact.company.pointOfContactEmail,
+                    pointOfContactPhone: contact.company.pointOfContactPhone,
+                    usmFounders: contact.company.usmFounders,
+                    miscResources: contact.company.miscResources,
+                    preCompanyResources: contact.company.preCompanyResources,
+                    preCompanyFunding: contact.company.preCompanyFunding,
+                    icorps: contact.company.icorps,
+                    tcf: contact.company.tcf,
+                    tcfAmount: contact.company.tcfAmount,
+                    comments: contact.company.comments
+                });
+            } else {
+                // Reset company form if no company
+                this.contactForm.controls.company.reset();
+            }
 
             if (contact.emails.length > 0) {
                 // Iterate through them
@@ -364,6 +370,12 @@ export class ContactDetailComponent implements OnInit, OnDestroy {
      */
     updateContact(): void {
         const payload = this.contactForm.getRawValue();
+
+        // Only include company data if it has been modified and has values
+        if (!payload.company.id && !payload.company.name) {
+            delete payload.company;
+        }
+
         // Update the contact on the server
         this._contactsService.updateContact(payload.id, payload).subscribe(() => {
             // Toggle the edit mode off
