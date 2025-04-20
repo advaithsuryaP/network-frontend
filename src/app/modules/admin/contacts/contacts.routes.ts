@@ -5,6 +5,7 @@ import { ContactDetailComponent } from './contact-detail/contact-detail.componen
 import { inject } from '@angular/core';
 import { ContactsService } from './contacts.service';
 import { catchError, throwError } from 'rxjs';
+import { ConfigurationService } from '../configuration/configuration.service';
 
 /**
  * Contact resolver
@@ -89,7 +90,8 @@ export default [
                         resolve: {
                             contact: contactResolver,
                             countries: () => inject(ContactsService).fetchCountries(),
-                            categories: () => inject(ContactsService).fetchCategories()
+                            categories: () => inject(ContactsService).fetchCategories(),
+                            configurations: () => inject(ConfigurationService).fetchConfigurations()
                         },
                         component: ContactDetailComponent,
                         canDeactivate: [canDeactivateContactsDetails]

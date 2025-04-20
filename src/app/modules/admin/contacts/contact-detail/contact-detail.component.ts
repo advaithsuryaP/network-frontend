@@ -504,7 +504,7 @@ export class ContactDetailComponent implements OnInit, OnDestroy {
         // Create an empty email form group with default label
         this.contactForm.controls.emails.push(
             new FormGroup<EmailFormGroup>({
-                label: new FormControl<string>(this.configurations[0]?.label || '', {
+                label: new FormControl<string>(this.configurations[0]?.id || '', {
                     validators: [Validators.required],
                     nonNullable: true
                 }),
@@ -543,7 +543,7 @@ export class ContactDetailComponent implements OnInit, OnDestroy {
                     validators: [Validators.required],
                     nonNullable: true
                 }),
-                label: new FormControl<string>(this.configurations[0]?.label || '', {
+                label: new FormControl<string>(this.configurations[0]?.id || '', {
                     validators: [Validators.required],
                     nonNullable: true
                 })
