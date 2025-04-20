@@ -54,15 +54,26 @@ export class ContactsService {
         return this.contacts$.pipe(
             take(1),
             switchMap(contacts =>
-                this._http.post<Contact>(`${API_URL}/contacts`, {}).pipe(
-                    map(newContact => {
-                        // Update the contacts with the new contact
-                        this._contactsSubject.next([newContact, ...contacts]);
-
-                        // Return the new contact
-                        return newContact;
+                this._http
+                    .post<Contact>(`${API_URL}/contacts`, {
+                        firstName: 'New',
+                        lastName: 'Contact',
+                        title: '',
+                        company: {
+                            name: 'New Company',
+                            category: 'STARTUP',
+                            primaryIndustry: 'TECHNOLOGY'
+                        }
                     })
-                )
+                    .pipe(
+                        map(newContact => {
+                            // Update the contacts with the new contact
+                            this._contactsSubject.next([...contacts, newContact]);
+
+                            // Return the new contact
+                            return newContact;
+                        })
+                    )
             )
         );
     }

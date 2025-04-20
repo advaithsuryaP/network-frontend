@@ -6,8 +6,7 @@ import { QuickChatService } from 'app/layout/common/quick-chat/quick-chat.servic
 import { ShortcutsService } from 'app/layout/common/shortcuts/shortcuts.service';
 import { forkJoin } from 'rxjs';
 
-export const initialDataResolver = () =>
-{
+export const initialDataResolver = () => {
     const messagesService = inject(MessagesService);
     const navigationService = inject(NavigationService);
     const notificationsService = inject(NotificationsService);
@@ -20,6 +19,6 @@ export const initialDataResolver = () =>
         messagesService.getAll(),
         notificationsService.getAll(),
         quickChatService.getChats(),
-        shortcutsService.getAll(),
+        shortcutsService.getAll()
     ]);
 };

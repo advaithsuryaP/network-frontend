@@ -26,6 +26,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatRippleModule } from '@angular/material/core';
 import { MatRadioModule } from '@angular/material/radio';
+import { Configuration } from '../../configuration/configuration.model';
+import { ConfigurationService } from '../../configuration/configuration.service';
 
 interface EmailFormGroup {
     label: FormControl<string>;
@@ -103,6 +105,7 @@ export class ContactDetailComponent implements OnInit, OnDestroy {
     private _activatedRoute = inject(ActivatedRoute);
     private _contactsService = inject(ContactsService);
     private _changeDetectorRef = inject(ChangeDetectorRef);
+    private _configurationService = inject(ConfigurationService);
     private _contactsListComponent = inject(ContactListComponent);
     private _fuseConfirmationService = inject(FuseConfirmationService);
 
@@ -115,6 +118,7 @@ export class ContactDetailComponent implements OnInit, OnDestroy {
     contacts: Contact[];
     countries: Country[] = [];
     categories: Category[] = [];
+    configurations: Configuration[] = [];
 
     contactForm = new FormGroup<ContactForm>({
         id: new FormControl<string>(''),
@@ -327,6 +331,15 @@ export class ContactDetailComponent implements OnInit, OnDestroy {
             // Mark for check
             this._changeDetectorRef.markForCheck();
         });
+
+        // Get labels
+        this._configurationService
+            .fetchConfigurations()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(configurations => {
+                this.configurations = configurations;
+                this._changeDetectorRef.markForCheck();
+            });
     }
 
     /**
@@ -488,20 +501,19 @@ export class ContactDetailComponent implements OnInit, OnDestroy {
      * Add the email field
      */
     addEmailField(): void {
-        // Create an empty email form group
+        // Create an empty email form group with default label
         this.contactForm.controls.emails.push(
             new FormGroup<EmailFormGroup>({
-                label: new FormControl<string>('', {
+                label: new FormControl<string>(this.configurations[0]?.label || '', {
                     validators: [Validators.required],
                     nonNullable: true
                 }),
                 email: new FormControl<string>('', {
-                    validators: [Validators.required],
+                    validators: [Validators.required, Validators.email],
                     nonNullable: true
                 })
             })
         );
-        // Mark for check
         this._changeDetectorRef.markForCheck();
     }
 
@@ -520,7 +532,7 @@ export class ContactDetailComponent implements OnInit, OnDestroy {
      * Add an empty phone number field
      */
     addPhoneNumberField(): void {
-        // Create an empty phone number form group
+        // Create an empty phone number form group with default label
         this.contactForm.controls.phoneNumbers.push(
             new FormGroup<PhoneNumberFormGroup>({
                 countryCode: new FormControl<string>('us', {
@@ -531,13 +543,12 @@ export class ContactDetailComponent implements OnInit, OnDestroy {
                     validators: [Validators.required],
                     nonNullable: true
                 }),
-                label: new FormControl<string>('', {
+                label: new FormControl<string>(this.configurations[0]?.label || '', {
                     validators: [Validators.required],
                     nonNullable: true
                 })
             })
         );
-        // Mark for check
         this._changeDetectorRef.markForCheck();
     }
 

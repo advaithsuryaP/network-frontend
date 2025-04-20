@@ -22,6 +22,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:arrow-trending-up',
         link: '/startups'
+    },
+    {
+        id: 'configuration',
+        title: 'Configuration',
+        type: 'basic',
+        icon: 'heroicons_outline:cog-8-tooth',
+        link: '/configuration'
     }
 ];
 export const compactNavigation: FuseNavigationItem[] = [
@@ -45,6 +52,13 @@ export const compactNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:arrow-trending-up',
         link: '/startups'
+    },
+    {
+        id: 'configuration',
+        title: 'Configuration',
+        type: 'basic',
+        icon: 'heroicons_outline:cog-8-tooth',
+        link: '/configuration'
     }
 ];
 export const futuristicNavigation: FuseNavigationItem[] = [
@@ -68,6 +82,13 @@ export const futuristicNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:arrow-trending-up',
         link: '/startups'
+    },
+    {
+        id: 'configuration',
+        title: 'Configuration',
+        type: 'basic',
+        icon: 'heroicons_outline:cog-8-tooth',
+        link: '/configuration'
     }
 ];
 export const horizontalNavigation: FuseNavigationItem[] = [
@@ -91,5 +112,12 @@ export const horizontalNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:arrow-trending-up',
         link: '/startups'
+    },
+    {
+        id: 'configuration',
+        title: 'Configuration',
+        type: 'basic',
+        icon: 'heroicons_outline:cog-8-tooth',
+        link: '/configuration'
     }
 ];
