@@ -54,7 +54,11 @@
                             </mat-form-field>
                         </div>
                         <!-- Add contact button -->
-                        <button class="ml-4" mat-flat-button [color]="'primary'" (click)="createContact()">
+                        <button
+                            class="ml-4"
+                            mat-flat-button
+                            [color]="'primary'"
+                            [routerLink]="['/contacts', 'edit', 'new']">
                             <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                             <span class="ml-2 mr-1">Add</span>
                         </button>
@@ -85,7 +89,7 @@
                                         'bg-primary-50 dark:bg-hover':
                                             selectedContact && selectedContact.id === contact.id
                                     }"
-                                    [routerLink]="['./', contact.id]">
+                                    [routerLink]="['/contacts', 'view', contact.id]">
                                     <div
                                         class="flex flex-0 items-center justify-center w-10 h-10 rounded-full overflow-hidden">
                                         <ng-container *ngIf="contact.avatar">

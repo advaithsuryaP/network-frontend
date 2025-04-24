@@ -2,6 +2,8 @@ import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, Routes } from '@an
 import { ContactsComponent } from './contacts.component';
 import { ContactListComponent } from './contact-list/contact-list.component';
 import { ContactDetailComponent } from './contact-detail/contact-detail.component';
+import { ContactPreviewComponent } from './contact-detail/contact-preview/contact-preview.component';
+import { ContactEditComponent } from './contact-detail/contact-edit/contact-edit.component';
 import { inject } from '@angular/core';
 import { ContactsService } from './contacts.service';
 import { catchError, throwError } from 'rxjs';
@@ -63,8 +65,8 @@ const canDeactivateContactsDetails = (
         return true;
     }
 
-    // If we are navigating to another contact...
-    if (nextRoute.paramMap.get('id')) {
+    // If we are navigating to another contact or to a new contact...
+    if (nextRoute.paramMap.get('id') || nextState.url.includes('new')) {
         // Just navigate
         return true;
     }
@@ -86,15 +88,44 @@ export default [
                 },
                 children: [
                     {
-                        path: ':id',
+                        path: 'edit',
+                        component: ContactDetailComponent,
+                        canDeactivate: [canDeactivateContactsDetails],
                         resolve: {
-                            contact: contactResolver,
                             countries: () => inject(ContactsService).fetchCountries(),
                             categories: () => inject(ContactsService).fetchCategories(),
                             configurations: () => inject(ConfigurationService).fetchConfigurations()
                         },
+                        children: [
+                            {
+                                path: 'new',
+                                component: ContactEditComponent
+                            },
+                            {
+                                path: ':id',
+                                component: ContactEditComponent,
+                                resolve: {
+                                    contact: contactResolver
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        path: 'view',
                         component: ContactDetailComponent,
-                        canDeactivate: [canDeactivateContactsDetails]
+                        canDeactivate: [canDeactivateContactsDetails],
+                        children: [
+                            {
+                                path: ':id',
+                                component: ContactPreviewComponent,
+                                resolve: {
+                                    contact: contactResolver,
+                                    countries: () => inject(ContactsService).fetchCountries(),
+                                    categories: () => inject(ContactsService).fetchCategories(),
+                                    configurations: () => inject(ConfigurationService).fetchConfigurations()
+                                }
+                            }
+                        ]
                     }
                 ]
             }

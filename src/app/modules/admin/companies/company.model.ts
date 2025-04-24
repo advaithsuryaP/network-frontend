@@ -1,3 +1,5 @@
+import { Contact } from '../contacts/contact.model';
+
 export interface Company {
     id?: string;
     name: string;
@@ -10,9 +12,6 @@ export interface Company {
     confidentialityRequested?: boolean;
     intellectualProperty?: string;
     departmentIfFaculty?: string;
-    pointOfContactName?: string;
-    pointOfContactEmail?: string;
-    pointOfContactPhone?: string;
     usmFounders?: string;
     miscResources?: string;
     preCompanyResources?: string;
@@ -21,4 +20,5 @@ export interface Company {
     tcf?: boolean;
     tcfAmount?: number;
     comments?: string;
+    contacts?: Contact[];
 }

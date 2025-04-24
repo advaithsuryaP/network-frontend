@@ -18,7 +18,7 @@ export interface Contact {
     notes?: string;
     title: string;
     major?: string;
-    company?: Company; // optional for JOIN responses
+    company?: Company;
 }
 
 export interface Country {
