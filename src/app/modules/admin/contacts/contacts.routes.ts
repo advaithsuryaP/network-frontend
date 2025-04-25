@@ -114,15 +114,17 @@ export default [
                         path: 'view',
                         component: ContactDetailComponent,
                         canDeactivate: [canDeactivateContactsDetails],
+                        resolve: {
+                            countries: () => inject(ContactsService).fetchCountries(),
+                            categories: () => inject(ContactsService).fetchCategories(),
+                            configurations: () => inject(ConfigurationService).fetchConfigurations()
+                        },
                         children: [
                             {
                                 path: ':id',
                                 component: ContactPreviewComponent,
                                 resolve: {
-                                    contact: contactResolver,
-                                    countries: () => inject(ContactsService).fetchCountries(),
-                                    categories: () => inject(ContactsService).fetchCategories(),
-                                    configurations: () => inject(ConfigurationService).fetchConfigurations()
+                                    contact: contactResolver
                                 }
                             }
                         ]

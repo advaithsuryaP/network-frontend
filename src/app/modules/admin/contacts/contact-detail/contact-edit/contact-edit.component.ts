@@ -12,7 +12,7 @@ import {
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Subject, switchMap, takeUntil, of, combineLatest, tap } from 'rxjs';
 import { ContactsService } from '../../contacts.service';
-import { ActivatedRoute, ParamMap, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, ParamMap, Params, Router, RouterLink } from '@angular/router';
 import { Category, Contact, Country } from '../../contact.model';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -169,113 +169,101 @@ export class ContactEditComponent implements OnInit, OnDestroy {
 
         const editContact$ = combineLatest([contact$, countries$, categories$, configurations$]).pipe(
             tap(([contact, _, __, ___]) => {
-                this.contact = contact;
+                if (contact) {
+                    this.contact = contact;
 
-                // Clear the emails and phoneNumbers form arrays
-                this.contactForm.controls.emails.clear();
-                this.contactForm.controls.phoneNumbers.clear();
+                    // Clear the emails and phoneNumbers form arrays
+                    this.contactForm.controls.emails.clear();
+                    this.contactForm.controls.phoneNumbers.clear();
 
-                // Patch values to the form
-                this.contactForm.patchValue({
-                    id: contact.id,
-                    firstName: contact.firstName,
-                    lastName: contact.lastName,
-                    title: contact.title,
-                    notes: contact.notes,
-                    major: contact.major
-                });
-
-                // Only patch company values if contact has a company
-                if (contact.company) {
-                    this.contactForm.controls.company.patchValue({
-                        id: contact.company.id,
-                        name: contact.company.name,
-                        description: contact.company.description,
-                        website: contact.company.website,
-                        category: contact.company.category,
-                        primaryIndustry: contact.company.primaryIndustry,
-                        secondaryIndustry: contact.company.secondaryIndustry,
-                        attractedOutOfState: contact.company.attractedOutOfState,
-                        confidentialityRequested: contact.company.confidentialityRequested,
-                        intellectualProperty: contact.company.intellectualProperty,
-                        departmentIfFaculty: contact.company.departmentIfFaculty,
-                        usmFounders: contact.company.usmFounders,
-                        miscResources: contact.company.miscResources,
-                        preCompanyResources: contact.company.preCompanyResources,
-                        preCompanyFunding: contact.company.preCompanyFunding,
-                        icorps: contact.company.icorps,
-                        tcf: contact.company.tcf,
-                        tcfAmount: contact.company.tcfAmount,
-                        comments: contact.company.comments
+                    // Patch values to the form
+                    this.contactForm.patchValue({
+                        id: contact.id,
+                        firstName: contact.firstName,
+                        lastName: contact.lastName,
+                        title: contact.title,
+                        notes: contact.notes,
+                        major: contact.major
                     });
-                }
 
-                if (contact.emails.length > 0) {
-                    contact.emails.forEach(email => {
-                        this.contactForm.controls.emails.push(
-                            new FormGroup<EmailFormGroup>({
-                                label: new FormControl<string>(email.label, {
-                                    validators: [Validators.required],
-                                    nonNullable: true
-                                }),
-                                email: new FormControl<string>(email.email, {
-                                    validators: [Validators.required],
-                                    nonNullable: true
+                    // Only patch company values if contact has a company
+                    if (contact.company) {
+                        this.contactForm.controls.company.patchValue({
+                            id: contact.company.id,
+                            name: contact.company.name,
+                            description: contact.company.description,
+                            website: contact.company.website,
+                            category: contact.company.category,
+                            primaryIndustry: contact.company.primaryIndustry,
+                            secondaryIndustry: contact.company.secondaryIndustry,
+                            attractedOutOfState: contact.company.attractedOutOfState,
+                            confidentialityRequested: contact.company.confidentialityRequested,
+                            intellectualProperty: contact.company.intellectualProperty,
+                            departmentIfFaculty: contact.company.departmentIfFaculty,
+                            usmFounders: contact.company.usmFounders,
+                            miscResources: contact.company.miscResources,
+                            preCompanyResources: contact.company.preCompanyResources,
+                            preCompanyFunding: contact.company.preCompanyFunding,
+                            icorps: contact.company.icorps,
+                            tcf: contact.company.tcf,
+                            tcfAmount: contact.company.tcfAmount,
+                            comments: contact.company.comments
+                        });
+                    }
+
+                    if (contact.emails.length > 0) {
+                        contact.emails.forEach(email => {
+                            this.contactForm.controls.emails.push(
+                                new FormGroup<EmailFormGroup>({
+                                    label: new FormControl<string>(email.label, {
+                                        validators: [Validators.required],
+                                        nonNullable: true
+                                    }),
+                                    email: new FormControl<string>(email.email, {
+                                        validators: [Validators.required],
+                                        nonNullable: true
+                                    })
                                 })
-                            })
-                        );
-                    });
-                }
+                            );
+                        });
+                    }
 
-                if (contact.phoneNumbers.length > 0) {
-                    contact.phoneNumbers.forEach(phoneNumber => {
-                        this.contactForm.controls.phoneNumbers.push(
-                            new FormGroup<PhoneNumberFormGroup>({
-                                countryCode: new FormControl<string>(phoneNumber.countryCode, {
-                                    validators: [Validators.required],
-                                    nonNullable: true
-                                }),
-                                phoneNumber: new FormControl<string>(phoneNumber.phoneNumber, {
-                                    validators: [Validators.required],
-                                    nonNullable: true
-                                }),
-                                label: new FormControl<string>(phoneNumber.label, {
-                                    validators: [Validators.required],
-                                    nonNullable: true
+                    if (contact.phoneNumbers.length > 0) {
+                        contact.phoneNumbers.forEach(phoneNumber => {
+                            this.contactForm.controls.phoneNumbers.push(
+                                new FormGroup<PhoneNumberFormGroup>({
+                                    countryCode: new FormControl<string>(phoneNumber.countryCode, {
+                                        validators: [Validators.required],
+                                        nonNullable: true
+                                    }),
+                                    phoneNumber: new FormControl<string>(phoneNumber.phoneNumber, {
+                                        validators: [Validators.required],
+                                        nonNullable: true
+                                    }),
+                                    label: new FormControl<string>(phoneNumber.label, {
+                                        validators: [Validators.required],
+                                        nonNullable: true
+                                    })
                                 })
-                            })
-                        );
-                    });
+                            );
+                        });
+                    }
+                } else {
+                    this.addEmailField();
+                    this.addPhoneNumberField();
                 }
             })
         );
 
-        const newContact$ = combineLatest([countries$, categories$, configurations$]).pipe(
-            tap(_ => {
-                console.log('new contact');
-                // For new contact, add default email and phone number fields
-                this.addEmailField();
-                this.addPhoneNumberField();
-            })
-        );
-
+        // Subscribe to the paramMap to determine if we're editing or creating
         this._activatedRoute.paramMap
             .pipe(
-                switchMap((paramMap: ParamMap) => {
-                    this.editMode = paramMap.has('id');
-
-                    return this.editMode ? editContact$ : newContact$;
-                }),
+                switchMap(_ => editContact$),
                 takeUntil(this._unsubscribeAll)
             )
             .subscribe({
                 next: () => this._changeDetectorRef.markForCheck()
             });
-    }
-
-    ngOnDestroy(): void {
-        this._unsubscribeAll.next(null);
-        this._unsubscribeAll.complete();
     }
 
     saveContact(): void {
@@ -448,5 +436,10 @@ export class ContactEditComponent implements OnInit, OnDestroy {
      */
     trackByFn(index: number, item: any): any {
         return item.id || index;
+    }
+
+    ngOnDestroy(): void {
+        this._unsubscribeAll.next(null);
+        this._unsubscribeAll.complete();
     }
 }

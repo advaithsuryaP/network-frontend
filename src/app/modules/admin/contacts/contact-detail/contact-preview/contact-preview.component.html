@@ -1,128 +1,132 @@
-<!-- Header -->
-<div class="relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-accent-100 dark:bg-accent-700">
-    <!-- Background -->
-    <img class="absolute inset-0 object-cover w-full h-full" src="assets/images/background/umbc-3.jpg" />
+<div class="flex flex-col w-full">
+    <!-- Header -->
+    <div class="relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-accent-100 dark:bg-accent-700">
+        <!-- Background -->
+        <img class="absolute inset-0 object-cover w-full h-full" src="assets/images/background/umbc-3.jpg" />
 
-    <!-- Close button -->
-    <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
-        <a mat-icon-button [matTooltip]="'Close'" [routerLink]="['/contacts']">
-            <mat-icon [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
-        </a>
+        <!-- Close button -->
+        <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
+            <a mat-icon-button [matTooltip]="'Close'" [routerLink]="['/contacts']">
+                <mat-icon class="text-white" [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
+            </a>
+        </div>
     </div>
-</div>
 
-<!-- Contact -->
-<div class="relative flex flex-col flex-auto items-center p-6 pt-0 sm:p-12 sm:pt-0">
-    <div class="w-full max-w-3xl">
-        <!-- Avatar and actions -->
-        <div class="flex flex-auto items-end -mt-16">
-            <!-- Avatar -->
-            <div class="flex items-center justify-center w-32 h-32 rounded-full overflow-hidden ring-4 ring-bg-card">
-                <img class="object-cover w-full h-full" *ngIf="contact.avatar" [src]="contact.avatar" />
+    <!-- Contact -->
+    <div class="relative flex flex-col flex-auto items-center p-6 pt-0 sm:p-12 sm:pt-0">
+        <div class="w-full max-w-3xl">
+            <!-- Avatar and actions -->
+            <div class="flex flex-auto items-end -mt-16">
+                <!-- Avatar -->
                 <div
-                    class="flex items-center justify-center w-full h-full rounded overflow-hidden uppercase text-8xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200"
-                    *ngIf="!contact.avatar">
-                    {{ contact.firstName.charAt(0) }}
+                    class="flex items-center justify-center w-32 h-32 rounded-full overflow-hidden ring-4 ring-bg-card">
+                    <img class="object-cover w-full h-full" *ngIf="contact.avatar" [src]="contact.avatar" />
+                    <div
+                        class="flex items-center justify-center w-full h-full rounded overflow-hidden uppercase text-8xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200"
+                        *ngIf="!contact.avatar">
+                        {{ contact.firstName.charAt(0) }}
+                    </div>
+                </div>
+                <!-- Actions -->
+                <div class="flex items-center ml-auto mb-1">
+                    <button mat-stroked-button [routerLink]="['/contacts', 'edit', contact.id]">
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:pencil-square'"></mat-icon>
+                        <span class="ml-2">Edit</span>
+                    </button>
                 </div>
             </div>
-            <!-- Actions -->
-            <div class="flex items-center ml-auto mb-1">
-                <button mat-stroked-button [routerLink]="['/contacts', 'edit', contact.id]">
-                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:pencil-square'"></mat-icon>
-                    <span class="ml-2">Edit</span>
-                </button>
+
+            <!-- Name -->
+            <div class="mt-3 text-4xl font-bold truncate">
+                {{ contact.firstName }}
+                {{ contact.lastName }}
             </div>
-        </div>
 
-        <!-- Name -->
-        <div class="mt-3 text-4xl font-bold truncate">
-            {{ contact.firstName }}
-            {{ contact.lastName }}
-        </div>
-
-        <!-- Role In the Company -->
-        <div class="flex flex-wrap items-center mt-2">
-            <div
-                class="flex items-center justify-center py-1 px-3 mr-3 mb-3 rounded-full leading-normal text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
-                <span class="text-sm font-medium whitespace-nowrap">{{ contact.title }}</span>
+            <!-- Role In the Company -->
+            <div class="flex flex-wrap items-center mt-2">
+                <div
+                    class="flex items-center justify-center py-1 px-3 mr-3 mb-3 rounded-full leading-normal text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
+                    <span class="text-sm font-medium whitespace-nowrap">{{ contact.title }}</span>
+                </div>
             </div>
-        </div>
 
-        <div class="flex flex-col mt-4 pt-6 border-t space-y-8">
-            <!-- Company -->
-            <ng-container *ngIf="contact.company">
-                <div class="flex sm:items-center">
-                    <mat-icon [svgIcon]="'heroicons_outline:building-office-2'"></mat-icon>
-                    <div class="ml-6 leading-6">
-                        {{ contact.company.name }}
+            <div class="flex flex-col mt-4 pt-6 border-t space-y-8">
+                <!-- Company -->
+                <ng-container *ngIf="contact.company">
+                    <div class="flex sm:items-center">
+                        <mat-icon [svgIcon]="'heroicons_outline:building-office-2'"></mat-icon>
+                        <div class="ml-6 leading-6">
+                            {{ contact.company.name }}
+                        </div>
                     </div>
-                </div>
-            </ng-container>
+                </ng-container>
 
-            <!-- Emails -->
-            <ng-container *ngIf="contact.emails.length > 0">
-                <div class="flex">
-                    <mat-icon [svgIcon]="'heroicons_outline:envelope'"></mat-icon>
-                    <div class="min-w-0 ml-6 space-y-1">
-                        <ng-container *ngFor="let email of contact.emails; trackBy: trackByFn">
-                            <div class="flex items-center leading-6">
-                                <a
-                                    class="hover:underline text-primary-500"
-                                    [href]="'mailto:' + email.email"
-                                    target="_blank">
-                                    {{ email.email }}
-                                </a>
-                                <div class="text-md truncate text-secondary" *ngIf="email.label">
-                                    <span class="mx-2">&bull;</span>
-                                    <span class="font-medium">{{ getLabelById(email.label) }}</span>
+                <!-- Emails -->
+                <ng-container *ngIf="contact.emails.length > 0">
+                    <div class="flex">
+                        <mat-icon [svgIcon]="'heroicons_outline:envelope'"></mat-icon>
+                        <div class="min-w-0 ml-6 space-y-1">
+                            <ng-container *ngFor="let email of contact.emails; trackBy: trackByFn">
+                                <div class="flex items-center leading-6">
+                                    <a
+                                        class="hover:underline text-primary-500"
+                                        [href]="'mailto:' + email.email"
+                                        target="_blank">
+                                        {{ email.email }}
+                                    </a>
+                                    <div class="text-md truncate text-secondary" *ngIf="email.label">
+                                        <span class="mx-2">&bull;</span>
+                                        <span class="font-medium">{{ getLabelById(email.label) }}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        </ng-container>
+                            </ng-container>
+                        </div>
                     </div>
-                </div>
-            </ng-container>
+                </ng-container>
 
-            <!-- Phone -->
-            <ng-container *ngIf="contact.phoneNumbers.length > 0">
-                <div class="flex">
-                    <mat-icon [svgIcon]="'heroicons_outline:phone'"></mat-icon>
-                    <div class="min-w-0 ml-6 space-y-1">
-                        <ng-container *ngFor="let item of contact.phoneNumbers; trackBy: trackByFn">
-                            <div class="flex items-center leading-6">
-                                <div
-                                    class="hidden sm:flex w-6 h-4 overflow-hidden"
-                                    [matTooltip]="getCountryByIso(item.countryCode).name"
-                                    [style.background]="'url(\'/assets/images/flags/flags.png\') no-repeat 0 0'"
-                                    [style.backgroundSize]="'24px 3876px'"
-                                    [style.backgroundPosition]="getCountryByIso(item.countryCode).flagImagePos"></div>
-                                <div class="sm:ml-3 font-mono">
-                                    {{ getCountryByIso(item.countryCode).code }}
+                <!-- Phone -->
+                <ng-container *ngIf="contact.phoneNumbers.length > 0">
+                    <div class="flex">
+                        <mat-icon [svgIcon]="'heroicons_outline:phone'"></mat-icon>
+                        <div class="min-w-0 ml-6 space-y-1">
+                            <ng-container *ngFor="let item of contact.phoneNumbers; trackBy: trackByFn">
+                                <div class="flex items-center leading-6">
+                                    <div
+                                        class="hidden sm:flex w-6 h-4 overflow-hidden"
+                                        [matTooltip]="getCountryByIso(item.countryCode).name"
+                                        [style.background]="'url(\'/assets/images/flags/flags.png\') no-repeat 0 0'"
+                                        [style.backgroundSize]="'24px 3876px'"
+                                        [style.backgroundPosition]="
+                                            getCountryByIso(item.countryCode).flagImagePos
+                                        "></div>
+                                    <div class="sm:ml-3 font-mono">
+                                        {{ getCountryByIso(item.countryCode).code }}
+                                    </div>
+                                    <div class="ml-2.5 font-mono">
+                                        {{ item.phoneNumber }}
+                                    </div>
+                                    <div class="text-md truncate text-secondary" *ngIf="item.label">
+                                        <span class="mx-2">&bull;</span>
+                                        <span class="font-medium">{{ getLabelById(item.label) }}</span>
+                                    </div>
                                 </div>
-                                <div class="ml-2.5 font-mono">
-                                    {{ item.phoneNumber }}
-                                </div>
-                                <div class="text-md truncate text-secondary" *ngIf="item.label">
-                                    <span class="mx-2">&bull;</span>
-                                    <span class="font-medium">{{ getLabelById(item.label) }}</span>
-                                </div>
-                            </div>
-                        </ng-container>
+                            </ng-container>
+                        </div>
                     </div>
-                </div>
-            </ng-container>
+                </ng-container>
 
-            <!-- Major -->
-            <ng-container *ngIf="contact.major">
-                <div class="flex sm:items-center">
-                    <mat-icon [svgIcon]="'heroicons_outline:map-pin'"></mat-icon>
-                    <div class="ml-6 leading-6">
-                        {{ contact.major }}
+                <!-- Major -->
+                <ng-container *ngIf="contact.major">
+                    <div class="flex sm:items-center">
+                        <mat-icon [svgIcon]="'heroicons_outline:map-pin'"></mat-icon>
+                        <div class="ml-6 leading-6">
+                            {{ contact.major }}
+                        </div>
                     </div>
-                </div>
-            </ng-container>
+                </ng-container>
 
-            <!-- Birthday -->
-            <!-- <ng-container *ngIf="contact.birthday">
+                <!-- Birthday -->
+                <!-- <ng-container *ngIf="contact.birthday">
                         <div class="flex sm:items-center">
                             <mat-icon
                                 [svgIcon]="'heroicons_outline:cake'"
@@ -133,15 +137,16 @@
                         </div>
                     </ng-container> -->
 
-            <!-- Notes -->
-            <ng-container *ngIf="contact.notes">
-                <div class="flex">
-                    <mat-icon [svgIcon]="'heroicons_outline:bars-3-bottom-left'"></mat-icon>
-                    <div class="max-w-none ml-6 prose prose-sm">
-                        <p>{{ contact.notes }}</p>
+                <!-- Notes -->
+                <ng-container *ngIf="contact.notes">
+                    <div class="flex">
+                        <mat-icon [svgIcon]="'heroicons_outline:bars-3-bottom-left'"></mat-icon>
+                        <div class="max-w-none ml-6 prose prose-sm">
+                            <p>{{ contact.notes }}</p>
+                        </div>
                     </div>
-                </div>
-            </ng-container>
+                </ng-container>
+            </div>
         </div>
     </div>
 </div>
