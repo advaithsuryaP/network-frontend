@@ -167,90 +167,92 @@ export class ContactEditComponent implements OnInit, OnDestroy {
             tap((configurations: Configuration[]) => (this.configurations = configurations))
         );
 
+        const newContact$ = combineLatest([countries$, categories$, configurations$]).pipe(
+            tap(_ => {
+                this.addEmailField();
+                this.addPhoneNumberField();
+            })
+        );
+
         const editContact$ = combineLatest([contact$, countries$, categories$, configurations$]).pipe(
             tap(([contact, _, __, ___]) => {
-                if (contact) {
-                    this.contact = contact;
+                this.contact = contact;
 
-                    // Clear the emails and phoneNumbers form arrays
-                    this.contactForm.controls.emails.clear();
-                    this.contactForm.controls.phoneNumbers.clear();
+                // Clear the emails and phoneNumbers form arrays
+                this.contactForm.controls.emails.clear();
+                this.contactForm.controls.phoneNumbers.clear();
 
-                    // Patch values to the form
-                    this.contactForm.patchValue({
-                        id: contact.id,
-                        firstName: contact.firstName,
-                        lastName: contact.lastName,
-                        title: contact.title,
-                        notes: contact.notes,
-                        major: contact.major
+                // Patch values to the form
+                this.contactForm.patchValue({
+                    id: contact.id,
+                    firstName: contact.firstName,
+                    lastName: contact.lastName,
+                    title: contact.title,
+                    notes: contact.notes,
+                    major: contact.major
+                });
+
+                // Only patch company values if contact has a company
+                if (contact.company) {
+                    this.contactForm.controls.company.patchValue({
+                        id: contact.company.id,
+                        name: contact.company.name,
+                        description: contact.company.description,
+                        website: contact.company.website,
+                        category: contact.company.category,
+                        primaryIndustry: contact.company.primaryIndustry,
+                        secondaryIndustry: contact.company.secondaryIndustry,
+                        attractedOutOfState: contact.company.attractedOutOfState,
+                        confidentialityRequested: contact.company.confidentialityRequested,
+                        intellectualProperty: contact.company.intellectualProperty,
+                        departmentIfFaculty: contact.company.departmentIfFaculty,
+                        usmFounders: contact.company.usmFounders,
+                        miscResources: contact.company.miscResources,
+                        preCompanyResources: contact.company.preCompanyResources,
+                        preCompanyFunding: contact.company.preCompanyFunding,
+                        icorps: contact.company.icorps,
+                        tcf: contact.company.tcf,
+                        tcfAmount: contact.company.tcfAmount,
+                        comments: contact.company.comments
                     });
+                }
 
-                    // Only patch company values if contact has a company
-                    if (contact.company) {
-                        this.contactForm.controls.company.patchValue({
-                            id: contact.company.id,
-                            name: contact.company.name,
-                            description: contact.company.description,
-                            website: contact.company.website,
-                            category: contact.company.category,
-                            primaryIndustry: contact.company.primaryIndustry,
-                            secondaryIndustry: contact.company.secondaryIndustry,
-                            attractedOutOfState: contact.company.attractedOutOfState,
-                            confidentialityRequested: contact.company.confidentialityRequested,
-                            intellectualProperty: contact.company.intellectualProperty,
-                            departmentIfFaculty: contact.company.departmentIfFaculty,
-                            usmFounders: contact.company.usmFounders,
-                            miscResources: contact.company.miscResources,
-                            preCompanyResources: contact.company.preCompanyResources,
-                            preCompanyFunding: contact.company.preCompanyFunding,
-                            icorps: contact.company.icorps,
-                            tcf: contact.company.tcf,
-                            tcfAmount: contact.company.tcfAmount,
-                            comments: contact.company.comments
-                        });
-                    }
-
-                    if (contact.emails.length > 0) {
-                        contact.emails.forEach(email => {
-                            this.contactForm.controls.emails.push(
-                                new FormGroup<EmailFormGroup>({
-                                    label: new FormControl<string>(email.label, {
-                                        validators: [Validators.required],
-                                        nonNullable: true
-                                    }),
-                                    email: new FormControl<string>(email.email, {
-                                        validators: [Validators.required],
-                                        nonNullable: true
-                                    })
+                if (contact.emails.length > 0) {
+                    contact.emails.forEach(email => {
+                        this.contactForm.controls.emails.push(
+                            new FormGroup<EmailFormGroup>({
+                                label: new FormControl<string>(email.label, {
+                                    validators: [Validators.required],
+                                    nonNullable: true
+                                }),
+                                email: new FormControl<string>(email.email, {
+                                    validators: [Validators.required],
+                                    nonNullable: true
                                 })
-                            );
-                        });
-                    }
+                            })
+                        );
+                    });
+                }
 
-                    if (contact.phoneNumbers.length > 0) {
-                        contact.phoneNumbers.forEach(phoneNumber => {
-                            this.contactForm.controls.phoneNumbers.push(
-                                new FormGroup<PhoneNumberFormGroup>({
-                                    countryCode: new FormControl<string>(phoneNumber.countryCode, {
-                                        validators: [Validators.required],
-                                        nonNullable: true
-                                    }),
-                                    phoneNumber: new FormControl<string>(phoneNumber.phoneNumber, {
-                                        validators: [Validators.required],
-                                        nonNullable: true
-                                    }),
-                                    label: new FormControl<string>(phoneNumber.label, {
-                                        validators: [Validators.required],
-                                        nonNullable: true
-                                    })
+                if (contact.phoneNumbers.length > 0) {
+                    contact.phoneNumbers.forEach(phoneNumber => {
+                        this.contactForm.controls.phoneNumbers.push(
+                            new FormGroup<PhoneNumberFormGroup>({
+                                countryCode: new FormControl<string>(phoneNumber.countryCode, {
+                                    validators: [Validators.required],
+                                    nonNullable: true
+                                }),
+                                phoneNumber: new FormControl<string>(phoneNumber.phoneNumber, {
+                                    validators: [Validators.required],
+                                    nonNullable: true
+                                }),
+                                label: new FormControl<string>(phoneNumber.label, {
+                                    validators: [Validators.required],
+                                    nonNullable: true
                                 })
-                            );
-                        });
-                    }
-                } else {
-                    this.addEmailField();
-                    this.addPhoneNumberField();
+                            })
+                        );
+                    });
                 }
             })
         );
@@ -258,7 +260,10 @@ export class ContactEditComponent implements OnInit, OnDestroy {
         // Subscribe to the paramMap to determine if we're editing or creating
         this._activatedRoute.paramMap
             .pipe(
-                switchMap(_ => editContact$),
+                switchMap(paramMap => {
+                    this.isEditMode = paramMap.has('id');
+                    return this.isEditMode ? editContact$ : newContact$;
+                }),
                 takeUntil(this._unsubscribeAll)
             )
             .subscribe({
@@ -277,13 +282,13 @@ export class ContactEditComponent implements OnInit, OnDestroy {
         if (this.isEditMode) {
             // Update the contact on the server
             this._contactsService.updateContact(payload.id, payload).subscribe(() => {
-                this._router.navigate(['../'], { relativeTo: this._activatedRoute });
+                this._router.navigate(['/contacts', 'view', payload.id]);
             });
         } else {
             // Create new contact
-            // this._contactsService.createContact(payload).subscribe(newContact => {
-            //     this._router.navigate(['../', newContact.id], { relativeTo: this._activatedRoute });
-            // });
+            this._contactsService.createContact(payload).subscribe(newContact => {
+                this._router.navigate(['/contacts', 'view', newContact.id]);
+            });
         }
     }
 

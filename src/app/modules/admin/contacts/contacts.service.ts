@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Category, Contact, Country } from './contact.model';
-import { BehaviorSubject, map, Observable, switchMap, tap, take, throwError, of, filter } from 'rxjs';
+import { BehaviorSubject, map, Observable, switchMap, tap, take, throwError, of, filter, pipe } from 'rxjs';
+import { CreateContactPayload } from './contact.payload';
 
 const API_URL = 'http://localhost:3000/api/v1';
 
@@ -50,30 +51,19 @@ export class ContactsService {
         );
     }
 
-    createContact(): Observable<Contact> {
+    createContact(payload: CreateContactPayload): Observable<Contact> {
         return this.contacts$.pipe(
             take(1),
             switchMap(contacts =>
-                this._http
-                    .post<Contact>(`${API_URL}/contacts`, {
-                        firstName: 'New',
-                        lastName: 'Contact',
-                        title: '',
-                        company: {
-                            name: 'New Company',
-                            category: 'STARTUP',
-                            primaryIndustry: 'TECHNOLOGY'
-                        }
-                    })
-                    .pipe(
-                        map(newContact => {
-                            // Update the contacts with the new contact
-                            this._contactsSubject.next([...contacts, newContact]);
+                this._http.post<Contact>(`${API_URL}/contacts`, payload).pipe(
+                    map(newContact => {
+                        // Update the contacts with the new contact
+                        this._contactsSubject.next([...contacts, newContact]);
 
-                            // Return the new contact
-                            return newContact;
-                        })
-                    )
+                        // Return the new contact
+                        return newContact;
+                    })
+                )
             )
         );
     }

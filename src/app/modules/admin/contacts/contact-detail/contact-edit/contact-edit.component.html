@@ -186,14 +186,43 @@
                                 let last = last;
                                 trackBy: trackByFn
                             ">
-                            <div class="flex" [formGroupName]="i">
+                            <div class="relative flex" [formGroupName]="i">
                                 <mat-form-field class="flex-auto" [subscriptSizing]="'dynamic'">
                                     <mat-label *ngIf="first">Phone</mat-label>
-                                    <mat-icon
-                                        matPrefix
-                                        class="hidden sm:flex icon-size-5"
-                                        [svgIcon]="'heroicons_solid:phone'"></mat-icon>
-                                    <input matInput formControlName="phoneNumber" [placeholder]="'Phone number'" />
+                                    <input matInput formControlName="phoneNumber" [placeholder]="'Phone'" />
+                                    <mat-select class="mr-1.5" formControlName="countryCode" matPrefix>
+                                        <mat-select-trigger>
+                                            <span class="flex items-center">
+                                                <span
+                                                    class="hidden sm:flex w-6 h-4 mr-1 overflow-hidden"
+                                                    [style.background]="
+                                                        'url(\'/assets/images/flags/flags.png\') no-repeat 0 0'
+                                                    "
+                                                    [style.backgroundSize]="'24px 3876px'"
+                                                    [style.backgroundPosition]="
+                                                        getCountryByIso(phone.get('countryCode').value).flagImagePos
+                                                    "></span>
+                                                <span class="sm:mx-0.5 font-medium text-default">
+                                                    {{ getCountryByIso(phone.get('countryCode').value).code }}
+                                                </span>
+                                            </span>
+                                        </mat-select-trigger>
+                                        <ng-container *ngFor="let country of countries; trackBy: trackByFn">
+                                            <mat-option [value]="country.iso">
+                                                <span class="flex items-center">
+                                                    <span
+                                                        class="w-6 h-4 overflow-hidden"
+                                                        [style.background]="
+                                                            'url(\'/assets/images/flags/flags.png\') no-repeat 0 0'
+                                                        "
+                                                        [style.backgroundSize]="'24px 3876px'"
+                                                        [style.backgroundPosition]="country.flagImagePos"></span>
+                                                    <span class="ml-2">{{ country.name }}</span>
+                                                    <span class="ml-2 font-medium">{{ country.code }}</span>
+                                                </span>
+                                            </mat-option>
+                                        </ng-container>
+                                    </mat-select>
                                 </mat-form-field>
                                 <mat-form-field
                                     class="flex-auto w-full max-w-24 sm:max-w-40 ml-2 sm:ml-4"
@@ -211,7 +240,7 @@
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
-                                <!-- Remove phone -->
+                                <!-- Remove phone number -->
                                 <ng-container *ngIf="!(first && last)">
                                     <div class="flex items-center w-10 pl-2" [ngClass]="{ 'mt-6': first }">
                                         <button
