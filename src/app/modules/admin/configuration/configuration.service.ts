@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Configuration } from './configuration.model';
+import { ConfigurationCategoryType } from './configuration.enum';
 
 const API_URL = 'http://localhost:3000/api/v1';
 
@@ -23,8 +24,8 @@ export class ConfigurationService {
     /**
      * Create configuration
      */
-    createConfiguration(): Observable<Configuration> {
-        return this._http.post<Configuration>(`${API_URL}/configurations`, {}).pipe(
+    createConfiguration(category: ConfigurationCategoryType): Observable<Configuration> {
+        return this._http.post<Configuration>(`${API_URL}/configurations`, { category }).pipe(
             tap(newConfiguration => {
                 this._configurationsSubject.next([...this._configurationsSubject.value, newConfiguration]);
             })

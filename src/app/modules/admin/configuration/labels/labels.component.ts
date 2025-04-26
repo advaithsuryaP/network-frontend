@@ -19,6 +19,7 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { ConfigurationService } from '../configuration.service';
 import { Configuration } from '../configuration.model';
+import { ConfigurationCategoryEnum } from '../configuration.enum';
 
 @Component({
     selector: 'app-labels',
@@ -78,6 +79,7 @@ export class LabelsComponent implements OnInit, OnDestroy {
         this.configurationForm = this._formBuilder.group({
             id: [''],
             label: ['', [Validators.required]],
+            category: [ConfigurationCategoryEnum.COMPANY_CATEGORY, [Validators.required]],
             description: [''],
             is_hidden: [false],
             is_disabled: [false]
@@ -99,12 +101,14 @@ export class LabelsComponent implements OnInit, OnDestroy {
     }
 
     createConfiguration(): void {
-        this._configurationService.createConfiguration().subscribe((newConfig: Configuration) => {
-            // Automatically expand the new configuration for editing
-            this.expandedConfiguration = newConfig;
-            this.configurationForm.patchValue(newConfig);
-            this._changeDetectorRef.markForCheck();
-        });
+        this._configurationService
+            .createConfiguration(ConfigurationCategoryEnum.COMPANY_CATEGORY)
+            .subscribe((newConfig: Configuration) => {
+                // Automatically expand the new configuration for editing
+                this.expandedConfiguration = newConfig;
+                this.configurationForm.patchValue(newConfig);
+                this._changeDetectorRef.markForCheck();
+            });
     }
 
     toggleConfiguration(configuration: Configuration): void {
