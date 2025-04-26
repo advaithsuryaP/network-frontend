@@ -55,19 +55,16 @@ export class ContactPreviewComponent implements OnInit {
         });
 
         // Get labels
-        this._configurationService
-            .fetchConfigurations()
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(configurations => {
-                this.labels = configurations.filter(config => config.category === ConfigurationCategoryEnum.LABELS);
-                this.companyCategories = configurations.filter(
-                    config => config.category === ConfigurationCategoryEnum.COMPANY_CATEGORY
-                );
-                this.primaryIndustries = configurations.filter(
-                    config => config.category === ConfigurationCategoryEnum.PRIMARY_INDUSTRY
-                );
-                this._changeDetectorRef.markForCheck();
-            });
+        this._configurationService.configurations$.pipe(takeUntil(this._unsubscribeAll)).subscribe(configurations => {
+            this.labels = configurations.filter(config => config.category === ConfigurationCategoryEnum.LABELS);
+            this.companyCategories = configurations.filter(
+                config => config.category === ConfigurationCategoryEnum.COMPANY_CATEGORY
+            );
+            this.primaryIndustries = configurations.filter(
+                config => config.category === ConfigurationCategoryEnum.PRIMARY_INDUSTRY
+            );
+            this._changeDetectorRef.markForCheck();
+        });
     }
 
     editContact(): void {

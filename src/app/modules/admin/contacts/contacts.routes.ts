@@ -91,20 +91,22 @@ export default [
                         path: 'edit',
                         component: ContactDetailComponent,
                         canDeactivate: [canDeactivateContactsDetails],
-                        resolve: {
-                            countries: () => inject(ContactsService).fetchCountries(),
-                            configurations: () => inject(ConfigurationService).fetchConfigurations()
-                        },
                         children: [
                             {
                                 path: 'new',
-                                component: ContactEditComponent
+                                component: ContactEditComponent,
+                                resolve: {
+                                    countries: () => inject(ContactsService).fetchCountries(),
+                                    configurations: () => inject(ConfigurationService).fetchConfigurations()
+                                }
                             },
                             {
                                 path: ':id',
                                 component: ContactEditComponent,
                                 resolve: {
-                                    contact: contactResolver
+                                    contact: contactResolver,
+                                    countries: () => inject(ContactsService).fetchCountries(),
+                                    configurations: () => inject(ConfigurationService).fetchConfigurations()
                                 }
                             }
                         ]
@@ -113,16 +115,14 @@ export default [
                         path: 'view',
                         component: ContactDetailComponent,
                         canDeactivate: [canDeactivateContactsDetails],
-                        resolve: {
-                            countries: () => inject(ContactsService).fetchCountries(),
-                            configurations: () => inject(ConfigurationService).fetchConfigurations()
-                        },
                         children: [
                             {
                                 path: ':id',
                                 component: ContactPreviewComponent,
                                 resolve: {
-                                    contact: contactResolver
+                                    contact: contactResolver,
+                                    countries: () => inject(ContactsService).fetchCountries(),
+                                    configurations: () => inject(ConfigurationService).fetchConfigurations()
                                 }
                             }
                         ]
