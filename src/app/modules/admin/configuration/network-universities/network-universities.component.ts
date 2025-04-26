@@ -22,7 +22,7 @@ import { Configuration } from '../configuration.model';
 import { ConfigurationCategoryEnum } from '../configuration.enum';
 
 @Component({
-    selector: 'app-labels',
+    selector: 'app-network-universities',
     standalone: true,
     imports: [
         CommonModule,
@@ -35,8 +35,8 @@ import { ConfigurationCategoryEnum } from '../configuration.enum';
         MatFormFieldModule,
         MatInputModule
     ],
+    templateUrl: './network-universities.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    templateUrl: './labels.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations,
     styles: [
@@ -59,13 +59,13 @@ import { ConfigurationCategoryEnum } from '../configuration.enum';
         `
     ]
 })
-export class LabelsComponent implements OnInit, OnDestroy {
+export default class NetworkUniversitiesComponent implements OnInit, OnDestroy {
     configurations$: Observable<Configuration[]>;
     configurations: Configuration[];
     displayedColumns: string[] = ['label', 'description', 'is_hidden', 'is_disabled', 'details'];
     expandedConfiguration: Configuration | null = null;
     configurationForm: UntypedFormGroup;
-    private _unsubscribeAll: Subject<void> = new Subject<void>();
+    private _unsubscribeAll: Subject<null> = new Subject<null>();
 
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
@@ -79,29 +79,30 @@ export class LabelsComponent implements OnInit, OnDestroy {
         this.configurationForm = this._formBuilder.group({
             id: [''],
             label: ['', [Validators.required]],
-            category: [ConfigurationCategoryEnum.LABELS, [Validators.required]],
+            category: [ConfigurationCategoryEnum.UNIVERSITY, [Validators.required]],
             description: [''],
             is_hidden: [false],
             is_disabled: [false]
         });
 
         // Get the configurations
-        this.configurations$ = this._configurationService.configurations$.pipe(
-            map(configurations => configurations.filter(config => config.category === ConfigurationCategoryEnum.LABELS))
-        );
-
-        // Subscribe to the configurations
-        this.configurations$.pipe(takeUntil(this._unsubscribeAll)).subscribe((configurations: Configuration[]) => {
-            this.configurations = configurations;
-            this._changeDetectorRef.markForCheck();
-        });
+        this._configurationService.configurations$
+            .pipe(
+                map(configurations =>
+                    configurations.filter(config => config.category === ConfigurationCategoryEnum.UNIVERSITY)
+                ),
+                takeUntil(this._unsubscribeAll)
+            )
+            .subscribe((configurations: Configuration[]) => {
+                this.configurations = configurations;
+                this._changeDetectorRef.markForCheck();
+            });
     }
 
     createConfiguration(): void {
         this._configurationService
-            .createConfiguration(ConfigurationCategoryEnum.LABELS)
+            .createConfiguration(ConfigurationCategoryEnum.UNIVERSITY)
             .subscribe((newConfig: Configuration) => {
-                // Automatically expand the new configuration for editing
                 this.expandedConfiguration = newConfig;
                 this.configurationForm.patchValue(newConfig);
                 this._changeDetectorRef.markForCheck();

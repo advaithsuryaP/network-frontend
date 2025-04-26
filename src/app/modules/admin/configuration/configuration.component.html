@@ -27,7 +27,7 @@
                             'hover:bg-gray-100 dark:hover:bg-hover': !selectedPanel || selectedPanel !== panel.id,
                             'bg-primary-50 dark:bg-hover': selectedPanel && selectedPanel === panel.id
                         }"
-                        (click)="goToPanel(panel.id)">
+                        (click)="goToPanel(panel)">
                         <mat-icon
                             [ngClass]="{
                                 'text-hint': !selectedPanel || selectedPanel !== panel.id,
@@ -70,36 +70,7 @@
 
                 <!-- Load settings panel -->
                 <div class="flex flex-col flex-auto">
-                    <ng-container [ngSwitch]="selectedPanel">
-                        <!-- Labels -->
-                        <ng-container *ngSwitchCase="ConfigurationCategoryEnum.LABELS">
-                            <app-labels />
-                        </ng-container>
-                        <!-- Company Categories -->
-                        <ng-container *ngSwitchCase="ConfigurationCategoryEnum.COMPANY_CATEGORY">
-                            <app-company-categories />
-                        </ng-container>
-                        <!-- Primary Industries -->
-                        <ng-container *ngSwitchCase="ConfigurationCategoryEnum.PRIMARY_INDUSTRY">
-                            <app-primary-industries />
-                        </ng-container>
-                        <!-- Universities -->
-                        <ng-container *ngSwitchCase="ConfigurationCategoryEnum.UNIVERSITY">
-                            <app-universities />
-                        </ng-container>
-                        <!-- Plan & Billing -->
-                        <!-- <ng-container *ngSwitchCase="'plan-billing'">
-                            <settings-plan-billing></settings-plan-billing>
-                        </ng-container> -->
-                        <!-- Notifications -->
-                        <!-- <ng-container *ngSwitchCase="'notifications'">
-                            <settings-notifications></settings-notifications>
-                        </ng-container> -->
-                        <!-- Team -->
-                        <!-- <ng-container *ngSwitchCase="'team'">
-                            <settings-team></settings-team>
-                        </ng-container> -->
-                    </ng-container>
+                    <router-outlet />
                 </div>
             </div>
         </mat-drawer-content>

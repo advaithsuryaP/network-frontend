@@ -1,11 +1,10 @@
 import { NgFor } from '@angular/common';
 import { NgClass } from '@angular/common';
-import { NgSwitch } from '@angular/common';
-import { NgSwitchCase } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    inject,
     OnDestroy,
     OnInit,
     ViewChild,
@@ -16,38 +15,63 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { Subject, takeUntil } from 'rxjs';
-import { LabelsComponent } from './labels/labels.component';
-import { PrimaryIndustriesComponent } from './primary-industries/primary-industries.component';
-import { CompanyCategoriesComponent } from './company-categories/company-categories.component';
 import { ConfigurationCategoryType } from './configuration.enum';
 import { ConfigurationCategoryEnum } from './configuration.enum';
-import { UniversitiesComponent } from './universities/universities.component';
+import { Router, RouterOutlet } from '@angular/router';
+
+interface ConfigurationPanel {
+    id: ConfigurationCategoryEnum;
+    icon: string;
+    title: string;
+    description: string;
+    route: string;
+}
 
 @Component({
     selector: 'app-configuration',
     standalone: true,
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        NgFor,
-        NgClass,
-        NgSwitch,
-        NgSwitchCase,
-        MatIconModule,
-        LabelsComponent,
-        MatButtonModule,
-        MatSidenavModule,
-        UniversitiesComponent,
-        PrimaryIndustriesComponent,
-        CompanyCategoriesComponent
-    ],
+    imports: [NgFor, NgClass, RouterOutlet, MatIconModule, MatButtonModule, MatSidenavModule],
     templateUrl: './configuration.component.html'
 })
 export class ConfigurationComponent implements OnInit, OnDestroy {
     @ViewChild('drawer') drawer: MatDrawer;
+
+    private _router = inject(Router);
+
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
-    panels: any[] = [];
+    panels: ConfigurationPanel[] = [
+        {
+            id: ConfigurationCategoryEnum.LABELS,
+            icon: 'heroicons_outline:tag',
+            title: 'Contact Labels',
+            description: 'Manage the labels for the emails and phone numbers of your contacts',
+            route: 'contact-labels'
+        },
+        {
+            id: ConfigurationCategoryEnum.COMPANY_CATEGORY,
+            icon: 'heroicons_outline:user-circle',
+            title: 'Company Categories',
+            description: 'Manage the company categories for the companies in your network',
+            route: 'company-categories'
+        },
+        {
+            id: ConfigurationCategoryEnum.PRIMARY_INDUSTRY,
+            icon: 'heroicons_outline:lock-closed',
+            title: 'Primary Industries',
+            description: 'Manage the primary industry labels for the companies in your network',
+            route: 'primary-industries'
+        },
+        {
+            id: ConfigurationCategoryEnum.UNIVERSITY,
+            icon: 'heroicons_outline:building-office-2',
+            title: 'Network Universities',
+            description: 'Manage the universities in your network',
+            route: 'network-universities'
+        }
+    ];
     selectedPanel: ConfigurationCategoryType = ConfigurationCategoryEnum.LABELS;
 
     ConfigurationCategoryEnum = ConfigurationCategoryEnum;
@@ -69,46 +93,6 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
-        // Setup available panels
-        this.panels = [
-            {
-                id: ConfigurationCategoryEnum.LABELS,
-                icon: 'heroicons_outline:tag',
-                title: 'Labels',
-                description: 'Manage the labels for the emails and phone numbers of your contacts'
-            },
-            {
-                id: ConfigurationCategoryEnum.COMPANY_CATEGORY,
-                icon: 'heroicons_outline:user-circle',
-                title: 'Company Categories',
-                description: 'Manage the company categories for the companies in your network'
-            },
-            {
-                id: ConfigurationCategoryEnum.PRIMARY_INDUSTRY,
-                icon: 'heroicons_outline:lock-closed',
-                title: 'Primary Industries',
-                description: 'Manage the primary industry labels for the companies in your network'
-            },
-            {
-                id: ConfigurationCategoryEnum.UNIVERSITY,
-                icon: 'heroicons_outline:building-office-2',
-                title: 'Universities',
-                description: 'Manage the universities in your network'
-            }
-            // {
-            //     id: 'notifications',
-            //     icon: 'heroicons_outline:bell',
-            //     title: 'Notifications',
-            //     description: "Manage when you'll be notified on which channels"
-            // },
-            // {
-            //     id: 'team',
-            //     icon: 'heroicons_outline:user-group',
-            //     title: 'Team',
-            //     description: 'Manage your existing team and change roles/permissions'
-            // }
-        ];
-
         // Subscribe to media changes
         this._fuseMediaWatcherService.onMediaChange$
             .pipe(takeUntil(this._unsubscribeAll))
@@ -145,8 +129,9 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
      *
      * @param panel
      */
-    goToPanel(panel: ConfigurationCategoryType): void {
-        this.selectedPanel = panel;
+    goToPanel(panel: ConfigurationPanel): void {
+        this.selectedPanel = panel.id;
+        this._router.navigate(['/configuration', panel.route]);
 
         // Close the drawer on 'over' mode
         if (this.drawerMode === 'over') {

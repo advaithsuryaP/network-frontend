@@ -59,7 +59,7 @@ import { ConfigurationCategoryEnum } from '../configuration.enum';
         `
     ]
 })
-export class PrimaryIndustriesComponent implements OnInit, OnDestroy {
+export default class PrimaryIndustriesComponent implements OnInit, OnDestroy {
     configurations$: Observable<Configuration[]>;
     configurations: Configuration[];
     displayedColumns: string[] = ['label', 'description', 'is_hidden', 'is_disabled', 'details'];
@@ -86,17 +86,17 @@ export class PrimaryIndustriesComponent implements OnInit, OnDestroy {
         });
 
         // Get the configurations
-        this.configurations$ = this._configurationService.configurations$.pipe(
-            map(configurations =>
-                configurations.filter(config => config.category === ConfigurationCategoryEnum.PRIMARY_INDUSTRY)
+        this._configurationService.configurations$
+            .pipe(
+                map(configurations =>
+                    configurations.filter(config => config.category === ConfigurationCategoryEnum.PRIMARY_INDUSTRY)
+                ),
+                takeUntil(this._unsubscribeAll)
             )
-        );
-
-        // Subscribe to the configurations
-        this.configurations$.pipe(takeUntil(this._unsubscribeAll)).subscribe((configurations: Configuration[]) => {
-            this.configurations = configurations;
-            this._changeDetectorRef.markForCheck();
-        });
+            .subscribe((configurations: Configuration[]) => {
+                this.configurations = configurations;
+                this._changeDetectorRef.markForCheck();
+            });
     }
 
     createConfiguration(): void {

@@ -38,6 +38,29 @@ export default [
         component: ConfigurationComponent,
         resolve: {
             configurations: configurationResolver
-        }
+        },
+        children: [
+            {
+                path: '',
+                redirectTo: 'contact-labels',
+                pathMatch: 'full'
+            },
+            {
+                path: 'contact-labels',
+                loadComponent: () => import('./contact-labels/contact-labels.component')
+            },
+            {
+                path: 'company-categories',
+                loadComponent: () => import('./company-categories/company-categories.component')
+            },
+            {
+                path: 'primary-industries',
+                loadComponent: () => import('./primary-industries/primary-industries.component')
+            },
+            {
+                path: 'network-universities',
+                loadComponent: () => import('./network-universities/network-universities.component')
+            }
+        ]
     }
 ] as Routes;
