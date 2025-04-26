@@ -53,15 +53,32 @@
                                     [placeholder]="'Search contacts'" />
                             </mat-form-field>
                         </div>
-                        <!-- Add contact button -->
-                        <button
-                            class="ml-4"
-                            mat-flat-button
-                            [color]="'primary'"
-                            [routerLink]="['/contacts', 'edit', 'new']">
-                            <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-                            <span class="ml-2 mr-1">Add</span>
-                        </button>
+                        <!-- Action buttons -->
+                        <div class="flex items-center space-x-2 ml-4">
+                            <button
+                                mat-icon-button
+                                [color]="'primary'"
+                                [routerLink]="['/contacts', 'edit', 'new']"
+                                matTooltip="Add Contact">
+                                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                            </button>
+
+                            <button
+                                mat-icon-button
+                                [color]="'accent'"
+                                [disabled]="isLoading"
+                                (click)="fileInput.click()"
+                                matTooltip="Upload Contacts">
+                                <mat-icon [svgIcon]="'heroicons_outline:document-arrow-up'"></mat-icon>
+                            </button>
+
+                            <input
+                                #fileInput
+                                type="file"
+                                accept=".xlsx,.xls"
+                                (change)="onFileSelected($event)"
+                                style="display: none" />
+                        </div>
                     </div>
                 </div>
 

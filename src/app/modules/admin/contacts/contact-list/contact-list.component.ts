@@ -6,12 +6,14 @@ import {
     ViewChild,
     ViewEncapsulation,
     ChangeDetectorRef,
-    ChangeDetectionStrategy
+    ChangeDetectionStrategy,
+    ElementRef
 } from '@angular/core';
 import { Router, RouterLink, RouterOutlet, ActivatedRoute } from '@angular/router';
 import { ContactsService } from '../contacts.service';
-import { Observable, Subject, switchMap, takeUntil, map } from 'rxjs';
+import { Observable, Subject, switchMap, takeUntil, map, finalize } from 'rxjs';
 import { Contact } from '../contact.model';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { NgIf, NgFor, NgClass, AsyncPipe, I18nPluralPipe } from '@angular/common';
@@ -21,6 +23,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
     selector: 'app-contact-list',
@@ -37,6 +40,8 @@ import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
         MatInputModule,
         MatButtonModule,
         MatSidenavModule,
+        MatTooltipModule,
+        MatSnackBarModule,
         MatFormFieldModule,
         ReactiveFormsModule
     ],
@@ -46,8 +51,10 @@ import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 })
 export class ContactListComponent implements OnInit, OnDestroy {
     @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
+    @ViewChild('fileInput') fileInput: ElementRef;
 
     private _router = inject(Router);
+    private _snackBar = inject(MatSnackBar);
     private _activatedRoute = inject(ActivatedRoute);
     private _contactsService = inject(ContactsService);
     private _changeDetectorRef = inject(ChangeDetectorRef);
@@ -55,6 +62,7 @@ export class ContactListComponent implements OnInit, OnDestroy {
 
     private _unsubscribeAll: Subject<void> = new Subject<void>();
 
+    isLoading: boolean = false;
     searchInputControl: FormControl<string> = new FormControl<string>('');
     contacts$: Observable<Contact[]> = this._contactsService.contacts$;
     selectedContact: Contact;
@@ -124,6 +132,35 @@ export class ContactListComponent implements OnInit, OnDestroy {
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
+            });
+    }
+
+    onFileSelected(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        if (input.files && input.files.length > 0) {
+            const file = input.files[0];
+            this.uploadFile(file);
+        }
+    }
+
+    uploadFile(file: File): void {
+        this.isLoading = true;
+        this._changeDetectorRef.markForCheck();
+        this._contactsService
+            .uploadContacts(file)
+            .pipe(finalize(() => this._changeDetectorRef.markForCheck()))
+            .subscribe({
+                next: response => {
+                    this.isLoading = false;
+                    this._snackBar.open('Contacts uploaded successfully', 'Close', { duration: 3000 });
+                    this.fileInput.nativeElement.value = ''; // Reset file input
+                },
+                error: error => {
+                    this.isLoading = false;
+                    console.error('Error uploading contacts:', error);
+                    this._snackBar.open('Error uploading contacts', 'Close', { duration: 3000 });
+                    this.fileInput.nativeElement.value = ''; // Reset file input
+                }
             });
     }
 
