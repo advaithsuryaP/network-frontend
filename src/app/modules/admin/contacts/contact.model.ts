@@ -4,6 +4,7 @@ export interface Contact {
     id?: string;
     avatar?: string | null;
     background?: string | null;
+    title: string;
     firstName: string;
     lastName: string;
     emails: Array<{
@@ -15,8 +16,9 @@ export interface Contact {
         countryCode: string;
         phoneNumber: string;
     }>;
+    isFromUniversity: boolean;
+    school?: string;
     notes?: string;
-    title: string;
     major?: string;
     company?: Company;
 }

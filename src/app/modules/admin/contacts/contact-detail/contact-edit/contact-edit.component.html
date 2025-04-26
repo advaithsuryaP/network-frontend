@@ -261,6 +261,27 @@
                     </div>
                 </div>
 
+                <!-- Is From University -->
+                <div class="mt-8">
+                    <div class="flex items-center">
+                        <mat-slide-toggle [formControlName]="'isFromUniversity'" class="mr-2">
+                            Is From UMBC
+                        </mat-slide-toggle>
+                    </div>
+                </div>
+
+                <!-- School (Conditional) -->
+                <div class="mt-8" *ngIf="!contactForm.get('isFromUniversity')?.value">
+                    <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                        <mat-label>School</mat-label>
+                        <mat-icon
+                            matPrefix
+                            class="hidden sm:flex icon-size-5"
+                            [svgIcon]="'heroicons_solid:academic-cap'"></mat-icon>
+                        <input matInput [formControlName]="'school'" [placeholder]="'School'" />
+                    </mat-form-field>
+                </div>
+
                 <!-- Address -->
                 <div class="mt-8">
                     <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">

@@ -27,6 +27,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { Configuration } from '../../../configuration/configuration.model';
 import { ConfigurationService } from '../../../configuration/configuration.service';
 import { ConfigurationCategoryEnum } from '../../../configuration/configuration.enum';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 interface EmailFormGroup {
     label: FormControl<string>;
     email: FormControl<string>;
@@ -47,6 +48,8 @@ interface ContactForm {
     phoneNumbers: FormArray<FormGroup<PhoneNumberFormGroup>>;
     notes: FormControl<string | null>;
     title: FormControl<string | null>;
+    isFromUniversity: FormControl<boolean>;
+    school: FormControl<string | null>;
     major: FormControl<string | null>;
     company: FormGroup<{
         id: FormControl<string | null>;
@@ -87,7 +90,8 @@ interface ContactForm {
         MatRippleModule,
         MatTooltipModule,
         MatFormFieldModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MatSlideToggleModule
     ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -106,9 +110,9 @@ export class ContactEditComponent implements OnInit, OnDestroy {
     editMode: boolean = false;
     private _unsubscribeAll: Subject<void> = new Subject<void>();
 
+    countries: Country[] = [];
     isEditMode: boolean = false;
     contact: Contact | null = null;
-    countries: Country[] = [];
 
     // Configurations
     labels: Configuration[] = [];
@@ -118,37 +122,39 @@ export class ContactEditComponent implements OnInit, OnDestroy {
     contactForm = new FormGroup<ContactForm>({
         id: new FormControl<string>(''),
         avatar: new FormControl<string | null>(null),
-        firstName: new FormControl<string | null>('', Validators.required),
-        lastName: new FormControl<string | null>('', Validators.required),
+        firstName: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
+        lastName: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
         emails: new FormArray<FormGroup<EmailFormGroup>>([]),
         phoneNumbers: new FormArray<FormGroup<PhoneNumberFormGroup>>([]),
-        notes: new FormControl<string | null>(''),
-        title: new FormControl<string | null>('', Validators.required),
+        title: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
         major: new FormControl<string | null>(''),
+        isFromUniversity: new FormControl<boolean>(true, { nonNullable: true, validators: [Validators.required] }),
+        school: new FormControl<string | null>(''),
+        notes: new FormControl<string | null>(''),
         company: new FormGroup({
             id: new FormControl<string | null>(''),
-            name: new FormControl<string | null>('', Validators.required),
+            name: new FormControl<string | null>('', { nonNullable: true, validators: [Validators.required] }),
             description: new FormControl<string | null>(''),
             website: new FormControl<string | null>(''),
             category: new FormControl<string>('', {
-                validators: [Validators.required],
-                nonNullable: true
+                nonNullable: true,
+                validators: [Validators.required]
             }),
             primaryIndustry: new FormControl<string>('', {
-                validators: [Validators.required],
-                nonNullable: true
+                nonNullable: true,
+                validators: [Validators.required]
             }),
             secondaryIndustry: new FormControl<string | null>(''),
-            attractedOutOfState: new FormControl<boolean | null>(false),
-            confidentialityRequested: new FormControl<boolean | null>(false),
+            attractedOutOfState: new FormControl<boolean | null>(false, { nonNullable: true }),
+            confidentialityRequested: new FormControl<boolean | null>(false, { nonNullable: true }),
             intellectualProperty: new FormControl<string | null>(''),
             departmentIfFaculty: new FormControl<string | null>(''),
             usmFounders: new FormControl<string | null>(''),
             miscResources: new FormControl<string | null>(''),
             preCompanyResources: new FormControl<string | null>(''),
             preCompanyFunding: new FormControl<number | null>(null),
-            icorps: new FormControl<boolean | null>(false),
-            tcf: new FormControl<boolean | null>(false),
+            icorps: new FormControl<boolean | null>(false, { nonNullable: true }),
+            tcf: new FormControl<boolean | null>(false, { nonNullable: true }),
             tcfAmount: new FormControl<number | null>(null),
             comments: new FormControl<string | null>('')
         })
