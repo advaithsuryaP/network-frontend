@@ -21,6 +21,7 @@ import { PrimaryIndustriesComponent } from './primary-industries/primary-industr
 import { CompanyCategoriesComponent } from './company-categories/company-categories.component';
 import { ConfigurationCategoryType } from './configuration.enum';
 import { ConfigurationCategoryEnum } from './configuration.enum';
+import { UniversitiesComponent } from './universities/universities.component';
 
 @Component({
     selector: 'app-configuration',
@@ -36,6 +37,7 @@ import { ConfigurationCategoryEnum } from './configuration.enum';
         LabelsComponent,
         MatButtonModule,
         MatSidenavModule,
+        UniversitiesComponent,
         PrimaryIndustriesComponent,
         CompanyCategoriesComponent
     ],
@@ -86,13 +88,13 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
                 icon: 'heroicons_outline:lock-closed',
                 title: 'Primary Industries',
                 description: 'Manage the primary industry labels for the companies in your network'
+            },
+            {
+                id: ConfigurationCategoryEnum.UNIVERSITY,
+                icon: 'heroicons_outline:building-office-2',
+                title: 'Universities',
+                description: 'Manage the universities in your network'
             }
-            // {
-            //     id: 'plan-billing',
-            //     icon: 'heroicons_outline:credit-card',
-            //     title: 'Plan & Billing',
-            //     description: 'Manage your subscription plan, payment method and billing information'
-            // },
             // {
             //     id: 'notifications',
             //     icon: 'heroicons_outline:bell',
