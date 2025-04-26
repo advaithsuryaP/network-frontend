@@ -101,7 +101,7 @@
                 <!-- Company -->
                 <div class="mt-8" formGroupName="company">
                     <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                        <mat-label>Company</mat-label>
+                        <mat-label>Company Name</mat-label>
                         <mat-icon
                             matPrefix
                             class="hidden sm:flex icon-size-5"
@@ -143,10 +143,8 @@
                                         class="hidden sm:flex icon-size-5"
                                         [svgIcon]="'heroicons_solid:tag'"></mat-icon>
                                     <mat-select formControlName="label" placeholder="Choose a label">
-                                        <mat-option
-                                            *ngFor="let configuration of configurations"
-                                            [value]="configuration.id">
-                                            {{ configuration.label }}
+                                        <mat-option *ngFor="let label of labels" [value]="label.id">
+                                            {{ getLabelById(label.id) }}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -233,10 +231,8 @@
                                         class="hidden sm:flex icon-size-5"
                                         [svgIcon]="'heroicons_solid:tag'"></mat-icon>
                                     <mat-select formControlName="label">
-                                        <mat-option
-                                            *ngFor="let configuration of configurations"
-                                            [value]="configuration.id">
-                                            {{ configuration.label }}
+                                        <mat-option *ngFor="let label of labels" [value]="label.id">
+                                            {{ label.label }}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -277,16 +273,16 @@
                     </mat-form-field>
                 </div>
 
-                <!-- Category -->
+                <!-- Company Category -->
                 <div class="mt-8" formGroupName="company">
                     <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                        <mat-label>Category</mat-label>
+                        <mat-label>Company Category</mat-label>
                         <mat-icon
                             matPrefix
                             class="hidden sm:flex icon-size-5"
                             [svgIcon]="'heroicons_solid:tag'"></mat-icon>
                         <mat-select formControlName="category">
-                            <mat-option *ngFor="let category of categories" [value]="category.id">
+                            <mat-option *ngFor="let category of companyCategories" [value]="category.id">
                                 {{ category.label }}
                             </mat-option>
                         </mat-select>
@@ -301,7 +297,11 @@
                             matPrefix
                             class="hidden sm:flex icon-size-5"
                             [svgIcon]="'heroicons_solid:building-office-2'"></mat-icon>
-                        <input matInput formControlName="primaryIndustry" [placeholder]="'Primary Industry'" />
+                        <mat-select formControlName="primaryIndustry">
+                            <mat-option *ngFor="let industry of primaryIndustries" [value]="industry.id">
+                                {{ industry.label }}
+                            </mat-option>
+                        </mat-select>
                     </mat-form-field>
                 </div>
 

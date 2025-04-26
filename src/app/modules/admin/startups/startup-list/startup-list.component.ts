@@ -21,7 +21,6 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
 import { CompaniesService } from '../../companies/companies.service';
 import { Company } from '../../companies/company.model';
-import { Category } from '../../contacts/contact.model';
 import { ContactsService } from '../../contacts/contacts.service';
 
 @Component({
@@ -48,7 +47,6 @@ import { ContactsService } from '../../contacts/contacts.service';
     templateUrl: './startup-list.component.html'
 })
 export class StartupListComponent implements OnInit, OnDestroy {
-    categories: Category[];
     startups: Company[];
     filteredStartups: Company[];
     filters: {
@@ -82,14 +80,6 @@ export class StartupListComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
-        // Get the categories
-        this._contactsService.categories$.pipe(takeUntil(this._unsubscribeAll)).subscribe((categories: Category[]) => {
-            this.categories = categories;
-
-            // Mark for check
-            this._changeDetectorRef.markForCheck();
-        });
-
         // Get the courses
         this._companyService.startups$.pipe(takeUntil(this._unsubscribeAll)).subscribe((startups: Company[]) => {
             this.startups = this.filteredStartups = startups;

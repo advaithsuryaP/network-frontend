@@ -42,7 +42,7 @@
                 {{ contact.lastName }}
             </div>
 
-            <!-- Role In the Company -->
+            <!-- Title -->
             <div class="flex flex-wrap items-center mt-2">
                 <div
                     class="flex items-center justify-center py-1 px-3 mr-3 mb-3 rounded-full leading-normal text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
@@ -56,7 +56,7 @@
                     <div class="flex sm:items-center">
                         <mat-icon [svgIcon]="'heroicons_outline:building-office-2'"></mat-icon>
                         <div class="ml-6 leading-6">
-                            {{ contact.company.name }}
+                            {{ contact.company.name }} ({{ getCompanyCategoryById(contact.company.category) }})
                         </div>
                     </div>
                 </ng-container>
@@ -121,6 +121,16 @@
                         <mat-icon [svgIcon]="'heroicons_outline:map-pin'"></mat-icon>
                         <div class="ml-6 leading-6">
                             {{ contact.major }}
+                        </div>
+                    </div>
+                </ng-container>
+
+                <!-- Primary Industry -->
+                <ng-container *ngIf="contact.company.primaryIndustry">
+                    <div class="flex sm:items-center">
+                        <mat-icon [svgIcon]="'heroicons_outline:tag'"></mat-icon>
+                        <div class="ml-6 leading-6">
+                            {{ getPrimaryIndustryById(contact.company.primaryIndustry) }}
                         </div>
                     </div>
                 </ng-container>

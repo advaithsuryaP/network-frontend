@@ -10,13 +10,13 @@ import { NgIf, NgFor } from '@angular/common';
 import { Subject, takeUntil } from 'rxjs';
 import { ContactsService } from '../../contacts.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Category, Contact, Country } from '../../contact.model';
+import { Contact, Country } from '../../contact.model';
 import { Configuration } from '../../../configuration/configuration.model';
 import { ConfigurationService } from '../../../configuration/configuration.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-
+import { ConfigurationCategoryEnum } from '../../../configuration/configuration.enum';
 @Component({
     selector: 'app-contact-preview',
     standalone: true,
@@ -36,8 +36,10 @@ export class ContactPreviewComponent implements OnInit {
 
     contact: Contact;
     countries: Country[] = [];
-    categories: Category[] = [];
-    configurations: Configuration[] = [];
+
+    labels: Configuration[] = [];
+    companyCategories: Configuration[] = [];
+    primaryIndustries: Configuration[] = [];
 
     ngOnInit(): void {
         // Get the contact
@@ -52,17 +54,18 @@ export class ContactPreviewComponent implements OnInit {
             this._changeDetectorRef.markForCheck();
         });
 
-        this._contactsService.categories$.pipe(takeUntil(this._unsubscribeAll)).subscribe((categories: Category[]) => {
-            this.categories = categories;
-            this._changeDetectorRef.markForCheck();
-        });
-
         // Get labels
         this._configurationService
             .fetchConfigurations()
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(configurations => {
-                this.configurations = configurations;
+                this.labels = configurations.filter(config => config.category === ConfigurationCategoryEnum.LABELS);
+                this.companyCategories = configurations.filter(
+                    config => config.category === ConfigurationCategoryEnum.COMPANY_CATEGORY
+                );
+                this.primaryIndustries = configurations.filter(
+                    config => config.category === ConfigurationCategoryEnum.PRIMARY_INDUSTRY
+                );
                 this._changeDetectorRef.markForCheck();
             });
     }
@@ -76,7 +79,15 @@ export class ContactPreviewComponent implements OnInit {
     }
 
     getLabelById(id: string): string {
-        return this.configurations.find(configuration => configuration.id === id)?.label || '';
+        return this.labels.find(label => label.id === id)?.label || '';
+    }
+
+    getCompanyCategoryById(id: string): string {
+        return this.companyCategories.find(category => category.id === id)?.label || '';
+    }
+
+    getPrimaryIndustryById(id: string): string {
+        return this.primaryIndustries.find(industry => industry.id === id)?.label || '';
     }
 
     /**

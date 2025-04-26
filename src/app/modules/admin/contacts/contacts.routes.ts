@@ -93,7 +93,6 @@ export default [
                         canDeactivate: [canDeactivateContactsDetails],
                         resolve: {
                             countries: () => inject(ContactsService).fetchCountries(),
-                            categories: () => inject(ContactsService).fetchCategories(),
                             configurations: () => inject(ConfigurationService).fetchConfigurations()
                         },
                         children: [
@@ -116,7 +115,6 @@ export default [
                         canDeactivate: [canDeactivateContactsDetails],
                         resolve: {
                             countries: () => inject(ContactsService).fetchCountries(),
-                            categories: () => inject(ContactsService).fetchCategories(),
                             configurations: () => inject(ConfigurationService).fetchConfigurations()
                         },
                         children: [

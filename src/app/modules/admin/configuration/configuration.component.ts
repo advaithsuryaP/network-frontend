@@ -17,6 +17,10 @@ import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { Subject, takeUntil } from 'rxjs';
 import { LabelsComponent } from './labels/labels.component';
+import { PrimaryIndustriesComponent } from './primary-industries/primary-industries.component';
+import { CompanyCategoriesComponent } from './company-categories/company-categories.component';
+import { ConfigurationCategoryType } from './configuration.enum';
+import { ConfigurationCategoryEnum } from './configuration.enum';
 
 @Component({
     selector: 'app-configuration',
@@ -31,7 +35,9 @@ import { LabelsComponent } from './labels/labels.component';
         MatIconModule,
         LabelsComponent,
         MatButtonModule,
-        MatSidenavModule
+        MatSidenavModule,
+        PrimaryIndustriesComponent,
+        CompanyCategoriesComponent
     ],
     templateUrl: './configuration.component.html'
 })
@@ -40,7 +46,9 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     panels: any[] = [];
-    selectedPanel: string = 'account';
+    selectedPanel: ConfigurationCategoryType = ConfigurationCategoryEnum.LABELS;
+
+    ConfigurationCategoryEnum = ConfigurationCategoryEnum;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -62,22 +70,22 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
         // Setup available panels
         this.panels = [
             {
-                id: 'account',
-                icon: 'heroicons_outline:user-circle',
-                title: 'Account',
-                description: 'Manage your public profile and private information'
-            },
-            {
-                id: 'security',
-                icon: 'heroicons_outline:lock-closed',
-                title: 'Security',
-                description: 'Manage your password and 2-step verification preferences'
-            },
-            {
-                id: 'labels',
+                id: ConfigurationCategoryEnum.LABELS,
                 icon: 'heroicons_outline:tag',
                 title: 'Labels',
                 description: 'Manage the labels for the emails and phone numbers of your contacts'
+            },
+            {
+                id: ConfigurationCategoryEnum.COMPANY_CATEGORY,
+                icon: 'heroicons_outline:user-circle',
+                title: 'Company Categories',
+                description: 'Manage the company categories for the companies in your network'
+            },
+            {
+                id: ConfigurationCategoryEnum.PRIMARY_INDUSTRY,
+                icon: 'heroicons_outline:lock-closed',
+                title: 'Primary Industries',
+                description: 'Manage the primary industry labels for the companies in your network'
             }
             // {
             //     id: 'plan-billing',
@@ -135,7 +143,7 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
      *
      * @param panel
      */
-    goToPanel(panel: string): void {
+    goToPanel(panel: ConfigurationCategoryType): void {
         this.selectedPanel = panel;
 
         // Close the drawer on 'over' mode

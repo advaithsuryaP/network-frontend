@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Category, Contact, Country } from './contact.model';
+import { Contact, Country } from './contact.model';
 import { BehaviorSubject, map, Observable, switchMap, tap, take, throwError, of, filter, pipe } from 'rxjs';
 import { CreateContactPayload } from './contact.payload';
 
@@ -15,12 +15,10 @@ export class ContactsService {
     private _contactSubject: BehaviorSubject<Contact | null> = new BehaviorSubject(null);
     private _contactsSubject: BehaviorSubject<Contact[]> = new BehaviorSubject([]);
     private _countriesSubject: BehaviorSubject<Country[]> = new BehaviorSubject([]);
-    private _categoriesSubject: BehaviorSubject<Category[]> = new BehaviorSubject([]);
 
     contact$: Observable<Contact> = this._contactSubject.asObservable();
     contacts$: Observable<Contact[]> = this._contactsSubject.asObservable();
     countries$: Observable<Country[]> = this._countriesSubject.asObservable();
-    categories$: Observable<Category[]> = this._categoriesSubject.asObservable();
 
     fetchContacts(): Observable<Contact[]> {
         return this._http
@@ -162,14 +160,5 @@ export class ContactsService {
         return this._http
             .get<Country[]>(`${API_URL}/metadata/countries`)
             .pipe(tap(countries => this._countriesSubject.next(countries)));
-    }
-
-    /**
-     * Get categories
-     */
-    fetchCategories(): Observable<Category[]> {
-        return this._http
-            .get<Category[]>(`${API_URL}/metadata/categories`)
-            .pipe(tap(categories => this._categoriesSubject.next(categories)));
     }
 }

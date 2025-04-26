@@ -3,7 +3,6 @@ import { CompaniesComponent } from './companies.component';
 import { CompanyListComponent } from './company-list/company-list.component';
 import { CompaniesService } from './companies.service';
 import { Routes } from '@angular/router';
-import { ContactsService } from '../contacts/contacts.service';
 
 export default [
     {
@@ -14,8 +13,7 @@ export default [
                 path: '',
                 component: CompanyListComponent,
                 resolve: {
-                    companies: () => inject(CompaniesService).fetchCompanies(),
-                    categories: () => inject(ContactsService).fetchCategories()
+                    companies: () => inject(CompaniesService).fetchCompanies()
                 }
                 // children: [
                 //     {

@@ -1,0 +1,150 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-end py-4 px-3 md:px-4 border-b">
+        <div class="flex items-center mt-6 sm:mt-0 sm:ml-4">
+            <button class="ml-4" mat-flat-button [color]="'primary'" (click)="createConfiguration()">
+                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                <span class="ml-2 mr-1">Add Label</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main -->
+    <div class="flex flex-col flex-auto">
+        <ng-container *ngIf="configurations?.length > 0; else noConfigurations">
+            <table mat-table [dataSource]="configurations" multiTemplateDataRows class="flex-1">
+                <!-- Label Column -->
+                <ng-container matColumnDef="label">
+                    <th mat-header-cell *matHeaderCellDef>Label</th>
+                    <td mat-cell *matCellDef="let configuration">{{ configuration.label }}</td>
+                </ng-container>
+
+                <!-- Description Column -->
+                <ng-container matColumnDef="description">
+                    <th mat-header-cell *matHeaderCellDef>Description</th>
+                    <td mat-cell *matCellDef="let configuration">{{ configuration.description }}</td>
+                </ng-container>
+
+                <!-- Hidden Column -->
+                <ng-container matColumnDef="is_hidden">
+                    <th mat-header-cell *matHeaderCellDef>Hidden</th>
+                    <td mat-cell *matCellDef="let configuration">
+                        <div class="hidden lg:block">
+                            <ng-container *ngIf="configuration.is_hidden">
+                                <mat-icon
+                                    class="text-green-400 icon-size-5"
+                                    [svgIcon]="'heroicons_solid:check'"></mat-icon>
+                            </ng-container>
+                            <ng-container *ngIf="!configuration.is_hidden">
+                                <mat-icon
+                                    class="text-gray-400 icon-size-5"
+                                    [svgIcon]="'heroicons_solid:x-mark'"></mat-icon>
+                            </ng-container>
+                        </div>
+                        <div class="lg:hidden">
+                            <mat-slide-toggle [checked]="configuration.is_hidden" disabled></mat-slide-toggle>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- Disabled Column -->
+                <ng-container matColumnDef="is_disabled">
+                    <th mat-header-cell *matHeaderCellDef>Disabled</th>
+                    <td mat-cell *matCellDef="let configuration">
+                        <div class="hidden lg:block">
+                            <ng-container *ngIf="configuration.is_disabled">
+                                <mat-icon
+                                    class="text-green-400 icon-size-5"
+                                    [svgIcon]="'heroicons_solid:check'"></mat-icon>
+                            </ng-container>
+                            <ng-container *ngIf="!configuration.is_disabled">
+                                <mat-icon
+                                    class="text-gray-400 icon-size-5"
+                                    [svgIcon]="'heroicons_solid:x-mark'"></mat-icon>
+                            </ng-container>
+                        </div>
+                        <div class="lg:hidden">
+                            <mat-slide-toggle [checked]="configuration.is_disabled" disabled></mat-slide-toggle>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- Details Column -->
+                <ng-container matColumnDef="details">
+                    <th mat-header-cell *matHeaderCellDef>Details</th>
+                    <td mat-cell *matCellDef="let configuration">
+                        <button mat-icon-button (click)="toggleConfiguration(configuration)">
+                            <mat-icon
+                                [svgIcon]="
+                                    expandedConfiguration?.id === configuration.id
+                                        ? 'heroicons_outline:chevron-up'
+                                        : 'heroicons_outline:chevron-down'
+                                ">
+                            </mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <!-- Expanded Content Column -->
+                <ng-container matColumnDef="expandedDetail">
+                    <td mat-cell *matCellDef="let configuration" [attr.colspan]="displayedColumns.length">
+                        <div class="p-4" *ngIf="expandedConfiguration?.id === configuration.id">
+                            <div class="grid labels-grid gap-4">
+                                <form [formGroup]="configurationForm" class="col-span-full">
+                                    <mat-form-field class="w-full">
+                                        <mat-label>Label</mat-label>
+                                        <input matInput formControlName="label" placeholder="Enter label" />
+                                    </mat-form-field>
+
+                                    <mat-form-field class="w-full">
+                                        <mat-label>Description</mat-label>
+                                        <textarea
+                                            matInput
+                                            formControlName="description"
+                                            placeholder="Enter description"
+                                            rows="3"></textarea>
+                                    </mat-form-field>
+
+                                    <div class="flex items-center space-x-4">
+                                        <mat-slide-toggle formControlName="is_hidden">Hidden</mat-slide-toggle>
+                                        <mat-slide-toggle formControlName="is_disabled">Disabled</mat-slide-toggle>
+                                    </div>
+
+                                    <div class="flex justify-between space-x-4 mt-4">
+                                        <button
+                                            mat-flat-button
+                                            color="warn"
+                                            (click)="deleteConfiguration(configuration)">
+                                            Delete
+                                        </button>
+                                        <button
+                                            mat-flat-button
+                                            color="primary"
+                                            (click)="updateConfiguration()"
+                                            [disabled]="configurationForm.invalid">
+                                            Update
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                <tr
+                    mat-row
+                    *matRowDef="let row; columns: ['expandedDetail']"
+                    [class.example-detail-row]="true"
+                    [style.display]="expandedConfiguration?.id === row.id ? '' : 'none'"></tr>
+            </table>
+        </ng-container>
+
+        <ng-template #noConfigurations>
+            <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">
+                There are no primary industries!
+            </div>
+        </ng-template>
+    </div>
+</div>

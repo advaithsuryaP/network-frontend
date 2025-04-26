@@ -10,10 +10,10 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { NgClass, NgFor, NgIf } from '@angular/common';
-import { Subject, switchMap, takeUntil, of, combineLatest, tap } from 'rxjs';
+import { Subject, switchMap, takeUntil, combineLatest, tap } from 'rxjs';
 import { ContactsService } from '../../contacts.service';
-import { ActivatedRoute, ParamMap, Params, Router, RouterLink } from '@angular/router';
-import { Category, Contact, Country } from '../../contact.model';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Contact, Country } from '../../contact.model';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
@@ -26,7 +26,7 @@ import { MatRippleModule } from '@angular/material/core';
 import { MatRadioModule } from '@angular/material/radio';
 import { Configuration } from '../../../configuration/configuration.model';
 import { ConfigurationService } from '../../../configuration/configuration.service';
-
+import { ConfigurationCategoryEnum } from '../../../configuration/configuration.enum';
 interface EmailFormGroup {
     label: FormControl<string>;
     email: FormControl<string>;
@@ -109,8 +109,11 @@ export class ContactEditComponent implements OnInit, OnDestroy {
     isEditMode: boolean = false;
     contact: Contact | null = null;
     countries: Country[] = [];
-    categories: Category[] = [];
-    configurations: Configuration[] = [];
+
+    // Configurations
+    labels: Configuration[] = [];
+    companyCategories: Configuration[] = [];
+    primaryIndustries: Configuration[] = [];
 
     contactForm = new FormGroup<ContactForm>({
         id: new FormControl<string>(''),
@@ -159,23 +162,27 @@ export class ContactEditComponent implements OnInit, OnDestroy {
             tap((countries: Country[]) => (this.countries = countries))
         );
 
-        const categories$ = this._contactsService.categories$.pipe(
-            tap((categories: Category[]) => (this.categories = categories))
-        );
-
         const configurations$ = this._configurationService.configurations$.pipe(
-            tap((configurations: Configuration[]) => (this.configurations = configurations))
+            tap((configurations: Configuration[]) => {
+                this.labels = configurations.filter(config => config.category === ConfigurationCategoryEnum.LABELS);
+                this.companyCategories = configurations.filter(
+                    config => config.category === ConfigurationCategoryEnum.COMPANY_CATEGORY
+                );
+                this.primaryIndustries = configurations.filter(
+                    config => config.category === ConfigurationCategoryEnum.PRIMARY_INDUSTRY
+                );
+            })
         );
 
-        const newContact$ = combineLatest([countries$, categories$, configurations$]).pipe(
+        const newContact$ = combineLatest([countries$, configurations$]).pipe(
             tap(_ => {
                 this.addEmailField();
                 this.addPhoneNumberField();
             })
         );
 
-        const editContact$ = combineLatest([contact$, countries$, categories$, configurations$]).pipe(
-            tap(([contact, _, __, ___]) => {
+        const editContact$ = combineLatest([contact$, countries$, configurations$]).pipe(
+            tap(([contact, _, ___]) => {
                 this.contact = contact;
 
                 // Clear the emails and phoneNumbers form arrays
@@ -303,7 +310,7 @@ export class ContactEditComponent implements OnInit, OnDestroy {
     addEmailField(): void {
         this.contactForm.controls.emails.push(
             new FormGroup<EmailFormGroup>({
-                label: new FormControl<string>(this.configurations[0]?.id || '', {
+                label: new FormControl<string>(this.labels[0]?.id || '', {
                     validators: [Validators.required],
                     nonNullable: true
                 }),
@@ -332,7 +339,7 @@ export class ContactEditComponent implements OnInit, OnDestroy {
                     validators: [Validators.required],
                     nonNullable: true
                 }),
-                label: new FormControl<string>(this.configurations[0]?.id || '', {
+                label: new FormControl<string>(this.labels[0]?.id || '', {
                     validators: [Validators.required],
                     nonNullable: true
                 })
@@ -348,6 +355,18 @@ export class ContactEditComponent implements OnInit, OnDestroy {
 
     getCountryByIso(iso: string): Country {
         return this.countries.find(country => country.iso === iso);
+    }
+
+    getLabelById(id: string): string {
+        return this.labels.find(label => label.id === id)?.label || '';
+    }
+
+    getCompanyCategoryById(id: string): string {
+        return this.companyCategories.find(category => category.id === id)?.label || '';
+    }
+
+    getPrimaryIndustryById(id: string): string {
+        return this.primaryIndustries.find(industry => industry.id === id)?.label || '';
     }
 
     /**

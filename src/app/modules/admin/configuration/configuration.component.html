@@ -69,19 +69,19 @@
                 </div>
 
                 <!-- Load settings panel -->
-                <div class="">
+                <div class="flex flex-col flex-auto">
                     <ng-container [ngSwitch]="selectedPanel">
-                        <!-- Account -->
-                        <ng-container *ngSwitchCase="'account'">
-                            <!-- <settings-account></settings-account> -->
-                        </ng-container>
-                        <!-- Security -->
-                        <ng-container *ngSwitchCase="'security'">
-                            <!-- <settings-security></settings-security> -->
-                        </ng-container>
                         <!-- Labels -->
-                        <ng-container *ngSwitchCase="'labels'">
+                        <ng-container *ngSwitchCase="ConfigurationCategoryEnum.LABELS">
                             <app-labels />
+                        </ng-container>
+                        <!-- Company Categories -->
+                        <ng-container *ngSwitchCase="ConfigurationCategoryEnum.COMPANY_CATEGORY">
+                            <app-company-categories />
+                        </ng-container>
+                        <!-- Primary Industries -->
+                        <ng-container *ngSwitchCase="ConfigurationCategoryEnum.PRIMARY_INDUSTRY">
+                            <app-primary-industries />
                         </ng-container>
                         <!-- Plan & Billing -->
                         <!-- <ng-container *ngSwitchCase="'plan-billing'">

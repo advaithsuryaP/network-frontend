@@ -28,8 +28,3 @@ export interface Country {
     code: string;
     flagImagePos: string;
 }
-
-export interface Category {
-    id: string;
-    label: string;
-}

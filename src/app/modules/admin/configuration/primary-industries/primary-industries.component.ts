@@ -22,7 +22,7 @@ import { Configuration } from '../configuration.model';
 import { ConfigurationCategoryEnum } from '../configuration.enum';
 
 @Component({
-    selector: 'app-labels',
+    selector: 'app-primary-industries',
     standalone: true,
     imports: [
         CommonModule,
@@ -35,8 +35,8 @@ import { ConfigurationCategoryEnum } from '../configuration.enum';
         MatFormFieldModule,
         MatInputModule
     ],
+    templateUrl: './primary-industries.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    templateUrl: './labels.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations,
     styles: [
@@ -59,13 +59,13 @@ import { ConfigurationCategoryEnum } from '../configuration.enum';
         `
     ]
 })
-export class LabelsComponent implements OnInit, OnDestroy {
+export class PrimaryIndustriesComponent implements OnInit, OnDestroy {
     configurations$: Observable<Configuration[]>;
     configurations: Configuration[];
     displayedColumns: string[] = ['label', 'description', 'is_hidden', 'is_disabled', 'details'];
     expandedConfiguration: Configuration | null = null;
     configurationForm: UntypedFormGroup;
-    private _unsubscribeAll: Subject<void> = new Subject<void>();
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
@@ -79,7 +79,7 @@ export class LabelsComponent implements OnInit, OnDestroy {
         this.configurationForm = this._formBuilder.group({
             id: [''],
             label: ['', [Validators.required]],
-            category: [ConfigurationCategoryEnum.LABELS, [Validators.required]],
+            category: [ConfigurationCategoryEnum.PRIMARY_INDUSTRY, [Validators.required]],
             description: [''],
             is_hidden: [false],
             is_disabled: [false]
@@ -87,7 +87,9 @@ export class LabelsComponent implements OnInit, OnDestroy {
 
         // Get the configurations
         this.configurations$ = this._configurationService.configurations$.pipe(
-            map(configurations => configurations.filter(config => config.category === ConfigurationCategoryEnum.LABELS))
+            map(configurations =>
+                configurations.filter(config => config.category === ConfigurationCategoryEnum.PRIMARY_INDUSTRY)
+            )
         );
 
         // Subscribe to the configurations
@@ -99,7 +101,7 @@ export class LabelsComponent implements OnInit, OnDestroy {
 
     createConfiguration(): void {
         this._configurationService
-            .createConfiguration(ConfigurationCategoryEnum.LABELS)
+            .createConfiguration(ConfigurationCategoryEnum.PRIMARY_INDUSTRY)
             .subscribe((newConfig: Configuration) => {
                 // Automatically expand the new configuration for editing
                 this.expandedConfiguration = newConfig;
