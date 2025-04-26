@@ -307,9 +307,9 @@ export class ContactEditComponent implements OnInit, OnDestroy {
 
     cancel(): void {
         if (this.isEditMode) {
-            this._router.navigate(['../'], { relativeTo: this._activatedRoute });
+            this._router.navigate(['/contacts', 'view', this.contact.id]);
         } else {
-            this._router.navigate(['../'], { relativeTo: this._activatedRoute.parent });
+            this._router.navigate(['/contacts']);
         }
     }
 

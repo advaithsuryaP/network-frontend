@@ -348,7 +348,12 @@
                 <div
                     class="flex items-center mt-10 -mx-6 sm:-mx-12 py-4 pr-4 pl-1 sm:pr-12 sm:pl-7 border-t bg-gray-50 dark:bg-transparent">
                     <!-- Delete -->
-                    <button mat-button [color]="'warn'" [matTooltip]="'Delete'" (click)="deleteContact()">
+                    <button
+                        mat-button
+                        [color]="'warn'"
+                        [matTooltip]="'Delete'"
+                        (click)="deleteContact()"
+                        [disabled]="!isEditMode">
                         Delete
                     </button>
                     <!-- Cancel -->
