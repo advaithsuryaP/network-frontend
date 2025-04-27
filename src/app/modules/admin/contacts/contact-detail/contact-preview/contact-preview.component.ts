@@ -55,7 +55,7 @@ export class ContactPreviewComponent implements OnInit {
 
         // Get labels
         this._configurationService.configurations$.pipe(takeUntil(this._unsubscribeAll)).subscribe(configurations => {
-            this.labels = configurations.filter(config => config.category === ConfigurationCategoryEnum.LABELS);
+            this.labels = configurations.filter(config => config.category === ConfigurationCategoryEnum.CONTACT_LABELS);
             this.companyCategories = configurations.filter(
                 config => config.category === ConfigurationCategoryEnum.COMPANY_CATEGORY
             );
@@ -63,7 +63,7 @@ export class ContactPreviewComponent implements OnInit {
                 config => config.category === ConfigurationCategoryEnum.PRIMARY_INDUSTRY
             );
             this.universities = configurations.filter(
-                config => config.category === ConfigurationCategoryEnum.UNIVERSITY
+                config => config.category === ConfigurationCategoryEnum.NETWORK_UNIVERSITY
             );
             this._changeDetectorRef.markForCheck();
         });

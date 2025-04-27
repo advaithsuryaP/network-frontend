@@ -167,7 +167,9 @@ export class ContactEditComponent implements OnInit, OnDestroy {
 
         const configurations$ = this._configurationService.configurations$.pipe(
             tap((configurations: Configuration[]) => {
-                this.labels = configurations.filter(config => config.category === ConfigurationCategoryEnum.LABELS);
+                this.labels = configurations.filter(
+                    config => config.category === ConfigurationCategoryEnum.CONTACT_LABELS
+                );
                 this.companyCategories = configurations.filter(
                     config => config.category === ConfigurationCategoryEnum.COMPANY_CATEGORY
                 );
@@ -175,7 +177,7 @@ export class ContactEditComponent implements OnInit, OnDestroy {
                     config => config.category === ConfigurationCategoryEnum.PRIMARY_INDUSTRY
                 );
                 this.universities = configurations.filter(
-                    config => config.category === ConfigurationCategoryEnum.UNIVERSITY
+                    config => config.category === ConfigurationCategoryEnum.NETWORK_UNIVERSITY
                 );
             })
         );

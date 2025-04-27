@@ -77,7 +77,7 @@ export default class ContactLabelsComponent implements OnInit, OnDestroy {
         this.configurationForm = this._formBuilder.group({
             id: [''],
             label: ['', [Validators.required]],
-            category: [ConfigurationCategoryEnum.LABELS, [Validators.required]],
+            category: [ConfigurationCategoryEnum.CONTACT_LABELS, [Validators.required]],
             description: [''],
             is_hidden: [false],
             is_disabled: [false]
@@ -85,7 +85,9 @@ export default class ContactLabelsComponent implements OnInit, OnDestroy {
 
         // Get the configurations
         this.configurations$ = this._configurationService.configurations$.pipe(
-            map(configurations => configurations.filter(config => config.category === ConfigurationCategoryEnum.LABELS))
+            map(configurations =>
+                configurations.filter(config => config.category === ConfigurationCategoryEnum.CONTACT_LABELS)
+            )
         );
 
         // Subscribe to the configurations
@@ -97,7 +99,7 @@ export default class ContactLabelsComponent implements OnInit, OnDestroy {
 
     createConfiguration(): void {
         this._configurationService
-            .createConfiguration(ConfigurationCategoryEnum.LABELS)
+            .createConfiguration(ConfigurationCategoryEnum.CONTACT_LABELS)
             .subscribe((newConfig: Configuration) => {
                 // Automatically expand the new configuration for editing
                 this.expandedConfiguration = newConfig;

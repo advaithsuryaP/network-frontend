@@ -77,7 +77,7 @@ export default class NetworkUniversitiesComponent implements OnInit, OnDestroy {
         this.configurationForm = this._formBuilder.group({
             id: [''],
             label: ['', [Validators.required]],
-            category: [ConfigurationCategoryEnum.UNIVERSITY, [Validators.required]],
+            category: [ConfigurationCategoryEnum.NETWORK_UNIVERSITY, [Validators.required]],
             description: [''],
             is_hidden: [false],
             is_disabled: [false]
@@ -87,7 +87,7 @@ export default class NetworkUniversitiesComponent implements OnInit, OnDestroy {
         this._configurationService.configurations$
             .pipe(
                 map(configurations =>
-                    configurations.filter(config => config.category === ConfigurationCategoryEnum.UNIVERSITY)
+                    configurations.filter(config => config.category === ConfigurationCategoryEnum.NETWORK_UNIVERSITY)
                 ),
                 takeUntil(this._unsubscribeAll)
             )
@@ -99,7 +99,7 @@ export default class NetworkUniversitiesComponent implements OnInit, OnDestroy {
 
     createConfiguration(): void {
         this._configurationService
-            .createConfiguration(ConfigurationCategoryEnum.UNIVERSITY)
+            .createConfiguration(ConfigurationCategoryEnum.NETWORK_UNIVERSITY)
             .subscribe((newConfig: Configuration) => {
                 this.expandedConfiguration = newConfig;
                 this.configurationForm.patchValue(newConfig);

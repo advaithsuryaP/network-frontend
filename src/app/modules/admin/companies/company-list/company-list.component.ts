@@ -4,6 +4,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    inject,
     OnDestroy,
     OnInit,
     ViewEncapsulation
@@ -22,6 +23,9 @@ import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
 import { CompaniesService } from '../../companies/companies.service';
 import { Company } from '../../companies/company.model';
 import { ContactsService } from '../../contacts/contacts.service';
+import { Configuration } from '../../configuration/configuration.model';
+import { ConfigurationService } from '../../configuration/configuration.service';
+import { ConfigurationCategoryEnum } from '../../configuration/configuration.enum';
 
 @Component({
     selector: 'app-company-list',
@@ -47,8 +51,10 @@ import { ContactsService } from '../../contacts/contacts.service';
     templateUrl: './company-list.component.html'
 })
 export class CompanyListComponent implements OnInit, OnDestroy {
-    startups: Company[];
-    filteredStartups: Company[];
+    private _configurationService = inject(ConfigurationService);
+
+    companies: Company[];
+    filteredCompanies: Company[];
     filters: {
         categorySlug$: BehaviorSubject<string>;
         query$: BehaviorSubject<string>;
@@ -58,6 +64,10 @@ export class CompanyListComponent implements OnInit, OnDestroy {
         query$: new BehaviorSubject(''),
         confidentialityRequested$: new BehaviorSubject(false)
     };
+
+    contactLabels: Configuration[] = [];
+    companyCategories: Configuration[] = [];
+    primaryIndustries: Configuration[] = [];
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -81,12 +91,26 @@ export class CompanyListComponent implements OnInit, OnDestroy {
      */
     ngOnInit(): void {
         // Get the courses
-        this._companyService.startups$.pipe(takeUntil(this._unsubscribeAll)).subscribe((startups: Company[]) => {
-            this.startups = this.filteredStartups = startups;
+        this._companyService.companies$.pipe(takeUntil(this._unsubscribeAll)).subscribe((companies: Company[]) => {
+            this.companies = this.filteredCompanies = companies;
 
             // Mark for check
             this._changeDetectorRef.markForCheck();
         });
+
+        this._configurationService.configurations$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((configurations: Configuration[]) => {
+                this.contactLabels = configurations.filter(
+                    config => config.category === ConfigurationCategoryEnum.CONTACT_LABELS
+                );
+                this.companyCategories = configurations.filter(
+                    config => config.category === ConfigurationCategoryEnum.COMPANY_CATEGORY
+                );
+                this.primaryIndustries = configurations.filter(
+                    config => config.category === ConfigurationCategoryEnum.PRIMARY_INDUSTRY
+                );
+            });
 
         // Filter the courses
         combineLatest([
@@ -95,27 +119,27 @@ export class CompanyListComponent implements OnInit, OnDestroy {
             this.filters.confidentialityRequested$
         ]).subscribe(([categorySlug, query, confidentialityRequested]) => {
             // Reset the filtered courses
-            this.filteredStartups = this.startups;
+            this.filteredCompanies = this.companies;
 
             // Filter by category
             if (categorySlug !== '') {
-                this.filteredStartups = this.filteredStartups.filter(startup => startup.category === categorySlug);
+                this.filteredCompanies = this.filteredCompanies.filter(company => company.category === categorySlug);
             }
 
             // Filter by search query
             if (query !== '') {
-                this.filteredStartups = this.filteredStartups.filter(
-                    startup =>
-                        startup.name.toLowerCase().includes(query.toLowerCase()) ||
-                        startup.description.toLowerCase().includes(query.toLowerCase()) ||
-                        startup.category.toLowerCase().includes(query.toLowerCase())
+                this.filteredCompanies = this.filteredCompanies.filter(
+                    company =>
+                        company.name.toLowerCase().includes(query.toLowerCase()) ||
+                        company.description.toLowerCase().includes(query.toLowerCase()) ||
+                        company.category.toLowerCase().includes(query.toLowerCase())
                 );
             }
 
             // Filter by completed
             if (confidentialityRequested) {
-                this.filteredStartups = this.filteredStartups.filter(
-                    startup => startup.confidentialityRequested === confidentialityRequested
+                this.filteredCompanies = this.filteredCompanies.filter(
+                    company => company.confidentialityRequested === confidentialityRequested
                 );
             }
         });

@@ -44,7 +44,7 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
     drawerOpened: boolean = true;
     panels: ConfigurationPanel[] = [
         {
-            id: ConfigurationCategoryEnum.LABELS,
+            id: ConfigurationCategoryEnum.CONTACT_LABELS,
             icon: 'heroicons_outline:tag',
             title: 'Contact Labels',
             description: 'Manage the labels for the emails and phone numbers of your contacts',
@@ -65,14 +65,14 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
             route: 'primary-industries'
         },
         {
-            id: ConfigurationCategoryEnum.UNIVERSITY,
+            id: ConfigurationCategoryEnum.NETWORK_UNIVERSITY,
             icon: 'heroicons_outline:building-library',
             title: 'Network Universities',
             description: 'Manage the universities in your network for the contacts to be associated with',
             route: 'network-universities'
         }
     ];
-    selectedPanel: ConfigurationCategoryType = ConfigurationCategoryEnum.LABELS;
+    selectedPanel: ConfigurationCategoryType = ConfigurationCategoryEnum.CONTACT_LABELS;
 
     ConfigurationCategoryEnum = ConfigurationCategoryEnum;
     private _unsubscribeAll: Subject<any> = new Subject<any>();

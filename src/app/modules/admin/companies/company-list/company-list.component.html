@@ -47,9 +47,9 @@
                 </div>
             </div>
             <!-- Startups -->
-            <ng-container *ngIf="this.filteredStartups.length; else noStartups">
+            <ng-container *ngIf="this.filteredCompanies.length; else noCompanies">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-8 sm:mt-10">
-                    <ng-container *ngFor="let startup of filteredStartups; trackBy: trackByFn">
+                    <ng-container *ngFor="let company of filteredCompanies; trackBy: trackByFn">
                         <!-- Startup -->
                         <div class="flex flex-col h-auto min-h-96 shadow rounded-2xl overflow-hidden bg-card">
                             <div class="flex flex-col p-6">
@@ -61,7 +61,7 @@
                                     </div>
                                     <!-- Confidentiality indicator -->
                                     <div class="flex items-center">
-                                        <ng-container *ngIf="startup.confidentialityRequested">
+                                        <ng-container *ngIf="company.confidentialityRequested">
                                             <mat-icon
                                                 class="icon-size-5 text-green-600"
                                                 [svgIcon]="'heroicons_solid:check-badge'"
@@ -70,8 +70,8 @@
                                     </div>
                                 </div>
                                 <!-- Startup name & description -->
-                                <div class="mt-4 text-lg font-medium">{{ startup.name }}</div>
-                                <div class="mt-0.5 line-clamp-2 text-secondary">{{ startup.description }}</div>
+                                <div class="mt-4 text-lg font-medium">{{ company.name }}</div>
+                                <div class="mt-0.5 line-clamp-2 text-secondary">{{ company.description }}</div>
                                 <div class="w-12 h-1 my-6 border-t-2"></div>
 
                                 <!-- Primary Industry -->
@@ -79,7 +79,7 @@
                                     <mat-icon
                                         class="icon-size-5 text-hint"
                                         [svgIcon]="'heroicons_solid:building-office'"></mat-icon>
-                                    <div class="ml-1.5">{{ startup.primaryIndustry || 'Industry not specified' }}</div>
+                                    <div class="ml-1.5">{{ company.primaryIndustry || 'Industry not specified' }}</div>
                                 </div>
 
                                 <!-- Website -->
@@ -87,50 +87,50 @@
                                     <mat-icon
                                         class="icon-size-5 text-hint"
                                         [svgIcon]="'heroicons_solid:link'"></mat-icon>
-                                    <div class="ml-1.5">{{ startup.website || 'No website' }}</div>
+                                    <div class="ml-1.5">{{ company.website || 'No website' }}</div>
                                 </div>
 
                                 <!-- USM Founders -->
                                 <div
                                     class="flex items-center mt-2 leading-5 text-md text-secondary"
-                                    *ngIf="startup.usmFounders">
+                                    *ngIf="company.usmFounders">
                                     <mat-icon
                                         class="icon-size-5 text-hint"
                                         [svgIcon]="'heroicons_solid:academic-cap'"></mat-icon>
-                                    <div class="ml-1.5">{{ startup.usmFounders }}</div>
+                                    <div class="ml-1.5">{{ company.usmFounders }}</div>
                                 </div>
 
                                 <!-- Pre-company Funding -->
                                 <div
                                     class="flex items-center mt-2 leading-5 text-md text-secondary"
-                                    *ngIf="startup.preCompanyFunding">
+                                    *ngIf="company.preCompanyFunding">
                                     <mat-icon
                                         class="icon-size-5 text-hint"
                                         [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
                                     <div class="ml-1.5">
-                                        Pre-company funding: ${{ startup.preCompanyFunding | number }}
+                                        Pre-company funding: ${{ company.preCompanyFunding | number }}
                                     </div>
                                 </div>
 
                                 <!-- TCF Amount -->
                                 <div
                                     class="flex items-center mt-2 leading-5 text-md text-secondary"
-                                    *ngIf="startup.tcfAmount">
+                                    *ngIf="company.tcfAmount">
                                     <mat-icon
                                         class="icon-size-5 text-hint"
                                         [svgIcon]="'heroicons_solid:banknotes'"></mat-icon>
-                                    <div class="ml-1.5">TCF Amount: ${{ startup.tcfAmount | number }}</div>
+                                    <div class="ml-1.5">TCF Amount: ${{ company.tcfAmount | number }}</div>
                                 </div>
 
                                 <!-- Program Indicators -->
                                 <div class="flex items-center mt-4 gap-2">
-                                    <ng-container *ngIf="startup.icorps">
+                                    <ng-container *ngIf="company.icorps">
                                         <div
                                             class="py-0.5 px-2 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-500 dark:text-purple-50">
                                             I-Corps
                                         </div>
                                     </ng-container>
-                                    <ng-container *ngIf="startup.tcf">
+                                    <ng-container *ngIf="company.tcf">
                                         <div
                                             class="py-0.5 px-2 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-500 dark:text-indigo-50">
                                             TCF
@@ -148,7 +148,7 @@
 
                                 <!-- View startup button -->
                                 <div class="px-6 py-4 text-right bg-gray-50 dark:bg-transparent">
-                                    <a mat-stroked-button [routerLink]="[startup.id]">
+                                    <a mat-stroked-button [routerLink]="[company.id]">
                                         <span class="inline-flex items-center">
                                             <span>View Details</span>
                                             <mat-icon
@@ -164,7 +164,7 @@
             </ng-container>
 
             <!-- No startups -->
-            <ng-template #noStartups>
+            <ng-template #noCompanies>
                 <div class="flex flex-auto flex-col items-center justify-center bg-gray-100 dark:bg-transparent">
                     <mat-icon class="icon-size-24" [svgIcon]="'heroicons_outline:document-magnifying-glass'"></mat-icon>
                     <div class="mt-6 text-2xl font-semibold tracking-tight text-secondary">No companies found!</div>
