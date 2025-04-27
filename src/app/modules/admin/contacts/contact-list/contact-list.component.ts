@@ -11,10 +11,10 @@ import {
 } from '@angular/core';
 import { Router, RouterLink, RouterOutlet, ActivatedRoute } from '@angular/router';
 import { ContactsService } from '../contacts.service';
-import { Observable, Subject, switchMap, takeUntil, map, finalize } from 'rxjs';
+import { Observable, Subject, switchMap, takeUntil, map, finalize, combineLatest, startWith } from 'rxjs';
 import { Contact } from '../contact.model';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-
+import { MatSelectModule } from '@angular/material/select';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { NgIf, NgFor, NgClass, AsyncPipe, I18nPluralPipe } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -25,6 +25,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Configuration } from '../../configuration/configuration.model';
+import { ConfigurationService } from '../../configuration/configuration.service';
+import { ConfigurationCategoryEnum } from '../../configuration/configuration.enum';
 
 @Component({
     selector: 'app-contact-list',
@@ -44,7 +47,8 @@ import { HttpErrorResponse } from '@angular/common/http';
         MatTooltipModule,
         MatSnackBarModule,
         MatFormFieldModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MatSelectModule
     ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -60,6 +64,7 @@ export class ContactListComponent implements OnInit, OnDestroy {
     private _contactsService = inject(ContactsService);
     private _changeDetectorRef = inject(ChangeDetectorRef);
     private _fuseMediaWatcherService = inject(FuseMediaWatcherService);
+    private _configurationService = inject(ConfigurationService);
 
     private _unsubscribeAll: Subject<void> = new Subject<void>();
 
@@ -71,13 +76,76 @@ export class ContactListComponent implements OnInit, OnDestroy {
     contactsCount: number = 0;
     drawerMode: 'side' | 'over';
 
+    // Filter controls
+    companyCategoryFilter = new FormControl<string>('');
+    primaryIndustryFilter = new FormControl<string>('');
+    universityFilter = new FormControl<string>('');
+
+    // Configuration data
+    companyCategories: Configuration[] = [];
+    primaryIndustries: Configuration[] = [];
+    universities: Configuration[] = [];
+
     ngOnInit(): void {
-        this.contacts$ = this._contactsService.contacts$.pipe(
-            map(contacts => {
+        // Get configurations
+        this._configurationService.configurations$.pipe(takeUntil(this._unsubscribeAll)).subscribe(configurations => {
+            this.companyCategories = configurations.filter(
+                config => config.category === ConfigurationCategoryEnum.COMPANY_CATEGORY
+            );
+            this.primaryIndustries = configurations.filter(
+                config => config.category === ConfigurationCategoryEnum.PRIMARY_INDUSTRY
+            );
+            this.universities = configurations.filter(
+                config => config.category === ConfigurationCategoryEnum.NETWORK_UNIVERSITY
+            );
+            this._changeDetectorRef.markForCheck();
+        });
+
+        // Combine all filters and search
+        this.contacts$ = combineLatest([
+            this._contactsService.contacts$,
+            this.searchInputControl.valueChanges.pipe(takeUntil(this._unsubscribeAll), startWith('')),
+            this.companyCategoryFilter.valueChanges.pipe(takeUntil(this._unsubscribeAll), startWith('')),
+            this.primaryIndustryFilter.valueChanges.pipe(takeUntil(this._unsubscribeAll), startWith('')),
+            this.universityFilter.valueChanges.pipe(takeUntil(this._unsubscribeAll), startWith(''))
+        ]).pipe(
+            map(([contacts, searchQuery, companyCategory, primaryIndustry, university]) => {
                 // Sort contacts alphabetically by first name
-                return [...contacts].sort((a, b) => {
+                let filteredContacts = [...contacts].sort((a, b) => {
                     return a.firstName.localeCompare(b.firstName);
                 });
+
+                // Apply search filter
+                if (searchQuery) {
+                    const query = searchQuery.toLowerCase();
+                    filteredContacts = filteredContacts.filter(
+                        contact =>
+                            contact.firstName.toLowerCase().includes(query) ||
+                            contact.lastName.toLowerCase().includes(query) ||
+                            contact.title.toLowerCase().includes(query)
+                    );
+                }
+
+                // Apply company category filter
+                if (companyCategory) {
+                    filteredContacts = filteredContacts.filter(
+                        contact => contact.company?.category === companyCategory
+                    );
+                }
+
+                // Apply primary industry filter
+                if (primaryIndustry) {
+                    filteredContacts = filteredContacts.filter(
+                        contact => contact.company?.primaryIndustry === primaryIndustry
+                    );
+                }
+
+                // Apply university filter
+                if (university) {
+                    filteredContacts = filteredContacts.filter(contact => contact.university === university);
+                }
+
+                return filteredContacts;
             })
         );
 

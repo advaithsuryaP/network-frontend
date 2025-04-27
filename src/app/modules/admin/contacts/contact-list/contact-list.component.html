@@ -15,69 +15,127 @@
             <!-- Main -->
             <div class="flex-auto">
                 <!-- Header -->
-                <div class="flex flex-col sm:flex-row md:flex-col flex-auto justify-between py-8 px-6 md:px-8 border-b">
-                    <!-- Title -->
-                    <div>
-                        <div class="text-4xl font-extrabold tracking-tight leading-none">Contacts</div>
-                        <div class="ml-0.5 font-medium text-secondary">
-                            <ng-container *ngIf="contactsCount > 0">
-                                {{ contactsCount }}
-                            </ng-container>
-                            {{
-                                contactsCount
-                                    | i18nPlural
-                                        : {
-                                              '=0': 'No contacts',
-                                              '=1': 'contact',
-                                              other: 'contacts'
-                                          }
-                            }}
+                <div class="flex flex-col py-8 px-6 md:px-8 border-b">
+                    <!-- Title and Search Row -->
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                        <!-- Title -->
+                        <div>
+                            <div class="text-4xl font-extrabold tracking-tight leading-none">Contacts</div>
+                            <div class="ml-0.5 font-medium text-secondary">
+                                <ng-container *ngIf="contactsCount > 0">
+                                    {{ contactsCount }}
+                                </ng-container>
+                                {{
+                                    contactsCount
+                                        | i18nPlural
+                                            : {
+                                                  '=0': 'No contacts',
+                                                  '=1': 'contact',
+                                                  other: 'contacts'
+                                              }
+                                }}
+                            </div>
+                        </div>
+
+                        <!-- Search and Actions -->
+                        <div class="flex items-center mt-4 sm:mt-0 w-full sm:w-auto">
+                            <!-- Search -->
+                            <div class="flex-auto max-w-[400px]">
+                                <mat-form-field
+                                    class="fuse-mat-dense fuse-mat-rounded w-full min-w-50"
+                                    subscriptSizing="dynamic">
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        matPrefix
+                                        [svgIcon]="'heroicons_solid:magnifying-glass'"></mat-icon>
+                                    <input
+                                        matInput
+                                        [formControl]="searchInputControl"
+                                        [autocomplete]="'off'"
+                                        [placeholder]="'Search contacts'" />
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Action buttons -->
+                            <div class="flex items-center space-x-2 ml-4">
+                                <button
+                                    mat-icon-button
+                                    [color]="'primary'"
+                                    [routerLink]="['/contacts', 'edit', 'new']"
+                                    matTooltip="Add Contact">
+                                    <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                                </button>
+
+                                <button
+                                    mat-icon-button
+                                    [color]="'accent'"
+                                    [disabled]="isLoading"
+                                    (click)="fileInput.click()"
+                                    matTooltip="Upload Contacts">
+                                    <mat-icon [svgIcon]="'heroicons_outline:document-arrow-up'"></mat-icon>
+                                </button>
+
+                                <input
+                                    #fileInput
+                                    type="file"
+                                    accept=".xlsx,.xls"
+                                    (change)="onFileSelected($event)"
+                                    style="display: none" />
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Main actions -->
-                    <div class="flex items-center mt-4 sm:mt-0 md:mt-4">
-                        <!-- Search -->
-                        <div class="flex-auto">
-                            <mat-form-field
-                                class="fuse-mat-dense fuse-mat-rounded w-full min-w-50"
-                                subscriptSizing="dynamic">
+                    <!-- Filters Row -->
+                    <div class="flex flex-col sm:flex-row gap-4 mt-8">
+                        <!-- Company Category Filter -->
+                        <div class="flex-1">
+                            <mat-form-field class="w-full" subscriptSizing="dynamic">
+                                <mat-label>Company Category</mat-label>
                                 <mat-icon
-                                    class="icon-size-5"
                                     matPrefix
-                                    [svgIcon]="'heroicons_solid:magnifying-glass'"></mat-icon>
-                                <input
-                                    matInput
-                                    [formControl]="searchInputControl"
-                                    [autocomplete]="'off'"
-                                    [placeholder]="'Search contacts'" />
+                                    class="icon-size-5"
+                                    [svgIcon]="'heroicons_solid:identification'"></mat-icon>
+                                <mat-select [formControl]="companyCategoryFilter">
+                                    <mat-option [value]="''">All Categories</mat-option>
+                                    <mat-option *ngFor="let category of companyCategories" [value]="category.id">
+                                        {{ category.label }}
+                                    </mat-option>
+                                </mat-select>
                             </mat-form-field>
                         </div>
-                        <!-- Action buttons -->
-                        <div class="flex items-center space-x-2 ml-4">
-                            <button
-                                mat-icon-button
-                                [color]="'primary'"
-                                [routerLink]="['/contacts', 'edit', 'new']"
-                                matTooltip="Add Contact">
-                                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-                            </button>
 
-                            <button
-                                mat-icon-button
-                                [color]="'accent'"
-                                [disabled]="isLoading"
-                                (click)="fileInput.click()"
-                                matTooltip="Upload Contacts">
-                                <mat-icon [svgIcon]="'heroicons_outline:document-arrow-up'"></mat-icon>
-                            </button>
+                        <!-- Primary Industry Filter -->
+                        <div class="flex-1">
+                            <mat-form-field class="w-full" subscriptSizing="dynamic">
+                                <mat-label>Primary Industry</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="icon-size-5"
+                                    [svgIcon]="'heroicons_solid:folder-open'"></mat-icon>
+                                <mat-select [formControl]="primaryIndustryFilter">
+                                    <mat-option [value]="''">All Industries</mat-option>
+                                    <mat-option *ngFor="let industry of primaryIndustries" [value]="industry.id">
+                                        {{ industry.label }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
 
-                            <input
-                                #fileInput
-                                type="file"
-                                accept=".xlsx,.xls"
-                                (change)="onFileSelected($event)"
-                                style="display: none" />
+                        <!-- University Filter -->
+                        <div class="flex-1">
+                            <mat-form-field class="w-full" subscriptSizing="dynamic">
+                                <mat-label>University</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="icon-size-5"
+                                    [svgIcon]="'heroicons_solid:building-library'"></mat-icon>
+                                <mat-select [formControl]="universityFilter">
+                                    <mat-option [value]="''">All Universities</mat-option>
+                                    <mat-option *ngFor="let university of universities" [value]="university.id">
+                                        {{ university.label }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
                         </div>
                     </div>
                 </div>

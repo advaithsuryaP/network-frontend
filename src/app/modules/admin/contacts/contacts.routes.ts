@@ -84,7 +84,8 @@ export default [
                 path: '',
                 component: ContactListComponent,
                 resolve: {
-                    contacts: () => inject(ContactsService).fetchContacts()
+                    contacts: () => inject(ContactsService).fetchContacts(),
+                    configurations: () => inject(ConfigurationService).fetchConfigurations()
                 },
                 children: [
                     {
