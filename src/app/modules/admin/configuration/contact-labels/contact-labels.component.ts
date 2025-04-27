@@ -15,7 +15,6 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { fuseAnimations } from '@fuse/animations';
-import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { map, Observable, Subject, takeUntil } from 'rxjs';
 import { ConfigurationService } from '../configuration.service';
 import { Configuration } from '../configuration.model';
@@ -69,7 +68,6 @@ export default class ContactLabelsComponent implements OnInit, OnDestroy {
 
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
-        private _fuseConfirmationService: FuseConfirmationService,
         private _formBuilder: UntypedFormBuilder,
         private _configurationService: ConfigurationService
     ) {}
@@ -129,26 +127,6 @@ export default class ContactLabelsComponent implements OnInit, OnDestroy {
     cancelUpdate(): void {
         this.expandedConfiguration = null;
         this._changeDetectorRef.markForCheck();
-    }
-
-    deleteConfiguration(configuration: Configuration): void {
-        const confirmation = this._fuseConfirmationService.open({
-            title: 'Delete configuration',
-            message: 'Are you sure you want to delete this configuration? This action cannot be undone!',
-            actions: {
-                confirm: {
-                    label: 'Delete'
-                }
-            }
-        });
-
-        confirmation.afterClosed().subscribe(result => {
-            if (result === 'confirmed') {
-                this._configurationService.deleteConfiguration(configuration.id).subscribe(() => {
-                    this._changeDetectorRef.markForCheck();
-                });
-            }
-        });
     }
 
     trackByFn(index: number, item: any): any {

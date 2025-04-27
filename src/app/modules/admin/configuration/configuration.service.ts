@@ -45,15 +45,16 @@ export class ConfigurationService {
         );
     }
 
-    deleteConfiguration(id: string): Observable<void> {
-        return this._http
-            .delete<void>(`${API_URL}/configurations/${id}`)
-            .pipe(
-                tap(() =>
-                    this._configurationsSubject.next(
-                        this._configurationsSubject.value.filter(configuration => configuration.id !== id)
-                    )
-                )
-            );
-    }
+    // Configuration should not be deleted, only disabled or hidden
+    // deleteConfiguration(id: string): Observable<void> {
+    //     return this._http
+    //         .delete<void>(`${API_URL}/configurations/${id}`)
+    //         .pipe(
+    //             tap(() =>
+    //                 this._configurationsSubject.next(
+    //                     this._configurationsSubject.value.filter(configuration => configuration.id !== id)
+    //                 )
+    //             )
+    //         );
+    // }
 }
