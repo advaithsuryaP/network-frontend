@@ -3,8 +3,9 @@ import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Configuration } from './configuration.model';
 import { ConfigurationCategoryType } from './configuration.enum';
+import { environment } from 'environments/environment';
 
-const API_URL = 'http://localhost:3000/api/v1';
+const API_URL = environment.API_URL;
 
 @Injectable({
     providedIn: 'root'

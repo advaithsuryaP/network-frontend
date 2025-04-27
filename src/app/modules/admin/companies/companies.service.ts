@@ -2,8 +2,9 @@ import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Company } from './company.model';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'environments/environment';
 
-const API_URL = 'http://localhost:3000/api/v1';
+const API_URL = environment.API_URL;
 
 @Injectable({
     providedIn: 'root'

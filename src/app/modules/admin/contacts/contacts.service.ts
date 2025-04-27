@@ -3,8 +3,9 @@ import { inject, Injectable } from '@angular/core';
 import { Contact, Country } from './contact.model';
 import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import { CreateContactPayload } from './contact.payload';
+import { environment } from 'environments/environment';
 
-const API_URL = 'http://localhost:3000/api/v1';
+const API_URL = environment.API_URL;
 
 @Injectable({
     providedIn: 'root'
