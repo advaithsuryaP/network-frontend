@@ -95,7 +95,10 @@
                             class="hidden sm:flex icon-size-5"
                             [svgIcon]="'heroicons_solid:identification'"></mat-icon>
                         <mat-select formControlName="university">
-                            <mat-option *ngFor="let university of universities" [value]="university.id">
+                            <mat-option
+                                *ngFor="let university of universities"
+                                [value]="university.id"
+                                [disabled]="university.is_disabled">
                                 {{ university.label }}
                             </mat-option>
                         </mat-select>
@@ -170,7 +173,10 @@
                                         class="hidden sm:flex icon-size-5"
                                         [svgIcon]="'heroicons_solid:tag'"></mat-icon>
                                     <mat-select formControlName="label" placeholder="Choose a label">
-                                        <mat-option *ngFor="let label of labels" [value]="label.id">
+                                        <mat-option
+                                            *ngFor="let label of labels"
+                                            [value]="label.id"
+                                            [disabled]="label.is_disabled">
                                             {{ label.label }}
                                         </mat-option>
                                     </mat-select>
@@ -258,7 +264,10 @@
                                         class="hidden sm:flex icon-size-5"
                                         [svgIcon]="'heroicons_solid:tag'"></mat-icon>
                                     <mat-select formControlName="label">
-                                        <mat-option *ngFor="let label of labels" [value]="label.id">
+                                        <mat-option
+                                            *ngFor="let label of labels"
+                                            [value]="label.id"
+                                            [disabled]="label.is_disabled">
                                             {{ label.label }}
                                         </mat-option>
                                     </mat-select>
@@ -297,7 +306,10 @@
                                 class="hidden sm:flex icon-size-5"
                                 [svgIcon]="'heroicons_solid:identification'"></mat-icon>
                             <mat-select formControlName="category">
-                                <mat-option *ngFor="let category of companyCategories" [value]="category.id">
+                                <mat-option
+                                    *ngFor="let category of companyCategories"
+                                    [value]="category.id"
+                                    [disabled]="category.is_disabled">
                                     {{ category.label }}
                                 </mat-option>
                             </mat-select>
@@ -311,7 +323,10 @@
                                 class="hidden sm:flex icon-size-5"
                                 [svgIcon]="'heroicons_solid:folder-open'"></mat-icon>
                             <mat-select formControlName="primaryIndustry">
-                                <mat-option *ngFor="let industry of primaryIndustries" [value]="industry.id">
+                                <mat-option
+                                    *ngFor="let industry of primaryIndustries"
+                                    [value]="industry.id"
+                                    [disabled]="industry.is_disabled">
                                     {{ industry.label }}
                                 </mat-option>
                             </mat-select>
