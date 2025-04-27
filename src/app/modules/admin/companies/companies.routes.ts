@@ -15,18 +15,6 @@ export default [
                 resolve: {
                     companies: () => inject(CompaniesService).fetchCompanies()
                 }
-                // children: [
-                //     {
-                //         path: ':id',
-                //         resolve: {
-                //             contact: contactResolver,
-                //             countries: () => inject(ContactsService).fetchCountries(),
-                //             categories: () => inject(ContactsService).fetchCategories()
-                //         },
-                //         component: ContactDetailComponent,
-                //         canDeactivate: [canDeactivateContactsDetails]
-                //     }
-                // ]
             }
         ]
     }

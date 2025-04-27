@@ -17,13 +17,6 @@ export const defaultNavigation: FuseNavigationItem[] = [
         link: '/companies'
     },
     {
-        id: 'startups',
-        title: 'Startups',
-        type: 'basic',
-        icon: 'heroicons_outline:arrow-trending-up',
-        link: '/startups'
-    },
-    {
         id: 'configuration',
         title: 'Configuration',
         type: 'basic',
@@ -45,13 +38,6 @@ export const compactNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:building-office-2',
         link: '/companies'
-    },
-    {
-        id: 'startups',
-        title: 'Startups',
-        type: 'basic',
-        icon: 'heroicons_outline:arrow-trending-up',
-        link: '/startups'
     },
     {
         id: 'configuration',
@@ -77,13 +63,6 @@ export const futuristicNavigation: FuseNavigationItem[] = [
         link: '/companies'
     },
     {
-        id: 'startups',
-        title: 'Startups',
-        type: 'basic',
-        icon: 'heroicons_outline:arrow-trending-up',
-        link: '/startups'
-    },
-    {
         id: 'configuration',
         title: 'Configuration',
         type: 'basic',
@@ -105,13 +84,6 @@ export const horizontalNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:building-office-2',
         link: '/companies'
-    },
-    {
-        id: 'startups',
-        title: 'Startups',
-        type: 'basic',
-        icon: 'heroicons_outline:arrow-trending-up',
-        link: '/startups'
     },
     {
         id: 'configuration',

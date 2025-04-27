@@ -106,10 +106,6 @@ export const appRoutes: Route[] = [
                 loadChildren: () => import('app/modules/admin/companies/companies.routes')
             },
             {
-                path: 'startups',
-                loadChildren: () => import('app/modules/admin/startups/startups.routes')
-            },
-            {
                 path: 'configuration',
                 loadChildren: () => import('app/modules/admin/configuration/configuration.routes')
             }
