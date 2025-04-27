@@ -250,7 +250,7 @@ export class ContactEditComponent implements OnInit, OnDestroy {
                                     nonNullable: true
                                 }),
                                 email: new FormControl<string>(email.email, {
-                                    validators: [Validators.required],
+                                    validators: [Validators.required, Validators.email],
                                     nonNullable: true
                                 })
                             })
@@ -267,7 +267,7 @@ export class ContactEditComponent implements OnInit, OnDestroy {
                                     nonNullable: true
                                 }),
                                 phoneNumber: new FormControl<string>(phoneNumber.phoneNumber, {
-                                    validators: [Validators.required],
+                                    validators: [Validators.required, Validators.pattern(/^\d{10}$/)],
                                     nonNullable: true
                                 }),
                                 label: new FormControl<string>(phoneNumber.label, {

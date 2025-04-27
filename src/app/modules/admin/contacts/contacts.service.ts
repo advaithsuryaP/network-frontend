@@ -136,16 +136,16 @@ export class ContactsService {
      *
      * @param file The Excel file to upload
      */
-    uploadContacts(file: File): Observable<Contact[]> {
+    uploadContacts(file: File): Observable<{ message: string; data: Contact[] }> {
         const formData = new FormData();
         formData.append('file', file);
 
-        return this._http.post<Contact[]>(`${API_URL}/contacts/upload`, formData).pipe(
-            tap(newContacts => {
+        return this._http.post<{ message: string; data: Contact[] }>(`${API_URL}/contacts/upload`, formData).pipe(
+            tap(response => {
                 // Get current contacts
                 const currentContacts = this._contactsSubject.getValue();
                 // Append new contacts to existing ones
-                this._contactsSubject.next([...currentContacts, ...newContacts]);
+                this._contactsSubject.next([...currentContacts, ...response.data]);
             })
         );
     }

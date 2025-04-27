@@ -24,6 +24,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'app-contact-list',
@@ -148,18 +149,18 @@ export class ContactListComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
         this._contactsService
             .uploadContacts(file)
-            .pipe(finalize(() => this._changeDetectorRef.markForCheck()))
+            .pipe(
+                finalize(() => {
+                    this.isLoading = false;
+                    this.fileInput.nativeElement.value = '';
+                    this._changeDetectorRef.markForCheck();
+                })
+            )
             .subscribe({
-                next: response => {
-                    this.isLoading = false;
-                    this._snackBar.open('Contacts uploaded successfully', 'Close', { duration: 3000 });
-                    this.fileInput.nativeElement.value = ''; // Reset file input
-                },
-                error: error => {
-                    this.isLoading = false;
+                next: response => this._snackBar.open(response.message, 'Close', { duration: 3000 }),
+                error: (error: HttpErrorResponse) => {
                     console.error('Error uploading contacts:', error);
-                    this._snackBar.open('Error uploading contacts', 'Close', { duration: 3000 });
-                    this.fileInput.nativeElement.value = ''; // Reset file input
+                    this._snackBar.open(error.error.message, 'Close', { duration: 3000 });
                 }
             });
     }
