@@ -9,7 +9,7 @@ import {
 import { NgIf, NgFor } from '@angular/common';
 import { Subject, takeUntil } from 'rxjs';
 import { ContactsService } from '../../contacts.service';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { Contact, Country } from '../../contact.model';
 import { Configuration } from '../../../configuration/configuration.model';
 import { ConfigurationService } from '../../../configuration/configuration.service';
@@ -26,8 +26,6 @@ import { ConfigurationCategoryEnum } from '../../../configuration/configuration.
     templateUrl: './contact-preview.component.html'
 })
 export class ContactPreviewComponent implements OnInit {
-    private _router = inject(Router);
-    private _activatedRoute = inject(ActivatedRoute);
     private _contactsService = inject(ContactsService);
     private _changeDetectorRef = inject(ChangeDetectorRef);
     private _configurationService = inject(ConfigurationService);
@@ -69,10 +67,6 @@ export class ContactPreviewComponent implements OnInit {
             );
             this._changeDetectorRef.markForCheck();
         });
-    }
-
-    editContact(): void {
-        this._router.navigate(['edit'], { relativeTo: this._activatedRoute });
     }
 
     getCountryByIso(iso: string): Country {

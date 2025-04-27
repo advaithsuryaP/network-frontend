@@ -121,16 +121,7 @@
                         <mat-icon [svgIcon]="'heroicons_outline:building-library'"></mat-icon>
                         <div class="ml-6 leading-6">
                             {{ getUniversityById(contact.university) }}
-                        </div>
-                    </div>
-                </ng-container>
-
-                <!-- Major -->
-                <ng-container *ngIf="contact.major">
-                    <div class="flex sm:items-center">
-                        <mat-icon [svgIcon]="'heroicons_outline:academic-cap'"></mat-icon>
-                        <div class="ml-6 leading-6">
-                            {{ contact.major }}
+                            <span class="text-sm text-gray-500" *ngIf="contact.major"> ({{ contact.major }}) </span>
                         </div>
                     </div>
                 </ng-container>

@@ -68,7 +68,7 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
             id: ConfigurationCategoryEnum.UNIVERSITY,
             icon: 'heroicons_outline:building-library',
             title: 'Network Universities',
-            description: 'Manage the universities in your network',
+            description: 'Manage the universities in your network for the contacts to be associated with',
             route: 'network-universities'
         }
     ];

@@ -189,6 +189,12 @@ export class ContactEditComponent implements OnInit, OnDestroy {
                 this.contactForm.patchValue({
                     university: this.universities[0].id
                 });
+
+                // Patch the default values for company category and primary industry
+                this.contactForm.controls.company.patchValue({
+                    category: this.companyCategories[0].id,
+                    primaryIndustry: this.primaryIndustries[0].id
+                });
             })
         );
 
@@ -347,7 +353,7 @@ export class ContactEditComponent implements OnInit, OnDestroy {
                     nonNullable: true
                 }),
                 phoneNumber: new FormControl<string>('', {
-                    validators: [Validators.required],
+                    validators: [Validators.required, Validators.pattern(/^\d{10}$/)],
                     nonNullable: true
                 }),
                 label: new FormControl<string>(this.labels[0].id, {
