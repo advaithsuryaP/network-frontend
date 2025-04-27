@@ -19,4 +19,12 @@ export class CompaniesService {
             .get<Company[]>(`${API_URL}/companies`)
             .pipe(tap(companies => this._companiesSubject.next(companies)));
     }
+
+    deleteCompany(id: string): Observable<{ message: string }> {
+        return this._http
+            .delete<{ message: string }>(`${API_URL}/companies/${id}`)
+            .pipe(
+                tap(_ => this._companiesSubject.next(this._companiesSubject.value.filter(company => company.id !== id)))
+            );
+    }
 }

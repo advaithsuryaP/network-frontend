@@ -18,14 +18,16 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleChange, MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, combineLatest, finalize, Subject, takeUntil } from 'rxjs';
 import { CompaniesService } from '../../companies/companies.service';
 import { Company } from '../../companies/company.model';
 import { ContactsService } from '../../contacts/contacts.service';
 import { Configuration } from '../../configuration/configuration.model';
 import { ConfigurationService } from '../../configuration/configuration.service';
 import { ConfigurationCategoryEnum } from '../../configuration/configuration.enum';
+import { Contact } from '../../contacts/contact.model';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'app-company-list',
@@ -33,7 +35,6 @@ import { ConfigurationCategoryEnum } from '../../configuration/configuration.enu
     imports: [
         NgIf,
         NgFor,
-        RouterLink,
         DecimalPipe,
         MatIconModule,
         CdkScrollable,
@@ -42,6 +43,7 @@ import { ConfigurationCategoryEnum } from '../../configuration/configuration.enu
         MatButtonModule,
         MatOptionModule,
         MatTooltipModule,
+        MatSnackBarModule,
         MatFormFieldModule,
         MatSlideToggleModule,
         MatProgressBarModule
@@ -51,10 +53,16 @@ import { ConfigurationCategoryEnum } from '../../configuration/configuration.enu
     templateUrl: './company-list.component.html'
 })
 export class CompanyListComponent implements OnInit, OnDestroy {
+    private _snackBar = inject(MatSnackBar);
+    private _contactsService = inject(ContactsService);
+    private _companiesService = inject(CompaniesService);
+    private _changeDetectorRef = inject(ChangeDetectorRef);
     private _configurationService = inject(ConfigurationService);
 
-    companies: Company[];
-    filteredCompanies: Company[];
+    contacts: Contact[] = [];
+    companies: Company[] = [];
+    filteredCompanies: Company[] = [];
+
     filters: {
         categorySlug$: BehaviorSubject<string>;
         query$: BehaviorSubject<string>;
@@ -69,18 +77,7 @@ export class CompanyListComponent implements OnInit, OnDestroy {
     companyCategories: Configuration[] = [];
     primaryIndustries: Configuration[] = [];
 
-    private _unsubscribeAll: Subject<any> = new Subject<any>();
-
-    /**
-     * Constructor
-     */
-    constructor(
-        private _activatedRoute: ActivatedRoute,
-        private _changeDetectorRef: ChangeDetectorRef,
-        private _router: Router,
-        private _companyService: CompaniesService,
-        private _contactsService: ContactsService
-    ) {}
+    private _unsubscribeAll: Subject<null> = new Subject<null>();
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -90,9 +87,16 @@ export class CompanyListComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
-        // Get the courses
-        this._companyService.companies$.pipe(takeUntil(this._unsubscribeAll)).subscribe((companies: Company[]) => {
+        // Get the companies
+        this._companiesService.companies$.pipe(takeUntil(this._unsubscribeAll)).subscribe((companies: Company[]) => {
             this.companies = this.filteredCompanies = companies;
+
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
+        });
+
+        this._contactsService.contacts$.pipe(takeUntil(this._unsubscribeAll)).subscribe((contacts: Contact[]) => {
+            this.contacts = contacts;
 
             // Mark for check
             this._changeDetectorRef.markForCheck();
@@ -142,6 +146,9 @@ export class CompanyListComponent implements OnInit, OnDestroy {
                     company => company.confidentialityRequested === confidentialityRequested
                 );
             }
+
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
         });
     }
 
@@ -174,6 +181,40 @@ export class CompanyListComponent implements OnInit, OnDestroy {
      */
     toggleConfidentialityRequested(change: MatSlideToggleChange): void {
         this.filters.confidentialityRequested$.next(change.checked);
+    }
+
+    getCompanyCategoryById(id: string): string {
+        return this.companyCategories.find(category => category.id === id)?.label || '';
+    }
+
+    getPrimaryIndustryById(id: string): string {
+        return this.primaryIndustries.find(industry => industry.id === id)?.label || '';
+    }
+
+    getContactById(id: string): string {
+        return (
+            this.contacts.find(contact => contact.id === id)?.firstName +
+            ' ' +
+            this.contacts.find(contact => contact.id === id)?.lastName
+        );
+    }
+
+    deleteCompany(id: string): void {
+        this._companiesService
+            .deleteCompany(id)
+            .pipe(finalize(() => this._changeDetectorRef.markForCheck()))
+            .subscribe({
+                next: response => {
+                    this._snackBar.open(response.message, 'Close', {
+                        duration: 3000
+                    });
+                },
+                error: (error: HttpErrorResponse) => {
+                    this._snackBar.open(error.error.message, 'Close', {
+                        duration: 3000
+                    });
+                }
+            });
     }
 
     /**

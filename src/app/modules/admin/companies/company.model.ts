@@ -1,5 +1,3 @@
-import { Contact } from '../contacts/contact.model';
-
 export interface Company {
     id: string;
     name: string;
@@ -21,5 +19,5 @@ export interface Company {
     tcf?: boolean;
     tcfAmount?: number;
     comments?: string;
-    contacts?: Contact[];
+    contacts?: string[]; // property via association
 }
