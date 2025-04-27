@@ -52,21 +52,21 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
         },
         {
             id: ConfigurationCategoryEnum.COMPANY_CATEGORY,
-            icon: 'heroicons_outline:user-circle',
+            icon: 'heroicons_outline:identification',
             title: 'Company Categories',
             description: 'Manage the company categories for the companies in your network',
             route: 'company-categories'
         },
         {
             id: ConfigurationCategoryEnum.PRIMARY_INDUSTRY,
-            icon: 'heroicons_outline:lock-closed',
+            icon: 'heroicons_outline:folder-open',
             title: 'Primary Industries',
             description: 'Manage the primary industry labels for the companies in your network',
             route: 'primary-industries'
         },
         {
             id: ConfigurationCategoryEnum.UNIVERSITY,
-            icon: 'heroicons_outline:building-office-2',
+            icon: 'heroicons_outline:building-library',
             title: 'Network Universities',
             description: 'Manage the universities in your network',
             route: 'network-universities'

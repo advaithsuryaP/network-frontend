@@ -1,13 +1,14 @@
 import { Contact } from '../contacts/contact.model';
 
 export interface Company {
-    id?: string;
+    id: string;
     name: string;
+    category: string;
+    primaryIndustry: string;
+
+    // Optional fields
     description?: string;
     website?: string;
-    category?: string;
-    primaryIndustry?: string;
-    secondaryIndustry?: string;
     attractedOutOfState?: boolean;
     confidentialityRequested?: boolean;
     intellectualProperty?: string;

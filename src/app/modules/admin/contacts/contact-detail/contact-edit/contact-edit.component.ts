@@ -48,8 +48,7 @@ interface ContactForm {
     phoneNumbers: FormArray<FormGroup<PhoneNumberFormGroup>>;
     notes: FormControl<string | null>;
     title: FormControl<string | null>;
-    isFromUniversity: FormControl<boolean>;
-    school: FormControl<string | null>;
+    university: FormControl<string | null>;
     major: FormControl<string | null>;
     company: FormGroup<{
         id: FormControl<string | null>;
@@ -58,7 +57,6 @@ interface ContactForm {
         website: FormControl<string | null>;
         category: FormControl<string>;
         primaryIndustry: FormControl<string>;
-        secondaryIndustry: FormControl<string | null>;
         attractedOutOfState: FormControl<boolean | null>;
         confidentialityRequested: FormControl<boolean | null>;
         intellectualProperty: FormControl<string | null>;
@@ -116,21 +114,21 @@ export class ContactEditComponent implements OnInit, OnDestroy {
 
     // Configurations
     labels: Configuration[] = [];
+    universities: Configuration[] = [];
     companyCategories: Configuration[] = [];
     primaryIndustries: Configuration[] = [];
 
     contactForm = new FormGroup<ContactForm>({
         id: new FormControl<string>(''),
+        major: new FormControl<string | null>(''),
+        notes: new FormControl<string | null>(''),
         avatar: new FormControl<string | null>(null),
-        firstName: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
-        lastName: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
         emails: new FormArray<FormGroup<EmailFormGroup>>([]),
         phoneNumbers: new FormArray<FormGroup<PhoneNumberFormGroup>>([]),
+        firstName: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
+        lastName: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
+        university: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
         title: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
-        major: new FormControl<string | null>(''),
-        isFromUniversity: new FormControl<boolean>(true, { nonNullable: true, validators: [Validators.required] }),
-        school: new FormControl<string | null>(''),
-        notes: new FormControl<string | null>(''),
         company: new FormGroup({
             id: new FormControl<string | null>(''),
             name: new FormControl<string | null>('', { nonNullable: true, validators: [Validators.required] }),
@@ -144,7 +142,6 @@ export class ContactEditComponent implements OnInit, OnDestroy {
                 nonNullable: true,
                 validators: [Validators.required]
             }),
-            secondaryIndustry: new FormControl<string | null>(''),
             attractedOutOfState: new FormControl<boolean | null>(false, { nonNullable: true }),
             confidentialityRequested: new FormControl<boolean | null>(false, { nonNullable: true }),
             intellectualProperty: new FormControl<string | null>(''),
@@ -177,6 +174,9 @@ export class ContactEditComponent implements OnInit, OnDestroy {
                 this.primaryIndustries = configurations.filter(
                     config => config.category === ConfigurationCategoryEnum.PRIMARY_INDUSTRY
                 );
+                this.universities = configurations.filter(
+                    config => config.category === ConfigurationCategoryEnum.UNIVERSITY
+                );
             })
         );
 
@@ -184,6 +184,11 @@ export class ContactEditComponent implements OnInit, OnDestroy {
             tap(_ => {
                 this.addEmailField();
                 this.addPhoneNumberField();
+
+                // Patch the university and isFromUniversity values
+                this.contactForm.patchValue({
+                    university: this.universities[0].id
+                });
             })
         );
 
@@ -202,7 +207,8 @@ export class ContactEditComponent implements OnInit, OnDestroy {
                     lastName: contact.lastName,
                     title: contact.title,
                     notes: contact.notes,
-                    major: contact.major
+                    major: contact.major,
+                    university: contact.university
                 });
 
                 // Only patch company values if contact has a company
@@ -214,7 +220,6 @@ export class ContactEditComponent implements OnInit, OnDestroy {
                         website: contact.company.website,
                         category: contact.company.category,
                         primaryIndustry: contact.company.primaryIndustry,
-                        secondaryIndustry: contact.company.secondaryIndustry,
                         attractedOutOfState: contact.company.attractedOutOfState,
                         confidentialityRequested: contact.company.confidentialityRequested,
                         intellectualProperty: contact.company.intellectualProperty,
@@ -316,7 +321,7 @@ export class ContactEditComponent implements OnInit, OnDestroy {
     addEmailField(): void {
         this.contactForm.controls.emails.push(
             new FormGroup<EmailFormGroup>({
-                label: new FormControl<string>(this.labels[0]?.id || '', {
+                label: new FormControl<string>(this.labels[0].id, {
                     validators: [Validators.required],
                     nonNullable: true
                 }),
@@ -345,7 +350,7 @@ export class ContactEditComponent implements OnInit, OnDestroy {
                     validators: [Validators.required],
                     nonNullable: true
                 }),
-                label: new FormControl<string>(this.labels[0]?.id || '', {
+                label: new FormControl<string>(this.labels[0].id, {
                     validators: [Validators.required],
                     nonNullable: true
                 })
@@ -361,18 +366,6 @@ export class ContactEditComponent implements OnInit, OnDestroy {
 
     getCountryByIso(iso: string): Country {
         return this.countries.find(country => country.iso === iso);
-    }
-
-    getLabelById(id: string): string {
-        return this.labels.find(label => label.id === id)?.label || '';
-    }
-
-    getCompanyCategoryById(id: string): string {
-        return this.companyCategories.find(category => category.id === id)?.label || '';
-    }
-
-    getPrimaryIndustryById(id: string): string {
-        return this.primaryIndustries.find(industry => industry.id === id)?.label || '';
     }
 
     /**

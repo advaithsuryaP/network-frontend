@@ -38,6 +38,7 @@ export class ContactPreviewComponent implements OnInit {
     countries: Country[] = [];
 
     labels: Configuration[] = [];
+    universities: Configuration[] = [];
     companyCategories: Configuration[] = [];
     primaryIndustries: Configuration[] = [];
 
@@ -63,6 +64,9 @@ export class ContactPreviewComponent implements OnInit {
             this.primaryIndustries = configurations.filter(
                 config => config.category === ConfigurationCategoryEnum.PRIMARY_INDUSTRY
             );
+            this.universities = configurations.filter(
+                config => config.category === ConfigurationCategoryEnum.UNIVERSITY
+            );
             this._changeDetectorRef.markForCheck();
         });
     }
@@ -85,6 +89,10 @@ export class ContactPreviewComponent implements OnInit {
 
     getPrimaryIndustryById(id: string): string {
         return this.primaryIndustries.find(industry => industry.id === id)?.label || '';
+    }
+
+    getUniversityById(id: string): string {
+        return this.universities.find(university => university.id === id)?.label || '';
     }
 
     /**

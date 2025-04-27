@@ -54,7 +54,7 @@
                 <!-- Company -->
                 <ng-container *ngIf="contact.company">
                     <div class="flex sm:items-center">
-                        <mat-icon [svgIcon]="'heroicons_outline:building-office-2'"></mat-icon>
+                        <mat-icon [svgIcon]="'heroicons_outline:identification'"></mat-icon>
                         <div class="ml-6 leading-6">
                             {{ contact.company.name }} ({{ getCompanyCategoryById(contact.company.category) }})
                         </div>
@@ -115,10 +115,20 @@
                     </div>
                 </ng-container>
 
+                <!-- University -->
+                <ng-container *ngIf="contact.university">
+                    <div class="flex sm:items-center">
+                        <mat-icon [svgIcon]="'heroicons_outline:building-library'"></mat-icon>
+                        <div class="ml-6 leading-6">
+                            {{ getUniversityById(contact.university) }}
+                        </div>
+                    </div>
+                </ng-container>
+
                 <!-- Major -->
                 <ng-container *ngIf="contact.major">
                     <div class="flex sm:items-center">
-                        <mat-icon [svgIcon]="'heroicons_outline:map-pin'"></mat-icon>
+                        <mat-icon [svgIcon]="'heroicons_outline:academic-cap'"></mat-icon>
                         <div class="ml-6 leading-6">
                             {{ contact.major }}
                         </div>
@@ -128,7 +138,7 @@
                 <!-- Primary Industry -->
                 <ng-container *ngIf="contact.company.primaryIndustry">
                     <div class="flex sm:items-center">
-                        <mat-icon [svgIcon]="'heroicons_outline:tag'"></mat-icon>
+                        <mat-icon [svgIcon]="'heroicons_outline:folder-open'"></mat-icon>
                         <div class="ml-6 leading-6">
                             {{ getPrimaryIndustryById(contact.company.primaryIndustry) }}
                         </div>

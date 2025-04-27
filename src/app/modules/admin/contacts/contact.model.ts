@@ -7,6 +7,7 @@ export interface Contact {
     title: string;
     firstName: string;
     lastName: string;
+    university: string;
     emails: Array<{
         label: string;
         email: string;
@@ -16,8 +17,6 @@ export interface Contact {
         countryCode: string;
         phoneNumber: string;
     }>;
-    isFromUniversity: boolean;
-    school?: string;
     notes?: string;
     major?: string;
     company?: Company;

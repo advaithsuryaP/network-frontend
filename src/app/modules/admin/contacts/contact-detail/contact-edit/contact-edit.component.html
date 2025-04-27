@@ -86,28 +86,55 @@
                     </div>
                 </div>
 
-                <!-- Title -->
+                <!-- University -->
                 <div class="mt-8">
                     <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                        <mat-label>Title</mat-label>
+                        <mat-label>University</mat-label>
                         <mat-icon
                             matPrefix
                             class="hidden sm:flex icon-size-5"
-                            [svgIcon]="'heroicons_solid:briefcase'"></mat-icon>
-                        <input matInput formControlName="title" [placeholder]="'Title in the company'" />
+                            [svgIcon]="'heroicons_solid:identification'"></mat-icon>
+                        <mat-select formControlName="university">
+                            <mat-option *ngFor="let university of universities" [value]="university.id">
+                                {{ university.label }}
+                            </mat-option>
+                        </mat-select>
                     </mat-form-field>
                 </div>
 
-                <!-- Company -->
-                <div class="mt-8" formGroupName="company">
+                <!-- Major -->
+                <div class="mt-8">
                     <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                        <mat-label>Company Name</mat-label>
+                        <mat-label>Major</mat-label>
                         <mat-icon
                             matPrefix
                             class="hidden sm:flex icon-size-5"
-                            [svgIcon]="'heroicons_solid:building-office-2'"></mat-icon>
-                        <input matInput formControlName="name" [placeholder]="'Company'" />
+                            [svgIcon]="'heroicons_solid:academic-cap'"></mat-icon>
+                        <input matInput [formControlName]="'major'" [placeholder]="'Major'" />
                     </mat-form-field>
+                </div>
+
+                <div class="mt-8 flex space-x-4">
+                    <div class="flex-1" formGroupName="company">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Company Name</mat-label>
+                            <mat-icon
+                                matPrefix
+                                class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:building-office-2'"></mat-icon>
+                            <input matInput formControlName="name" [placeholder]="'Company'" />
+                        </mat-form-field>
+                    </div>
+                    <div class="flex-1">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Title</mat-label>
+                            <mat-icon
+                                matPrefix
+                                class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:briefcase'"></mat-icon>
+                            <input matInput formControlName="title" [placeholder]="'Title in the company'" />
+                        </mat-form-field>
+                    </div>
                 </div>
 
                 <!-- Emails -->
@@ -144,7 +171,7 @@
                                         [svgIcon]="'heroicons_solid:tag'"></mat-icon>
                                     <mat-select formControlName="label" placeholder="Choose a label">
                                         <mat-option *ngFor="let label of labels" [value]="label.id">
-                                            {{ getLabelById(label.id) }}
+                                            {{ label.label }}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -261,69 +288,35 @@
                     </div>
                 </div>
 
-                <!-- Is From University -->
-                <div class="mt-8">
-                    <div class="flex items-center">
-                        <mat-slide-toggle [formControlName]="'isFromUniversity'" class="mr-2">
-                            Is From UMBC
-                        </mat-slide-toggle>
+                <div class="mt-8 flex space-x-4" formGroupName="company">
+                    <div class="flex-1">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Company Category</mat-label>
+                            <mat-icon
+                                matPrefix
+                                class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:identification'"></mat-icon>
+                            <mat-select formControlName="category">
+                                <mat-option *ngFor="let category of companyCategories" [value]="category.id">
+                                    {{ category.label }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
                     </div>
-                </div>
-
-                <!-- School (Conditional) -->
-                <div class="mt-8" *ngIf="!contactForm.get('isFromUniversity')?.value">
-                    <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                        <mat-label>School</mat-label>
-                        <mat-icon
-                            matPrefix
-                            class="hidden sm:flex icon-size-5"
-                            [svgIcon]="'heroicons_solid:academic-cap'"></mat-icon>
-                        <input matInput [formControlName]="'school'" [placeholder]="'School'" />
-                    </mat-form-field>
-                </div>
-
-                <!-- Address -->
-                <div class="mt-8">
-                    <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                        <mat-label>Major</mat-label>
-                        <mat-icon
-                            matPrefix
-                            class="hidden sm:flex icon-size-5"
-                            [svgIcon]="'heroicons_solid:map-pin'"></mat-icon>
-                        <input matInput [formControlName]="'major'" [placeholder]="'Major'" />
-                    </mat-form-field>
-                </div>
-
-                <!-- Company Category -->
-                <div class="mt-8" formGroupName="company">
-                    <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                        <mat-label>Company Category</mat-label>
-                        <mat-icon
-                            matPrefix
-                            class="hidden sm:flex icon-size-5"
-                            [svgIcon]="'heroicons_solid:tag'"></mat-icon>
-                        <mat-select formControlName="category">
-                            <mat-option *ngFor="let category of companyCategories" [value]="category.id">
-                                {{ category.label }}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-
-                <!-- Primary Industry -->
-                <div class="mt-8" formGroupName="company">
-                    <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                        <mat-label>Primary Industry</mat-label>
-                        <mat-icon
-                            matPrefix
-                            class="hidden sm:flex icon-size-5"
-                            [svgIcon]="'heroicons_solid:building-office-2'"></mat-icon>
-                        <mat-select formControlName="primaryIndustry">
-                            <mat-option *ngFor="let industry of primaryIndustries" [value]="industry.id">
-                                {{ industry.label }}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
+                    <div class="flex-1">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Primary Industry</mat-label>
+                            <mat-icon
+                                matPrefix
+                                class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:folder-open'"></mat-icon>
+                            <mat-select formControlName="primaryIndustry">
+                                <mat-option *ngFor="let industry of primaryIndustries" [value]="industry.id">
+                                    {{ industry.label }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
                 </div>
 
                 <!-- Notes -->
