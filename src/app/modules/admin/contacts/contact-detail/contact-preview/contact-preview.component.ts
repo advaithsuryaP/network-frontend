@@ -6,7 +6,7 @@ import {
     OnInit,
     ViewEncapsulation
 } from '@angular/core';
-import { NgIf, NgFor } from '@angular/common';
+import { NgIf, NgFor, DecimalPipe } from '@angular/common';
 import { Subject, takeUntil } from 'rxjs';
 import { ContactsService } from '../../contacts.service';
 import { RouterLink } from '@angular/router';
@@ -20,7 +20,7 @@ import { ConfigurationCategoryEnum } from '../../../configuration/configuration.
 @Component({
     selector: 'app-contact-preview',
     standalone: true,
-    imports: [NgIf, NgFor, RouterLink, MatIconModule, MatButtonModule, MatTooltipModule],
+    imports: [NgIf, NgFor, RouterLink, MatIconModule, MatButtonModule, MatTooltipModule, DecimalPipe],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './contact-preview.component.html'

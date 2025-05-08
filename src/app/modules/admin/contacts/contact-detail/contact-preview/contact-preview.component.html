@@ -136,6 +136,144 @@
                     </div>
                 </ng-container>
 
+                <!-- Company Description -->
+                <ng-container *ngIf="contact.company.description">
+                    <div class="flex">
+                        <mat-icon [svgIcon]="'heroicons_outline:document-text'"></mat-icon>
+                        <div class="max-w-none ml-6 prose prose-sm">
+                            <p>{{ contact.company.description }}</p>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <!-- Company Website -->
+                <ng-container *ngIf="contact.company.website">
+                    <div class="flex sm:items-center">
+                        <mat-icon [svgIcon]="'heroicons_outline:globe-alt'"></mat-icon>
+                        <div class="ml-6 leading-6">
+                            <a
+                                [href]="contact.company.website"
+                                target="_blank"
+                                class="hover:underline text-primary-500">
+                                {{ contact.company.website }}
+                            </a>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <!-- Department (if Faculty) -->
+                <ng-container *ngIf="contact.company.departmentIfFaculty">
+                    <div class="flex sm:items-center">
+                        <mat-icon [svgIcon]="'heroicons_outline:academic-cap'"></mat-icon>
+                        <div class="ml-6 leading-6">
+                            {{ contact.company.departmentIfFaculty }}
+                        </div>
+                    </div>
+                </ng-container>
+
+                <!-- Company Flags -->
+                <ng-container
+                    *ngIf="
+                        contact.company.attractedOutOfState ||
+                        contact.company.confidentialityRequested ||
+                        contact.company.icorps ||
+                        contact.company.tcf
+                    ">
+                    <div class="flex">
+                        <mat-icon [svgIcon]="'heroicons_outline:flag'"></mat-icon>
+                        <div class="ml-6 space-y-2">
+                            <div class="flex items-center" *ngIf="contact.company.attractedOutOfState">
+                                <mat-icon
+                                    class="icon-size-5 text-primary-500"
+                                    [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+                                <span class="ml-2">Attracted Out of State</span>
+                            </div>
+                            <div class="flex items-center" *ngIf="contact.company.confidentialityRequested">
+                                <mat-icon
+                                    class="icon-size-5 text-primary-500"
+                                    [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+                                <span class="ml-2">Confidentiality Requested</span>
+                            </div>
+                            <div class="flex items-center" *ngIf="contact.company.icorps">
+                                <mat-icon
+                                    class="icon-size-5 text-primary-500"
+                                    [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+                                <span class="ml-2">I-Corps</span>
+                            </div>
+                            <div class="flex items-center" *ngIf="contact.company.tcf">
+                                <mat-icon
+                                    class="icon-size-5 text-primary-500"
+                                    [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+                                <span class="ml-2">TCF</span>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <!-- Intellectual Property -->
+                <ng-container *ngIf="contact.company.intellectualProperty">
+                    <div class="flex">
+                        <mat-icon [svgIcon]="'heroicons_outline:shield-check'"></mat-icon>
+                        <div class="max-w-none ml-6 prose prose-sm">
+                            <p>{{ contact.company.intellectualProperty }}</p>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <!-- USM Founders -->
+                <ng-container *ngIf="contact.company.usmFounders">
+                    <div class="flex">
+                        <mat-icon [svgIcon]="'heroicons_outline:users'"></mat-icon>
+                        <div class="max-w-none ml-6 prose prose-sm">
+                            <p>{{ contact.company.usmFounders }}</p>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <!-- Resources -->
+                <ng-container *ngIf="contact.company.miscResources || contact.company.preCompanyResources">
+                    <div class="flex">
+                        <mat-icon [svgIcon]="'heroicons_outline:cube'"></mat-icon>
+                        <div class="max-w-none ml-6 space-y-4">
+                            <div *ngIf="contact.company.miscResources">
+                                <h4 class="text-sm font-medium text-gray-500">Miscellaneous Resources</h4>
+                                <p class="prose prose-sm">{{ contact.company.miscResources }}</p>
+                            </div>
+                            <div *ngIf="contact.company.preCompanyResources">
+                                <h4 class="text-sm font-medium text-gray-500">Pre-Company Resources</h4>
+                                <p class="prose prose-sm">{{ contact.company.preCompanyResources }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <!-- Funding Information -->
+                <ng-container *ngIf="contact.company.preCompanyFunding || contact.company.tcfAmount">
+                    <div class="flex">
+                        <mat-icon [svgIcon]="'heroicons_outline:currency-dollar'"></mat-icon>
+                        <div class="ml-6 space-y-2">
+                            <div class="flex items-center" *ngIf="contact.company.preCompanyFunding">
+                                <span class="font-medium">Pre-Company Funding:</span>
+                                <span class="ml-2">${{ contact.company.preCompanyFunding | number }}</span>
+                            </div>
+                            <div class="flex items-center" *ngIf="contact.company.tcfAmount">
+                                <span class="font-medium">TCF Amount:</span>
+                                <span class="ml-2">${{ contact.company.tcfAmount | number }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <!-- Company Comments -->
+                <ng-container *ngIf="contact.company.comments">
+                    <div class="flex">
+                        <mat-icon [svgIcon]="'heroicons_outline:chat-bubble-left-right'"></mat-icon>
+                        <div class="max-w-none ml-6 prose prose-sm">
+                            <p>{{ contact.company.comments }}</p>
+                        </div>
+                    </div>
+                </ng-container>
+
                 <!-- Birthday -->
                 <!-- <ng-container *ngIf="contact.birthday">
                         <div class="flex sm:items-center">

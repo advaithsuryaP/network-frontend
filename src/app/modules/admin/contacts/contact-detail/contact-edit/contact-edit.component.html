@@ -334,6 +334,187 @@
                     </div>
                 </div>
 
+                <div class="mt-8" formGroupName="company">
+                    <!-- Company Description -->
+                    <div class="mt-8">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Company Description</mat-label>
+                            <mat-icon
+                                matPrefix
+                                class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:document-text'"></mat-icon>
+                            <textarea
+                                matInput
+                                formControlName="description"
+                                [placeholder]="'Brief description of the company'"
+                                rows="3"></textarea>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Website and Department -->
+                    <div class="mt-8 flex space-x-4">
+                        <div class="flex-1">
+                            <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                                <mat-label>Company Website</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:globe-alt'"></mat-icon>
+                                <input
+                                    matInput
+                                    formControlName="website"
+                                    [placeholder]="'https://example.com'"
+                                    [spellcheck]="false" />
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-1">
+                            <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                                <mat-label>Department (if Faculty)</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:academic-cap'"></mat-icon>
+                                <input
+                                    matInput
+                                    formControlName="departmentIfFaculty"
+                                    [placeholder]="'Department name'" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <!-- Toggle Fields -->
+                    <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="flex items-center">
+                            <mat-slide-toggle formControlName="attractedOutOfState" class="mr-2">
+                                Attracted Out of State
+                            </mat-slide-toggle>
+                        </div>
+                        <div class="flex items-center">
+                            <mat-slide-toggle formControlName="confidentialityRequested" class="mr-2">
+                                Confidentiality Requested
+                            </mat-slide-toggle>
+                        </div>
+                        <div class="flex items-center">
+                            <mat-slide-toggle formControlName="icorps" class="mr-2"> I-Corps </mat-slide-toggle>
+                        </div>
+                        <div class="flex items-center">
+                            <mat-slide-toggle formControlName="tcf" class="mr-2"> TCF </mat-slide-toggle>
+                        </div>
+                    </div>
+
+                    <!-- Intellectual Property -->
+                    <div class="mt-8">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Intellectual Property</mat-label>
+                            <mat-icon
+                                matPrefix
+                                class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:shield-check'"></mat-icon>
+                            <textarea
+                                matInput
+                                formControlName="intellectualProperty"
+                                [placeholder]="'Intellectual property details'"
+                                rows="2"></textarea>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- USM Founders -->
+                    <div class="mt-8">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>USM Founders</mat-label>
+                            <mat-icon
+                                matPrefix
+                                class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:users'"></mat-icon>
+                            <textarea
+                                matInput
+                                formControlName="usmFounders"
+                                [placeholder]="'USM founders information'"
+                                rows="2"></textarea>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Misc Resources -->
+                    <div class="mt-8">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Misc Resources</mat-label>
+                            <mat-icon
+                                matPrefix
+                                class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:cube'"></mat-icon>
+                            <textarea
+                                matInput
+                                formControlName="miscResources"
+                                [placeholder]="'Miscellaneous resources'"
+                                rows="2"></textarea>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Pre-Company Resources -->
+                    <div class="mt-8">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Pre-Company Resources</mat-label>
+                            <mat-icon
+                                matPrefix
+                                class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:cube-transparent'"></mat-icon>
+                            <textarea
+                                matInput
+                                formControlName="preCompanyResources"
+                                [placeholder]="'Pre-company resources'"
+                                rows="2"></textarea>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Funding Fields -->
+                    <div class="mt-8 flex space-x-4">
+                        <div class="flex-1">
+                            <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                                <mat-label>Pre-Company Funding</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                                <input
+                                    type="number"
+                                    matInput
+                                    formControlName="preCompanyFunding"
+                                    [placeholder]="'Amount in USD'" />
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-1">
+                            <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                                <mat-label>TCF Amount</mat-label>
+                                <mat-icon
+                                    matPrefix
+                                    class="hidden sm:flex icon-size-5"
+                                    [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                                <input
+                                    type="number"
+                                    matInput
+                                    formControlName="tcfAmount"
+                                    [placeholder]="'TCF funding amount'" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <!-- Comments -->
+                    <div class="mt-8">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Comments</mat-label>
+                            <mat-icon
+                                matPrefix
+                                class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:chat-bubble-left-right'"></mat-icon>
+                            <textarea
+                                matInput
+                                formControlName="comments"
+                                [placeholder]="'Additional comments'"
+                                rows="2"></textarea>
+                        </mat-form-field>
+                    </div>
+                </div>
+
                 <!-- Notes -->
                 <div class="mt-8">
                     <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
