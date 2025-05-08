@@ -1,13 +1,7 @@
 import { NgIf } from '@angular/common';
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import {
-    FormsModule,
-    NgForm,
-    ReactiveFormsModule,
-    UntypedFormBuilder,
-    UntypedFormGroup,
-    Validators
-} from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, inject, ViewEncapsulation } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -39,45 +33,24 @@ import { AuthService } from 'app/core/auth/auth.service';
         MatProgressSpinnerModule
     ]
 })
-export class AuthSignInComponent implements OnInit {
-    @ViewChild('signInNgForm') signInNgForm: NgForm;
+export class AuthSignInComponent {
+    private _router = inject(Router);
+    private _authService = inject(AuthService);
+    private _activatedRoute = inject(ActivatedRoute);
 
     alert: { type: FuseAlertType; message: string } = {
         type: 'success',
         message: ''
     };
-    signInForm: UntypedFormGroup;
+    signInForm = new FormGroup({
+        email: new FormControl('kevinf@umbc.edu', {
+            validators: [Validators.required, Validators.email],
+            nonNullable: true
+        }),
+        password: new FormControl('admin', { validators: [Validators.required], nonNullable: true }),
+        rememberMe: new FormControl(false, { nonNullable: true })
+    });
     showAlert: boolean = false;
-
-    /**
-     * Constructor
-     */
-    constructor(
-        private _activatedRoute: ActivatedRoute,
-        private _authService: AuthService,
-        private _formBuilder: UntypedFormBuilder,
-        private _router: Router
-    ) {}
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * On init
-     */
-    ngOnInit(): void {
-        // Create the form
-        this.signInForm = this._formBuilder.group({
-            email: ['kevinf@umbc.edu', [Validators.required, Validators.email]],
-            password: ['admin', Validators.required],
-            rememberMe: ['']
-        });
-    }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
 
     /**
      * Sign in
@@ -95,34 +68,36 @@ export class AuthSignInComponent implements OnInit {
         this.showAlert = false;
 
         // Sign in
-        this._authService.signIn(this.signInForm.value).subscribe(
-            () => {
-                // Set the redirect url.
-                // The '/signed-in-redirect' is a dummy url to catch the request and redirect the user
-                // to the correct page after a successful sign in. This way, that url can be set via
-                // routing file and we don't have to touch here.
-                const redirectURL =
-                    this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/signed-in-redirect';
+        this._authService
+            .signIn({ email: this.signInForm.value.email, password: this.signInForm.value.password })
+            .subscribe({
+                next: () => {
+                    // Set the redirect url.
+                    // The '/signed-in-redirect' is a dummy url to catch the request and redirect the user
+                    // to the correct page after a successful sign in. This way, that url can be set via
+                    // routing file and we don't have to touch here.
+                    const redirectURL =
+                        this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/signed-in-redirect';
 
-                // Navigate to the redirect url
-                this._router.navigateByUrl(redirectURL);
-            },
-            response => {
-                // Re-enable the form
-                this.signInForm.enable();
+                    // Navigate to the redirect url
+                    this._router.navigateByUrl(redirectURL);
+                },
+                error: (error: HttpErrorResponse) => {
+                    // Re-enable the form
+                    this.signInForm.enable();
 
-                // Reset the form
-                this.signInNgForm.resetForm();
+                    // Reset the form
+                    this.signInForm.reset();
 
-                // Set the alert
-                this.alert = {
-                    type: 'error',
-                    message: 'Wrong email or password'
-                };
+                    // Set the alert
+                    this.alert = {
+                        type: 'error',
+                        message: error.error.message
+                    };
 
-                // Show the alert
-                this.showAlert = true;
-            }
-        );
+                    // Show the alert
+                    this.showAlert = true;
+                }
+            });
     }
 }
