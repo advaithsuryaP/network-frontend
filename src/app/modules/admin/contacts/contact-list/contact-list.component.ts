@@ -11,7 +11,18 @@ import {
 } from '@angular/core';
 import { Router, RouterLink, RouterOutlet, ActivatedRoute } from '@angular/router';
 import { ContactsService } from '../contacts.service';
-import { Observable, Subject, switchMap, takeUntil, map, finalize, combineLatest, startWith } from 'rxjs';
+import {
+    Observable,
+    Subject,
+    switchMap,
+    takeUntil,
+    map,
+    finalize,
+    combineLatest,
+    startWith,
+    debounceTime,
+    distinctUntilChanged
+} from 'rxjs';
 import { Contact } from '../contact.model';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSelectModule } from '@angular/material/select';
@@ -104,7 +115,12 @@ export class ContactListComponent implements OnInit, OnDestroy {
         // Combine all filters and search
         this.contacts$ = combineLatest([
             this._contactsService.contacts$,
-            this.searchInputControl.valueChanges.pipe(takeUntil(this._unsubscribeAll), startWith('')),
+            this.searchInputControl.valueChanges.pipe(
+                startWith(''),
+                debounceTime(300),
+                distinctUntilChanged(),
+                takeUntil(this._unsubscribeAll)
+            ),
             this.companyCategoryFilter.valueChanges.pipe(takeUntil(this._unsubscribeAll), startWith('')),
             this.primaryIndustryFilter.valueChanges.pipe(takeUntil(this._unsubscribeAll), startWith('')),
             this.universityFilter.valueChanges.pipe(takeUntil(this._unsubscribeAll), startWith(''))
@@ -122,7 +138,9 @@ export class ContactListComponent implements OnInit, OnDestroy {
                         contact =>
                             contact.firstName.toLowerCase().includes(query) ||
                             contact.lastName.toLowerCase().includes(query) ||
-                            contact.title.toLowerCase().includes(query)
+                            contact.title.toLowerCase().includes(query) ||
+                            contact.notes.toLowerCase().includes(query) ||
+                            contact.major.toLowerCase().includes(query)
                     );
                 }
 
@@ -165,17 +183,6 @@ export class ContactListComponent implements OnInit, OnDestroy {
             // Mark for check
             this._changeDetectorRef.markForCheck();
         });
-
-        // // Subscribe to search input field value changes
-        this.searchInputControl.valueChanges
-            .pipe(
-                takeUntil(this._unsubscribeAll),
-                switchMap(query =>
-                    // Search
-                    this._contactsService.searchContacts(query)
-                )
-            )
-            .subscribe();
 
         // Subscribe to MatDrawer opened change
         this.matDrawer.openedChange.subscribe(opened => {

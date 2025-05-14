@@ -16,8 +16,8 @@
             <div class="flex-auto">
                 <!-- Header -->
                 <div class="flex flex-col py-8 px-6 md:px-8 border-b">
-                    <!-- Title and Search Row -->
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                    <!-- Title and Actions Row -->
+                    <div class="flex justify-between items-center w-full">
                         <!-- Title -->
                         <div>
                             <div class="text-4xl font-extrabold tracking-tight leading-none">Contacts</div>
@@ -37,56 +37,73 @@
                             </div>
                         </div>
 
-                        <!-- Search and Actions -->
-                        <div class="flex items-center mt-4 sm:mt-0 w-full sm:w-auto">
-                            <!-- Search -->
-                            <div class="flex-auto max-w-[400px]">
-                                <mat-form-field
-                                    class="fuse-mat-dense fuse-mat-rounded w-full min-w-50"
-                                    subscriptSizing="dynamic">
-                                    <mat-icon
-                                        class="icon-size-5"
-                                        matPrefix
-                                        [svgIcon]="'heroicons_solid:magnifying-glass'"></mat-icon>
-                                    <input
-                                        matInput
-                                        [formControl]="searchInputControl"
-                                        [autocomplete]="'off'"
-                                        [placeholder]="'Search contacts'" />
-                                </mat-form-field>
-                            </div>
+                        <!-- Action buttons -->
+                        <div class="flex items-center space-x-2">
+                            <!-- Add Contact Button -->
+                            <button
+                                mat-flat-button
+                                [color]="'primary'"
+                                [routerLink]="['/contacts', 'edit', 'new']"
+                                class="hidden sm:inline-flex">
+                                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                                <span class="ml-2 mr-1">Add Contact</span>
+                            </button>
+                            <button
+                                mat-icon-button
+                                [color]="'primary'"
+                                [routerLink]="['/contacts', 'edit', 'new']"
+                                matTooltip="Add Contact"
+                                class="sm:hidden">
+                                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                            </button>
 
-                            <!-- Action buttons -->
-                            <div class="flex items-center space-x-2 ml-4">
-                                <button
-                                    mat-icon-button
-                                    [color]="'primary'"
-                                    [routerLink]="['/contacts', 'edit', 'new']"
-                                    matTooltip="Add Contact">
-                                    <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-                                </button>
+                            <!-- Upload Contacts Button -->
+                            <button
+                                mat-button
+                                [color]="'accent'"
+                                [disabled]="isLoading"
+                                (click)="fileInput.click()"
+                                class="hidden sm:inline-flex">
+                                <mat-icon [svgIcon]="'heroicons_outline:document-arrow-up'"></mat-icon>
+                                <span class="ml-2 mr-1">Upload Contacts</span>
+                            </button>
+                            <button
+                                mat-icon-button
+                                [color]="'accent'"
+                                [disabled]="isLoading"
+                                (click)="fileInput.click()"
+                                matTooltip="Upload Contacts"
+                                class="sm:hidden">
+                                <mat-icon [svgIcon]="'heroicons_outline:document-arrow-up'"></mat-icon>
+                            </button>
 
-                                <button
-                                    mat-icon-button
-                                    [color]="'accent'"
-                                    [disabled]="isLoading"
-                                    (click)="fileInput.click()"
-                                    matTooltip="Upload Contacts">
-                                    <mat-icon [svgIcon]="'heroicons_outline:document-arrow-up'"></mat-icon>
-                                </button>
-
-                                <input
-                                    #fileInput
-                                    type="file"
-                                    accept=".xlsx,.xls"
-                                    (change)="onFileSelected($event)"
-                                    style="display: none" />
-                            </div>
+                            <input
+                                #fileInput
+                                type="file"
+                                accept=".xlsx,.xls"
+                                (change)="onFileSelected($event)"
+                                style="display: none" />
                         </div>
                     </div>
 
+                    <!-- Search Row -->
+                    <div class="w-full mt-6">
+                        <mat-form-field class="fuse-mat-dense fuse-mat-rounded w-full" subscriptSizing="dynamic">
+                            <mat-icon
+                                class="icon-size-5"
+                                matPrefix
+                                [svgIcon]="'heroicons_solid:magnifying-glass'"></mat-icon>
+                            <input
+                                matInput
+                                [autocomplete]="'off'"
+                                [formControl]="searchInputControl"
+                                [placeholder]="'Search contacts'" />
+                            <mat-hint>Search by name, title, major, or notes</mat-hint>
+                        </mat-form-field>
+                    </div>
+
                     <!-- Filters Row -->
-                    <div class="flex flex-col sm:flex-row gap-4 mt-8">
+                    <div class="flex flex-col sm:flex-row gap-4 mt-4">
                         <!-- Company Category Filter -->
                         <div class="flex-1">
                             <mat-form-field class="w-full" subscriptSizing="dynamic">

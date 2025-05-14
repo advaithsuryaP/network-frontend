@@ -43,11 +43,11 @@ export class AuthSignInComponent {
         message: ''
     };
     signInForm = new FormGroup({
-        email: new FormControl('', {
+        email: new FormControl('kevinf@umbc.edu', {
             validators: [Validators.required, Validators.email],
             nonNullable: true
         }),
-        password: new FormControl('', { validators: [Validators.required], nonNullable: true }),
+        password: new FormControl('admin', { validators: [Validators.required], nonNullable: true }),
         rememberMe: new FormControl(false, { nonNullable: true })
     });
     showAlert: boolean = false;
