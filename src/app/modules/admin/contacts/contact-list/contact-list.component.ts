@@ -12,15 +12,14 @@ import {
 import { Router, RouterLink, RouterOutlet, ActivatedRoute } from '@angular/router';
 import { ContactsService } from '../contacts.service';
 import {
-    Observable,
-    Subject,
-    switchMap,
-    takeUntil,
     map,
+    Subject,
     finalize,
-    combineLatest,
     startWith,
+    takeUntil,
+    Observable,
     debounceTime,
+    combineLatest,
     distinctUntilChanged
 } from 'rxjs';
 import { Contact } from '../contact.model';
@@ -54,12 +53,12 @@ import { ConfigurationCategoryEnum } from '../../configuration/configuration.enu
         I18nPluralPipe,
         MatInputModule,
         MatButtonModule,
+        MatSelectModule,
         MatSidenavModule,
         MatTooltipModule,
         MatSnackBarModule,
         MatFormFieldModule,
-        ReactiveFormsModule,
-        MatSelectModule
+        ReactiveFormsModule
     ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,

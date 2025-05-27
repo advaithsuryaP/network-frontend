@@ -81,7 +81,7 @@ export class AuthService {
     signInUsingToken(): Observable<any> {
         // Sign in using the token
         return this._http
-            .post('api/auth/sign-in-with-token', {
+            .post<{ message: string; data: User }>(`${API_URL}/auth/signin-with-token`, {
                 accessToken: this.accessToken
             })
             .pipe(
@@ -105,7 +105,7 @@ export class AuthService {
                     this._authenticated = true;
 
                     // Store the user on the user service
-                    this._userService.user = response.user;
+                    this._userService.user = response.data;
 
                     // Return true
                     return of(true);
