@@ -10,10 +10,8 @@ export interface Company {
     attractedOutOfState?: boolean;
     confidentialityRequested?: boolean;
     intellectualProperty?: string;
-    departmentIfFaculty?: string;
     preCompanyFunding?: number;
     icorps?: boolean;
     tcf?: boolean;
-    tcfAmount?: number;
     contacts?: string[]; // property via association
 }

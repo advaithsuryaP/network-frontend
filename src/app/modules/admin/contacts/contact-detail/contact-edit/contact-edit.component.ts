@@ -60,7 +60,6 @@ interface ContactForm {
         attractedOutOfState: FormControl<boolean | null>;
         confidentialityRequested: FormControl<boolean | null>;
         intellectualProperty: FormControl<string | null>;
-        departmentIfFaculty: FormControl<string | null>;
         preCompanyFunding: FormControl<number | null>;
         icorps: FormControl<boolean | null>;
         tcf: FormControl<boolean | null>;
@@ -140,7 +139,6 @@ export class ContactEditComponent implements OnInit, OnDestroy {
             attractedOutOfState: new FormControl<boolean | null>(false, { nonNullable: true }),
             confidentialityRequested: new FormControl<boolean | null>(false, { nonNullable: true }),
             intellectualProperty: new FormControl<string | null>(''),
-            departmentIfFaculty: new FormControl<string | null>(''),
             preCompanyFunding: new FormControl<number | null>(null),
             icorps: new FormControl<boolean | null>(false, { nonNullable: true }),
             tcf: new FormControl<boolean | null>(false, { nonNullable: true })
@@ -221,7 +219,6 @@ export class ContactEditComponent implements OnInit, OnDestroy {
                         attractedOutOfState: contact.company.attractedOutOfState,
                         confidentialityRequested: contact.company.confidentialityRequested,
                         intellectualProperty: contact.company.intellectualProperty,
-                        departmentIfFaculty: contact.company.departmentIfFaculty,
                         preCompanyFunding: contact.company.preCompanyFunding,
                         icorps: contact.company.icorps,
                         tcf: contact.company.tcf

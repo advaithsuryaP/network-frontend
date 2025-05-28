@@ -161,16 +161,6 @@
                     </div>
                 </ng-container>
 
-                <!-- Department (if Faculty) -->
-                <ng-container *ngIf="contact.company.departmentIfFaculty">
-                    <div class="flex sm:items-center">
-                        <mat-icon [svgIcon]="'heroicons_outline:academic-cap'"></mat-icon>
-                        <div class="ml-6 leading-6">
-                            {{ contact.company.departmentIfFaculty }}
-                        </div>
-                    </div>
-                </ng-container>
-
                 <!-- Company Flags -->
                 <ng-container
                     *ngIf="
