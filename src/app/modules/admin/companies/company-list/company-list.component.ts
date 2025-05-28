@@ -117,11 +117,7 @@ export class CompanyListComponent implements OnInit, OnDestroy {
             });
 
         // Filter the courses
-        combineLatest([
-            this.filters.categorySlug$,
-            this.filters.query$,
-            this.filters.confidentialityRequested$
-        ]).subscribe(([categorySlug, query, confidentialityRequested]) => {
+        combineLatest([this.filters.categorySlug$, this.filters.query$]).subscribe(([categorySlug, query]) => {
             // Reset the filtered courses
             this.filteredCompanies = this.companies;
 
@@ -137,13 +133,6 @@ export class CompanyListComponent implements OnInit, OnDestroy {
                         company.name.toLowerCase().includes(query.toLowerCase()) ||
                         company.description.toLowerCase().includes(query.toLowerCase()) ||
                         company.category.toLowerCase().includes(query.toLowerCase())
-                );
-            }
-
-            // Filter by completed
-            if (confidentialityRequested) {
-                this.filteredCompanies = this.filteredCompanies.filter(
-                    company => company.confidentialityRequested === confidentialityRequested
                 );
             }
 

@@ -334,6 +334,17 @@
                     </div>
                 </div>
 
+                <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="flex items-center">
+                        <mat-slide-toggle formControlName="isAlumni" class="mr-2"> Alumni </mat-slide-toggle>
+                    </div>
+                    <div class="flex items-center">
+                        <mat-slide-toggle formControlName="isContestWinner" class="mr-2">
+                            Contest Winner
+                        </mat-slide-toggle>
+                    </div>
+                </div>
+
                 <div class="mt-8" formGroupName="company">
                     <!-- Company Description -->
                     <div class="mt-8">
@@ -366,26 +377,6 @@
                                     [placeholder]="'https://example.com'"
                                     [spellcheck]="false" />
                             </mat-form-field>
-                        </div>
-                    </div>
-
-                    <!-- Toggle Fields -->
-                    <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="flex items-center">
-                            <mat-slide-toggle formControlName="attractedOutOfState" class="mr-2">
-                                Attracted Out of State
-                            </mat-slide-toggle>
-                        </div>
-                        <div class="flex items-center">
-                            <mat-slide-toggle formControlName="confidentialityRequested" class="mr-2">
-                                Confidentiality Requested
-                            </mat-slide-toggle>
-                        </div>
-                        <div class="flex items-center">
-                            <mat-slide-toggle formControlName="icorps" class="mr-2"> I-Corps </mat-slide-toggle>
-                        </div>
-                        <div class="flex items-center">
-                            <mat-slide-toggle formControlName="tcf" class="mr-2"> TCF </mat-slide-toggle>
                         </div>
                     </div>
 

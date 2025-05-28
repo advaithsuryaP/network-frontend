@@ -50,6 +50,8 @@ interface ContactForm {
     title: FormControl<string | null>;
     university: FormControl<string | null>;
     major: FormControl<string | null>;
+    isAlumni: FormControl<boolean>;
+    isContestWinner: FormControl<boolean>;
     company: FormGroup<{
         id: FormControl<string | null>;
         name: FormControl<string | null>;
@@ -57,12 +59,8 @@ interface ContactForm {
         website: FormControl<string | null>;
         category: FormControl<string>;
         primaryIndustry: FormControl<string>;
-        attractedOutOfState: FormControl<boolean | null>;
-        confidentialityRequested: FormControl<boolean | null>;
         intellectualProperty: FormControl<string | null>;
         fundingReceived: FormControl<number | null>;
-        icorps: FormControl<boolean | null>;
-        tcf: FormControl<boolean | null>;
     }>;
 }
 
@@ -123,6 +121,8 @@ export class ContactEditComponent implements OnInit, OnDestroy {
         lastName: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
         university: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
         title: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
+        isAlumni: new FormControl<boolean>(false, { nonNullable: true }),
+        isContestWinner: new FormControl<boolean>(false, { nonNullable: true }),
         company: new FormGroup({
             id: new FormControl<string | null>(''),
             name: new FormControl<string | null>('', { nonNullable: true, validators: [Validators.required] }),
@@ -136,12 +136,8 @@ export class ContactEditComponent implements OnInit, OnDestroy {
                 nonNullable: true,
                 validators: [Validators.required]
             }),
-            attractedOutOfState: new FormControl<boolean | null>(false, { nonNullable: true }),
-            confidentialityRequested: new FormControl<boolean | null>(false, { nonNullable: true }),
             intellectualProperty: new FormControl<string | null>(''),
-            fundingReceived: new FormControl<number | null>(null),
-            icorps: new FormControl<boolean | null>(false, { nonNullable: true }),
-            tcf: new FormControl<boolean | null>(false, { nonNullable: true })
+            fundingReceived: new FormControl<number | null>(null)
         })
     });
 
@@ -204,7 +200,9 @@ export class ContactEditComponent implements OnInit, OnDestroy {
                     title: contact.title,
                     notes: contact.notes,
                     major: contact.major,
-                    university: contact.university
+                    university: contact.university,
+                    isAlumni: contact.isAlumni,
+                    isContestWinner: contact.isContestWinner
                 });
 
                 // Only patch company values if contact has a company
@@ -216,12 +214,8 @@ export class ContactEditComponent implements OnInit, OnDestroy {
                         website: contact.company.website,
                         category: contact.company.category,
                         primaryIndustry: contact.company.primaryIndustry,
-                        attractedOutOfState: contact.company.attractedOutOfState,
-                        confidentialityRequested: contact.company.confidentialityRequested,
                         intellectualProperty: contact.company.intellectualProperty,
-                        fundingReceived: contact.company.fundingReceived,
-                        icorps: contact.company.icorps,
-                        tcf: contact.company.tcf
+                        fundingReceived: contact.company.fundingReceived
                     });
                 }
 

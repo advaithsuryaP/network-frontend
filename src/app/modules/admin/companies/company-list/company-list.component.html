@@ -59,25 +59,6 @@
                                         class="py-0.5 px-3 rounded-full text-sm font-semibold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500">
                                         {{ getCompanyCategoryById(company.category) }}
                                     </div>
-                                    <!-- Confidentiality indicator -->
-                                    <div class="flex items-center gap-2">
-                                        <ng-container *ngIf="company.confidentialityRequested">
-                                            <mat-icon
-                                                class="icon-size-5 text-green-600"
-                                                [svgIcon]="'heroicons_solid:check-badge'"
-                                                [matTooltip]="'Confidentiality requested'"></mat-icon>
-                                        </ng-container>
-                                        <button
-                                            mat-icon-button
-                                            [color]="'warn'"
-                                            matTooltip="Delete Company"
-                                            (click)="deleteCompany(company.id)"
-                                            *ngIf="company.contacts && company.contacts.length === 0">
-                                            <mat-icon
-                                                [svgIcon]="'heroicons_outline:trash'"
-                                                class="icon-size-5"></mat-icon>
-                                        </button>
-                                    </div>
                                 </div>
                                 <!-- Startup name & description -->
                                 <div class="mt-4 text-lg font-medium">{{ company.name }}</div>
@@ -110,22 +91,6 @@
                                         class="icon-size-5 text-hint"
                                         [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
                                     <div class="ml-1.5">Funding received: ${{ company.fundingReceived | number }}</div>
-                                </div>
-
-                                <!-- Program Indicators -->
-                                <div class="flex items-center mt-4 gap-2">
-                                    <ng-container *ngIf="company.icorps">
-                                        <div
-                                            class="py-0.5 px-2 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-500 dark:text-purple-50">
-                                            I-Corps
-                                        </div>
-                                    </ng-container>
-                                    <ng-container *ngIf="company.tcf">
-                                        <div
-                                            class="py-0.5 px-2 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-500 dark:text-indigo-50">
-                                            TCF
-                                        </div>
-                                    </ng-container>
                                 </div>
                             </div>
                             <!-- Footer -->

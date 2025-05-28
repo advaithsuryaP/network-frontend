@@ -7,11 +7,7 @@ export interface Company {
     // Optional fields
     description?: string;
     website?: string;
-    attractedOutOfState?: boolean;
-    confidentialityRequested?: boolean;
     intellectualProperty?: string;
     fundingReceived?: number;
-    icorps?: boolean;
-    tcf?: boolean;
     contacts?: string[]; // property via association
 }

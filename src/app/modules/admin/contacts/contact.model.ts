@@ -8,6 +8,8 @@ export interface Contact {
     firstName: string;
     lastName: string;
     university: string;
+    isAlumni: boolean;
+    isContestWinner: boolean;
     emails: Array<{
         label: string;
         email: string;

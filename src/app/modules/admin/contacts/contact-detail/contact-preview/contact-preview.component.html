@@ -162,39 +162,21 @@
                 </ng-container>
 
                 <!-- Company Flags -->
-                <ng-container
-                    *ngIf="
-                        contact.company.attractedOutOfState ||
-                        contact.company.confidentialityRequested ||
-                        contact.company.icorps ||
-                        contact.company.tcf
-                    ">
+                <ng-container *ngIf="contact.isContestWinner || contact.isAlumni">
                     <div class="flex">
                         <mat-icon [svgIcon]="'heroicons_outline:flag'"></mat-icon>
                         <div class="ml-6 space-y-2">
-                            <div class="flex items-center" *ngIf="contact.company.attractedOutOfState">
+                            <div class="flex items-center" *ngIf="contact.isContestWinner">
                                 <mat-icon
                                     class="icon-size-5 text-primary-500"
                                     [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
-                                <span class="ml-2">Attracted Out of State</span>
+                                <span class="ml-2">Contest Winner</span>
                             </div>
-                            <div class="flex items-center" *ngIf="contact.company.confidentialityRequested">
+                            <div class="flex items-center" *ngIf="contact.isAlumni">
                                 <mat-icon
                                     class="icon-size-5 text-primary-500"
                                     [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
-                                <span class="ml-2">Confidentiality Requested</span>
-                            </div>
-                            <div class="flex items-center" *ngIf="contact.company.icorps">
-                                <mat-icon
-                                    class="icon-size-5 text-primary-500"
-                                    [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
-                                <span class="ml-2">I-Corps</span>
-                            </div>
-                            <div class="flex items-center" *ngIf="contact.company.tcf">
-                                <mat-icon
-                                    class="icon-size-5 text-primary-500"
-                                    [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
-                                <span class="ml-2">TCF</span>
+                                <span class="ml-2">Alumni</span>
                             </div>
                         </div>
                     </div>
