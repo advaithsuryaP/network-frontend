@@ -211,12 +211,12 @@
                 </ng-container>
 
                 <!-- Funding Information -->
-                <div class="flex" *ngIf="contact.company.preCompanyFunding">
+                <div class="flex" *ngIf="contact.company.fundingReceived">
                     <mat-icon [svgIcon]="'heroicons_outline:currency-dollar'"></mat-icon>
                     <div class="ml-6 space-y-2">
-                        <div class="flex items-center" *ngIf="contact.company.preCompanyFunding">
-                            <span class="font-medium">Pre-Company Funding:</span>
-                            <span class="ml-2">${{ contact.company.preCompanyFunding | number }}</span>
+                        <div class="flex items-center">
+                            <span class="font-medium">Funding Received:</span>
+                            <span class="ml-2">${{ contact.company.fundingReceived | number }}</span>
                         </div>
                     </div>
                 </div>

@@ -102,16 +102,14 @@
                                     <div class="ml-1.5">{{ company.website || 'No website' }}</div>
                                 </div>
 
-                                <!-- Pre-company Funding -->
+                                <!-- Funding Received -->
                                 <div
                                     class="flex items-center mt-2 leading-5 text-md text-secondary"
-                                    *ngIf="company.preCompanyFunding">
+                                    *ngIf="company.fundingReceived">
                                     <mat-icon
                                         class="icon-size-5 text-hint"
                                         [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
-                                    <div class="ml-1.5">
-                                        Pre-company funding: ${{ company.preCompanyFunding | number }}
-                                    </div>
+                                    <div class="ml-1.5">Funding received: ${{ company.fundingReceived | number }}</div>
                                 </div>
 
                                 <!-- Program Indicators -->
