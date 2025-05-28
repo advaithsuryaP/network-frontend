@@ -16,7 +16,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
-import { MatSlideToggleChange, MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BehaviorSubject, combineLatest, finalize, Subject, takeUntil } from 'rxjs';
 import { CompaniesService } from '../../companies/companies.service';
@@ -45,7 +44,6 @@ import { HttpErrorResponse } from '@angular/common/http';
         MatTooltipModule,
         MatSnackBarModule,
         MatFormFieldModule,
-        MatSlideToggleModule,
         MatProgressBarModule
     ],
     encapsulation: ViewEncapsulation.None,
@@ -66,11 +64,9 @@ export class CompanyListComponent implements OnInit, OnDestroy {
     filters: {
         categorySlug$: BehaviorSubject<string>;
         query$: BehaviorSubject<string>;
-        confidentialityRequested$: BehaviorSubject<boolean>;
     } = {
         categorySlug$: new BehaviorSubject(''),
-        query$: new BehaviorSubject(''),
-        confidentialityRequested$: new BehaviorSubject(false)
+        query$: new BehaviorSubject('')
     };
 
     contactLabels: Configuration[] = [];
@@ -161,15 +157,6 @@ export class CompanyListComponent implements OnInit, OnDestroy {
      */
     filterByCategory(change: MatSelectChange): void {
         this.filters.categorySlug$.next(change.value);
-    }
-
-    /**
-     * Show/hide completed courses
-     *
-     * @param change
-     */
-    toggleConfidentialityRequested(change: MatSlideToggleChange): void {
-        this.filters.confidentialityRequested$.next(change.checked);
     }
 
     getCompanyCategoryById(id: string): string {

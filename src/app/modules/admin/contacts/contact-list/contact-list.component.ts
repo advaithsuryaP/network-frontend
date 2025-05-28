@@ -38,6 +38,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Configuration } from '../../configuration/configuration.model';
 import { ConfigurationService } from '../../configuration/configuration.service';
 import { ConfigurationCategoryEnum } from '../../configuration/configuration.enum';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
     selector: 'app-contact-list',
@@ -58,7 +59,8 @@ import { ConfigurationCategoryEnum } from '../../configuration/configuration.enu
         MatTooltipModule,
         MatSnackBarModule,
         MatFormFieldModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MatSlideToggleModule
     ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -79,7 +81,6 @@ export class ContactListComponent implements OnInit, OnDestroy {
     private _unsubscribeAll: Subject<void> = new Subject<void>();
 
     isLoading: boolean = false;
-    searchInputControl: FormControl<string> = new FormControl<string>('');
     contacts$: Observable<Contact[]> = this._contactsService.contacts$;
     selectedContact: Contact;
 
@@ -87,14 +88,17 @@ export class ContactListComponent implements OnInit, OnDestroy {
     drawerMode: 'side' | 'over';
 
     // Filter controls
+    universityFilter = new FormControl<string>('');
+    searchInputControl = new FormControl<string>('');
     companyCategoryFilter = new FormControl<string>('');
     primaryIndustryFilter = new FormControl<string>('');
-    universityFilter = new FormControl<string>('');
+    isAlumniFilter = new FormControl<boolean>(false);
+    isContestWinnerFilter = new FormControl<boolean>(false);
 
     // Configuration data
+    universities: Configuration[] = [];
     companyCategories: Configuration[] = [];
     primaryIndustries: Configuration[] = [];
-    universities: Configuration[] = [];
 
     ngOnInit(): void {
         // Get configurations
@@ -122,9 +126,11 @@ export class ContactListComponent implements OnInit, OnDestroy {
             ),
             this.companyCategoryFilter.valueChanges.pipe(takeUntil(this._unsubscribeAll), startWith('')),
             this.primaryIndustryFilter.valueChanges.pipe(takeUntil(this._unsubscribeAll), startWith('')),
-            this.universityFilter.valueChanges.pipe(takeUntil(this._unsubscribeAll), startWith(''))
+            this.universityFilter.valueChanges.pipe(takeUntil(this._unsubscribeAll), startWith('')),
+            this.isAlumniFilter.valueChanges.pipe(takeUntil(this._unsubscribeAll), startWith(false)),
+            this.isContestWinnerFilter.valueChanges.pipe(takeUntil(this._unsubscribeAll), startWith(false))
         ]).pipe(
-            map(([contacts, searchQuery, companyCategory, primaryIndustry, university]) => {
+            map(([contacts, searchQuery, companyCategory, primaryIndustry, university, isAlumni, isContestWinner]) => {
                 // Sort contacts alphabetically by first name
                 let filteredContacts = [...contacts].sort((a, b) => {
                     return a.firstName.localeCompare(b.firstName);
@@ -133,13 +139,17 @@ export class ContactListComponent implements OnInit, OnDestroy {
                 // Apply search filter
                 if (searchQuery) {
                     const query = searchQuery.toLowerCase();
+                    // Filter by first name, last name, title, notes, major, phone numbers, emails, and company name
                     filteredContacts = filteredContacts.filter(
                         contact =>
                             contact.firstName.toLowerCase().includes(query) ||
                             contact.lastName.toLowerCase().includes(query) ||
                             contact.title.toLowerCase().includes(query) ||
                             contact.notes.toLowerCase().includes(query) ||
-                            contact.major.toLowerCase().includes(query)
+                            contact.major.toLowerCase().includes(query) ||
+                            contact.phoneNumbers.some(phone => phone.phoneNumber.toLowerCase().includes(query)) ||
+                            contact.emails.some(email => email.email.toLowerCase().includes(query)) ||
+                            contact.company?.name.toLowerCase().includes(query)
                     );
                 }
 
@@ -160,6 +170,16 @@ export class ContactListComponent implements OnInit, OnDestroy {
                 // Apply university filter
                 if (university) {
                     filteredContacts = filteredContacts.filter(contact => contact.university === university);
+                }
+
+                // Apply alumni filter
+                if (isAlumni) {
+                    filteredContacts = filteredContacts.filter(contact => contact.isAlumni);
+                }
+
+                // Apply contest winner filter
+                if (isContestWinner) {
+                    filteredContacts = filteredContacts.filter(contact => contact.isContestWinner);
                 }
 
                 return filteredContacts;

@@ -77,24 +77,6 @@
                                 <mat-icon [svgIcon]="'heroicons_outline:document-arrow-up'"></mat-icon>
                             </button>
 
-                            <!-- Filter Contacts Button -->
-                            <button
-                                mat-button
-                                [color]="'accent'"
-                                (click)="fileInput.click()"
-                                class="hidden sm:inline-flex">
-                                <mat-icon [svgIcon]="'heroicons_outline:funnel'"></mat-icon>
-                                <span class="ml-2 mr-1">Filter Contacts</span>
-                            </button>
-                            <button
-                                mat-icon-button
-                                [color]="'accent'"
-                                (click)="fileInput.click()"
-                                matTooltip="Filter Contacts"
-                                class="sm:hidden">
-                                <mat-icon [svgIcon]="'heroicons_outline:funnel'"></mat-icon>
-                            </button>
-
                             <input
                                 #fileInput
                                 type="file"
@@ -115,8 +97,10 @@
                                 matInput
                                 [autocomplete]="'off'"
                                 [formControl]="searchInputControl"
-                                [placeholder]="'Search contacts'" />
-                            <mat-hint>Search by name, title, major, or notes</mat-hint>
+                                [placeholder]="
+                                    'Search by name, title, major, notes, phone numbers, emails, and company name'
+                                " />
+                            <mat-hint>Search through contact and company information</mat-hint>
                         </mat-form-field>
                     </div>
 
@@ -171,6 +155,20 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
+                        </div>
+
+                        <!-- Alumni Filter -->
+                        <div class="flex-1 flex items-center justify-between">
+                            <mat-slide-toggle [formControl]="isAlumniFilter" color="primary">
+                                Show Alumni Only
+                            </mat-slide-toggle>
+                        </div>
+
+                        <!-- Contest Winner Filter -->
+                        <div class="flex-1 flex items-center justify-between">
+                            <mat-slide-toggle [formControl]="isContestWinnerFilter" color="primary">
+                                Show Contest Winners Only
+                            </mat-slide-toggle>
                         </div>
                     </div>
                 </div>

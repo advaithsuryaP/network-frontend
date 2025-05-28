@@ -40,11 +40,6 @@
                         matInput
                         #query />
                 </mat-form-field>
-                <div class="flex items-center mt-4 sm:mt-0 sm:ml-auto">
-                    <mat-slide-toggle [color]="'primary'" (change)="toggleConfidentialityRequested($event)">
-                        Confidentiality requested
-                    </mat-slide-toggle>
-                </div>
             </div>
             <!-- Startups -->
             <ng-container *ngIf="this.filteredCompanies.length; else noCompanies">

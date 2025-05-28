@@ -105,41 +105,6 @@
                     </mat-form-field>
                 </div>
 
-                <!-- Major -->
-                <div class="mt-8">
-                    <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                        <mat-label>Major</mat-label>
-                        <mat-icon
-                            matPrefix
-                            class="hidden sm:flex icon-size-5"
-                            [svgIcon]="'heroicons_solid:academic-cap'"></mat-icon>
-                        <input matInput [formControlName]="'major'" [placeholder]="'Major'" />
-                    </mat-form-field>
-                </div>
-
-                <div class="mt-8 flex space-x-4">
-                    <div class="flex-1" formGroupName="company">
-                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                            <mat-label>Company Name</mat-label>
-                            <mat-icon
-                                matPrefix
-                                class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:building-office-2'"></mat-icon>
-                            <input matInput formControlName="name" [placeholder]="'Company'" />
-                        </mat-form-field>
-                    </div>
-                    <div class="flex-1">
-                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                            <mat-label>Title</mat-label>
-                            <mat-icon
-                                matPrefix
-                                class="hidden sm:flex icon-size-5"
-                                [svgIcon]="'heroicons_solid:briefcase'"></mat-icon>
-                            <input matInput formControlName="title" [placeholder]="'Title in the company'" />
-                        </mat-form-field>
-                    </div>
-                </div>
-
                 <!-- Emails -->
                 <div class="mt-8" formArrayName="emails">
                     <div class="space-y-4">
@@ -297,6 +262,42 @@
                     </div>
                 </div>
 
+                <div class="mt-8 flex space-x-4">
+                    <div class="flex-1" formGroupName="company">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Company Name</mat-label>
+                            <mat-icon
+                                matPrefix
+                                class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:building-office-2'"></mat-icon>
+                            <input matInput formControlName="name" [placeholder]="'Company'" />
+                        </mat-form-field>
+                    </div>
+                    <div class="flex-1">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Title</mat-label>
+                            <mat-icon
+                                matPrefix
+                                class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:briefcase'"></mat-icon>
+                            <input matInput formControlName="title" [placeholder]="'Title in the company'" />
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- Major -->
+                <div class="mt-8">
+                    <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                        <mat-label>Major</mat-label>
+                        <mat-icon
+                            matPrefix
+                            class="hidden sm:flex icon-size-5"
+                            [svgIcon]="'heroicons_solid:academic-cap'"></mat-icon>
+                        <input matInput [formControlName]="'major'" [placeholder]="'Major'" />
+                        <mat-hint>Majoring in / Majored in</mat-hint>
+                    </mat-form-field>
+                </div>
+
                 <div class="mt-8 flex space-x-4" formGroupName="company">
                     <div class="flex-1">
                         <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
@@ -336,10 +337,12 @@
 
                 <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="flex items-center">
-                        <mat-slide-toggle formControlName="isAlumni" class="mr-2"> Alumni </mat-slide-toggle>
+                        <mat-slide-toggle formControlName="isAlumni" color="primary" class="mr-2">
+                            Alumni
+                        </mat-slide-toggle>
                     </div>
                     <div class="flex items-center">
-                        <mat-slide-toggle formControlName="isContestWinner" class="mr-2">
+                        <mat-slide-toggle formControlName="isContestWinner" color="primary" class="mr-2">
                             Contest Winner
                         </mat-slide-toggle>
                     </div>
