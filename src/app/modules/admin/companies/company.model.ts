@@ -18,6 +18,5 @@ export interface Company {
     icorps?: boolean;
     tcf?: boolean;
     tcfAmount?: number;
-    comments?: string;
     contacts?: string[]; // property via association
 }

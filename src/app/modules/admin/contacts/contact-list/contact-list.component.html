@@ -77,6 +77,24 @@
                                 <mat-icon [svgIcon]="'heroicons_outline:document-arrow-up'"></mat-icon>
                             </button>
 
+                            <!-- Filter Contacts Button -->
+                            <button
+                                mat-button
+                                [color]="'accent'"
+                                (click)="fileInput.click()"
+                                class="hidden sm:inline-flex">
+                                <mat-icon [svgIcon]="'heroicons_outline:funnel'"></mat-icon>
+                                <span class="ml-2 mr-1">Filter Contacts</span>
+                            </button>
+                            <button
+                                mat-icon-button
+                                [color]="'accent'"
+                                (click)="fileInput.click()"
+                                matTooltip="Filter Contacts"
+                                class="sm:hidden">
+                                <mat-icon [svgIcon]="'heroicons_outline:funnel'"></mat-icon>
+                            </button>
+
                             <input
                                 #fileInput
                                 type="file"

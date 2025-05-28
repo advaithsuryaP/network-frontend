@@ -264,28 +264,6 @@
                     </div>
                 </ng-container>
 
-                <!-- Company Comments -->
-                <ng-container *ngIf="contact.company.comments">
-                    <div class="flex">
-                        <mat-icon [svgIcon]="'heroicons_outline:chat-bubble-left-right'"></mat-icon>
-                        <div class="max-w-none ml-6 prose prose-sm">
-                            <p>{{ contact.company.comments }}</p>
-                        </div>
-                    </div>
-                </ng-container>
-
-                <!-- Birthday -->
-                <!-- <ng-container *ngIf="contact.birthday">
-                        <div class="flex sm:items-center">
-                            <mat-icon
-                                [svgIcon]="'heroicons_outline:cake'"
-                            ></mat-icon>
-                            <div class="ml-6 leading-6">
-                                {{ contact.birthday | date : "longDate" }}
-                            </div>
-                        </div>
-                    </ng-container> -->
-
                 <!-- Notes -->
                 <ng-container *ngIf="contact.notes">
                     <div class="flex">

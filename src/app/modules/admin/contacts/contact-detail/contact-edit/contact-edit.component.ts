@@ -68,7 +68,6 @@ interface ContactForm {
         icorps: FormControl<boolean | null>;
         tcf: FormControl<boolean | null>;
         tcfAmount: FormControl<number | null>;
-        comments: FormControl<string | null>;
     }>;
 }
 
@@ -152,8 +151,7 @@ export class ContactEditComponent implements OnInit, OnDestroy {
             preCompanyFunding: new FormControl<number | null>(null),
             icorps: new FormControl<boolean | null>(false, { nonNullable: true }),
             tcf: new FormControl<boolean | null>(false, { nonNullable: true }),
-            tcfAmount: new FormControl<number | null>(null),
-            comments: new FormControl<string | null>('')
+            tcfAmount: new FormControl<number | null>(null)
         })
     });
 
@@ -238,8 +236,7 @@ export class ContactEditComponent implements OnInit, OnDestroy {
                         preCompanyFunding: contact.company.preCompanyFunding,
                         icorps: contact.company.icorps,
                         tcf: contact.company.tcf,
-                        tcfAmount: contact.company.tcfAmount,
-                        comments: contact.company.comments
+                        tcfAmount: contact.company.tcfAmount
                     });
                 }
 
