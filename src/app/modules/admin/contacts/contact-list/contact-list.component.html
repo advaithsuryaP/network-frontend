@@ -77,6 +77,27 @@
                                 <mat-icon [svgIcon]="'heroicons_outline:document-arrow-up'"></mat-icon>
                             </button>
 
+                            <!-- Export Contacts Button -->
+                            <button
+                                mat-button
+                                [color]="'accent'"
+                                [disabled]="isLoading"
+                                (click)="exportContacts()"
+                                class="hidden sm:inline-flex"
+                                [matTooltip]="'Export ' + filteredContactIds.length + ' contacts'">
+                                <mat-icon [svgIcon]="'heroicons_outline:document-arrow-down'"></mat-icon>
+                                <span class="ml-2 mr-1">Export Contacts</span>
+                            </button>
+                            <button
+                                mat-icon-button
+                                [color]="'accent'"
+                                class="sm:hidden"
+                                [disabled]="isLoading"
+                                (click)="exportContacts()"
+                                [matTooltip]="'Export ' + filteredContactIds.length + ' contacts'">
+                                <mat-icon [svgIcon]="'heroicons_outline:document-arrow-down'"></mat-icon>
+                            </button>
+
                             <input
                                 #fileInput
                                 type="file"

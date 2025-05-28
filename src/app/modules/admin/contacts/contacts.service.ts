@@ -150,4 +150,13 @@ export class ContactsService {
             })
         );
     }
+
+    /**
+     * Export contacts to Excel
+     */
+    exportContacts(payload: { contactIds: string[] }): Observable<Blob> {
+        return this._http.post(`${API_URL}/contacts/export`, payload, {
+            responseType: 'blob'
+        });
+    }
 }

@@ -20,7 +20,8 @@ import {
     Observable,
     debounceTime,
     combineLatest,
-    distinctUntilChanged
+    distinctUntilChanged,
+    take
 } from 'rxjs';
 import { Contact } from '../contact.model';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -94,6 +95,8 @@ export class ContactListComponent implements OnInit, OnDestroy {
     primaryIndustryFilter = new FormControl<string>('');
     isAlumniFilter = new FormControl<boolean>(false);
     isContestWinnerFilter = new FormControl<boolean>(false);
+
+    filteredContactIds: string[] = [];
 
     // Configuration data
     universities: Configuration[] = [];
@@ -181,6 +184,9 @@ export class ContactListComponent implements OnInit, OnDestroy {
                 if (isContestWinner) {
                     filteredContacts = filteredContacts.filter(contact => contact.isContestWinner);
                 }
+
+                // Get the IDs of the filtered contacts for export
+                this.filteredContactIds = filteredContacts.map(contact => contact.id);
 
                 return filteredContacts;
             })
@@ -278,6 +284,35 @@ export class ContactListComponent implements OnInit, OnDestroy {
      */
     trackByFn(index: number, item: any): any {
         return item.id || index;
+    }
+
+    exportContacts(): void {
+        this.isLoading = true;
+        this._changeDetectorRef.markForCheck();
+
+        this._contactsService
+            .exportContacts({ contactIds: this.filteredContactIds })
+            .pipe(
+                finalize(() => {
+                    this.isLoading = false;
+                    this._changeDetectorRef.markForCheck();
+                })
+            )
+            .subscribe({
+                next: (blob: Blob) => {
+                    // Create a download link
+                    const url = window.URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = 'contacts.xlsx';
+                    link.click();
+                    window.URL.revokeObjectURL(url);
+                },
+                error: (error: HttpErrorResponse) => {
+                    console.error('Error exporting contacts:', error);
+                    this._snackBar.open(error.error.message, 'Close', { duration: 3000 });
+                }
+            });
     }
 
     ngOnDestroy(): void {
