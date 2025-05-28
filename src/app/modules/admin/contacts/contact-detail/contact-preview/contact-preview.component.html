@@ -220,33 +220,6 @@
                     </div>
                 </ng-container>
 
-                <!-- USM Founders -->
-                <ng-container *ngIf="contact.company.usmFounders">
-                    <div class="flex">
-                        <mat-icon [svgIcon]="'heroicons_outline:users'"></mat-icon>
-                        <div class="max-w-none ml-6 prose prose-sm">
-                            <p>{{ contact.company.usmFounders }}</p>
-                        </div>
-                    </div>
-                </ng-container>
-
-                <!-- Resources -->
-                <ng-container *ngIf="contact.company.miscResources || contact.company.preCompanyResources">
-                    <div class="flex">
-                        <mat-icon [svgIcon]="'heroicons_outline:cube'"></mat-icon>
-                        <div class="max-w-none ml-6 space-y-4">
-                            <div *ngIf="contact.company.miscResources">
-                                <h4 class="text-sm font-medium text-gray-500">Miscellaneous Resources</h4>
-                                <p class="prose prose-sm">{{ contact.company.miscResources }}</p>
-                            </div>
-                            <div *ngIf="contact.company.preCompanyResources">
-                                <h4 class="text-sm font-medium text-gray-500">Pre-Company Resources</h4>
-                                <p class="prose prose-sm">{{ contact.company.preCompanyResources }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </ng-container>
-
                 <!-- Funding Information -->
                 <div class="flex" *ngIf="contact.company.preCompanyFunding">
                     <mat-icon [svgIcon]="'heroicons_outline:currency-dollar'"></mat-icon>

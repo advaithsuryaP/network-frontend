@@ -61,9 +61,6 @@ interface ContactForm {
         confidentialityRequested: FormControl<boolean | null>;
         intellectualProperty: FormControl<string | null>;
         departmentIfFaculty: FormControl<string | null>;
-        usmFounders: FormControl<string | null>;
-        miscResources: FormControl<string | null>;
-        preCompanyResources: FormControl<string | null>;
         preCompanyFunding: FormControl<number | null>;
         icorps: FormControl<boolean | null>;
         tcf: FormControl<boolean | null>;
@@ -144,9 +141,6 @@ export class ContactEditComponent implements OnInit, OnDestroy {
             confidentialityRequested: new FormControl<boolean | null>(false, { nonNullable: true }),
             intellectualProperty: new FormControl<string | null>(''),
             departmentIfFaculty: new FormControl<string | null>(''),
-            usmFounders: new FormControl<string | null>(''),
-            miscResources: new FormControl<string | null>(''),
-            preCompanyResources: new FormControl<string | null>(''),
             preCompanyFunding: new FormControl<number | null>(null),
             icorps: new FormControl<boolean | null>(false, { nonNullable: true }),
             tcf: new FormControl<boolean | null>(false, { nonNullable: true })
@@ -228,9 +222,6 @@ export class ContactEditComponent implements OnInit, OnDestroy {
                         confidentialityRequested: contact.company.confidentialityRequested,
                         intellectualProperty: contact.company.intellectualProperty,
                         departmentIfFaculty: contact.company.departmentIfFaculty,
-                        usmFounders: contact.company.usmFounders,
-                        miscResources: contact.company.miscResources,
-                        preCompanyResources: contact.company.preCompanyResources,
                         preCompanyFunding: contact.company.preCompanyFunding,
                         icorps: contact.company.icorps,
                         tcf: contact.company.tcf
