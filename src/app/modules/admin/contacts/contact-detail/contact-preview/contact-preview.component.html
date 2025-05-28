@@ -248,21 +248,15 @@
                 </ng-container>
 
                 <!-- Funding Information -->
-                <ng-container *ngIf="contact.company.preCompanyFunding || contact.company.tcfAmount">
-                    <div class="flex">
-                        <mat-icon [svgIcon]="'heroicons_outline:currency-dollar'"></mat-icon>
-                        <div class="ml-6 space-y-2">
-                            <div class="flex items-center" *ngIf="contact.company.preCompanyFunding">
-                                <span class="font-medium">Pre-Company Funding:</span>
-                                <span class="ml-2">${{ contact.company.preCompanyFunding | number }}</span>
-                            </div>
-                            <div class="flex items-center" *ngIf="contact.company.tcfAmount">
-                                <span class="font-medium">TCF Amount:</span>
-                                <span class="ml-2">${{ contact.company.tcfAmount | number }}</span>
-                            </div>
+                <div class="flex" *ngIf="contact.company.preCompanyFunding">
+                    <mat-icon [svgIcon]="'heroicons_outline:currency-dollar'"></mat-icon>
+                    <div class="ml-6 space-y-2">
+                        <div class="flex items-center" *ngIf="contact.company.preCompanyFunding">
+                            <span class="font-medium">Pre-Company Funding:</span>
+                            <span class="ml-2">${{ contact.company.preCompanyFunding | number }}</span>
                         </div>
                     </div>
-                </ng-container>
+                </div>
 
                 <!-- Notes -->
                 <ng-container *ngIf="contact.notes">

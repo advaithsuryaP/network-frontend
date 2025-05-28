@@ -17,6 +17,5 @@ export interface Company {
     preCompanyFunding?: number;
     icorps?: boolean;
     tcf?: boolean;
-    tcfAmount?: number;
     contacts?: string[]; // property via association
 }

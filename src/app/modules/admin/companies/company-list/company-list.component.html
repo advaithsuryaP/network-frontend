@@ -124,16 +124,6 @@
                                     </div>
                                 </div>
 
-                                <!-- TCF Amount -->
-                                <div
-                                    class="flex items-center mt-2 leading-5 text-md text-secondary"
-                                    *ngIf="company.tcfAmount">
-                                    <mat-icon
-                                        class="icon-size-5 text-hint"
-                                        [svgIcon]="'heroicons_solid:banknotes'"></mat-icon>
-                                    <div class="ml-1.5">TCF Amount: ${{ company.tcfAmount | number }}</div>
-                                </div>
-
                                 <!-- Program Indicators -->
                                 <div class="flex items-center mt-4 gap-2">
                                     <ng-container *ngIf="company.icorps">
@@ -157,18 +147,6 @@
                                     <div class="z-10 absolute inset-x-0 h-6 -mt-3"></div>
                                     <mat-progress-bar class="h-0.5" [value]="100"></mat-progress-bar>
                                 </div>
-
-                                <!-- View startup button -->
-                                <!-- <div class="px-6 py-4 text-right bg-gray-50 dark:bg-transparent">
-                                    <a mat-stroked-button [routerLink]="[company.id]">
-                                        <span class="inline-flex items-center">
-                                            <span>View Details</span>
-                                            <mat-icon
-                                                class="ml-1.5 icon-size-5"
-                                                [svgIcon]="'heroicons_solid:arrow-small-right'"></mat-icon>
-                                        </span>
-                                    </a>
-                                </div> -->
 
                                 <div class="px-6 py-4 bg-gray-50 dark:bg-transparent">
                                     <div class="flex flex-wrap gap-2">
